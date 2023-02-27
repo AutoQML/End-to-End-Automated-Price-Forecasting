@@ -141,8 +141,7 @@ def encode_categorical_features(df: pd.DataFrame) -> pd.DataFrame:
     return df_encoded
 
 
-def prepare_data_for_ml(machine_model: str,
-                        df_dataset: pd.DataFrame,
+def prepare_data_for_ml(df_dataset: pd.DataFrame,
                         file_path_pics: str,
                         file_path_data: str,
                         input_filename: str,
@@ -164,7 +163,7 @@ def prepare_data_for_ml(machine_model: str,
 
     Parameters
     ----------
-    machine_model : str
+    dataset : str
         Name of the current machine model.
     df_dataset : pd.DataFrame
         Dataset to be processed.
@@ -182,8 +181,6 @@ def prepare_data_for_ml(machine_model: str,
 
 
     """
-
-    MACHINE_MODEL = machine_model
     df_dataset = df_dataset
     FILE_PATH_PICS = file_path_pics
     FILE_PATH_DATA = file_path_data

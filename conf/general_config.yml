@@ -4,6 +4,8 @@ random_state: 1 # set random state
 
 bin_outlier_detect: True # set the additional outlier detection within bins (True or False)
 
+datasets: ['merged-files']
+
 algorithms: ["classical", "nn", "autosklearn", "autogluon", "flaml"]
 
 documentation: True # set the documentation (True or False)

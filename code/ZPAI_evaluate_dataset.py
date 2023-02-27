@@ -13,7 +13,7 @@ from ZPAI_prepare_data_for_ml import prepare_data_for_ml
 from ZPAI_common_functions import load_csv_data, create_path, read_yaml
 
 def calculate_stats(df: pd.DataFrame, 
-                    machine_model: str, 
+                    dataset: str, 
                     filename: str, 
                     creation_date: str, 
                     yaml_file: str) -> None:
@@ -47,9 +47,9 @@ def calculate_stats(df: pd.DataFrame,
         summery_result_values = yaml.safe_load(file)
 
     # insert statistics if it does not already exists
-    if machine_model not in summery_result_values:
+    if dataset not in summery_result_values:
 
-        # print('-- Instert statistics to model: ', machine_model)
+        # print('-- Instert statistics to model: ', dataset)
          
         file_mean = int(df['price'].describe()['mean'])
         file_std = int(df['price'].describe()['std'])
@@ -59,7 +59,7 @@ def calculate_stats(df: pd.DataFrame,
         file_50 = int(df['price'].describe()['50%'])
         file_75 = int(df['price'].describe()['75%'])
 
-        dict_file_stats = {machine_model :{'input_file_name': filename, 
+        dict_file_stats = {dataset :{'input_file_name': filename, 
                                     'input_file_size': len(df), 
                                     'input_file_creation_date': creation_date, 
                                     'input_file_mean' : file_mean,
@@ -74,9 +74,9 @@ def calculate_stats(df: pd.DataFrame,
             yaml.dump(dict_file_stats, file, default_flow_style=False)
 
     # else:
-    #     print('Statistics to model: {} already exists!'.format(machine_model))
+    #     print('Statistics to model: {} already exists!'.format(dataset))
 
-def evaluate_data(machine_model: str,
+def evaluate_data(dataset: str,
                             measurement: int,
                             GLOBAL_TXT_SUMMERY_FILE: str, 
                             GLOBAL_YAML_SUMMERY_FILE: str,
@@ -105,7 +105,7 @@ def evaluate_data(machine_model: str,
 
 
     # assign construction machine model
-    MACHINE_MODEL = machine_model
+    DATASET = dataset
     NUM_OF_MEASUREMENT = measurement
     GLOBAL_TXT_SUMMERY_FILE = GLOBAL_TXT_SUMMERY_FILE
     GLOBAL_YAML_SUMMERY_FILE = GLOBAL_YAML_SUMMERY_FILE
@@ -123,7 +123,7 @@ def evaluate_data(machine_model: str,
 
 
     # set path to CSV data files 
-    FILE_PATH_IN = Path(REPO_PATH, 'data')
+    FILE_PATH_IN = Path(REPO_PATH, 'data', DATASET)
 
     # Get all CSV files for the current construction machine model
     list_of_files = FILE_PATH_IN.glob('*.csv')
@@ -163,7 +163,7 @@ def evaluate_data(machine_model: str,
     # write name of input file to global summery.txt
     with open(GLOBAL_TXT_SUMMERY_FILE, "a") as f:
         f.write("Input file for " + 
-                MACHINE_MODEL + ": " + input_filename_with_type + 
+                DATASET + ": " + input_filename_with_type + 
                 " with size: " + str(len(machine_type)) + 
                 " created: " + str(file_creation_date) + "\n")
         
@@ -176,31 +176,31 @@ def evaluate_data(machine_model: str,
     ######################################
 
     # File path for storing pictures and data
-    FILE_PATH_OUT = Path(REPO_PATH, 'measurements', MACHINE_MODEL)
+    FILE_PATH_OUT = Path(REPO_PATH, 'measurements', DATASET)
     create_path(path = FILE_PATH_OUT, verbose = False)
 
     # File path for storing pictures
-    FILE_PATH_PICS = Path(REPO_PATH, 'measurements', MACHINE_MODEL, 'pictures')
+    FILE_PATH_PICS = Path(REPO_PATH, 'measurements', DATASET, 'pictures')
     create_path(path = FILE_PATH_PICS, verbose = False)
     
     # File path for storing data
-    FILE_PATH_DATA = Path(REPO_PATH, 'measurements', MACHINE_MODEL, 'data')
+    FILE_PATH_DATA = Path(REPO_PATH, 'measurements', DATASET, 'data')
     create_path(path = FILE_PATH_DATA, verbose = False)
 
     # File path for storing pictures
-    FILE_PATH_PICS = Path(REPO_PATH, 'measurements', MACHINE_MODEL, 'pictures', date_input_filename)
+    FILE_PATH_PICS = Path(REPO_PATH, 'measurements', DATASET, 'pictures', date_input_filename)
     create_path(path = FILE_PATH_PICS, verbose = False)
 
     # File path for storing data
-    FILE_PATH_DATA = Path(REPO_PATH, 'measurements', MACHINE_MODEL, 'data', date_input_filename)
+    FILE_PATH_DATA = Path(REPO_PATH, 'measurements', DATASET, 'data', date_input_filename)
     create_path(path = FILE_PATH_DATA, verbose = False)
 
     # File path for storing pictures
-    FILE_PATH_PICS = Path(REPO_PATH, 'measurements', MACHINE_MODEL, 'pictures', date_input_filename, str(NUM_OF_MEASUREMENT))
+    FILE_PATH_PICS = Path(REPO_PATH, 'measurements', DATASET, 'pictures', date_input_filename, str(NUM_OF_MEASUREMENT))
     create_path(path = FILE_PATH_PICS, verbose = False)
 
     # File path for storing data
-    FILE_PATH_DATA = Path(REPO_PATH, 'measurements', MACHINE_MODEL, 'data', date_input_filename, str(NUM_OF_MEASUREMENT))
+    FILE_PATH_DATA = Path(REPO_PATH, 'measurements', DATASET, 'data', date_input_filename, str(NUM_OF_MEASUREMENT))
     create_path(path = FILE_PATH_DATA, verbose = False)
 
     # create summery txt file
@@ -255,7 +255,7 @@ def evaluate_data(machine_model: str,
     ###################################
 
     calculate_stats(df = machine_type, 
-                    machine_model = MACHINE_MODEL,
+                    dataset = DATASET,
                     filename = input_filename_with_type,  
                     creation_date = file_creation_date,
                     yaml_file = GLOBAL_YAML_SUMMERY_FILE)
@@ -295,8 +295,7 @@ def evaluate_data(machine_model: str,
 
     # call next function in the ML pipeline: prepare_data_for_ml()
 
-    prepare_data_for_ml(machine_model = MACHINE_MODEL, 
-                        df_dataset = machine_type, 
+    prepare_data_for_ml(df_dataset = machine_type, 
                         file_path_pics = FILE_PATH_PICS, 
                         file_path_data = FILE_PATH_DATA, 
                         input_filename = input_filename_without_type, 

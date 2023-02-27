@@ -12,7 +12,7 @@ def create_parser():
     parser = argparse.ArgumentParser(description="Process inputs")
     parser.add_argument("--pca", type = int, help = "Number of selected PCA components")
     parser.add_argument("--algorithms", choices = ["classical", "nn", "autosklearn", "autogluon", "flaml"], nargs="*", help = "Type of algorithms to run.")
-    parser.add_argument("--models", choices = ['308', '320', '323', '329', '330', '336', '950', '966', 'D6', 'M318', 'merged', 'all'], nargs="*", help = "Selected models list")
+    parser.add_argument("--datasets", choices = ['merged'], nargs="*", help = "Selected datasets list")
     parser.add_argument("--outlier_detection", choices = ["True", "False"], help = "Remove outliers from dataset")
     parser.add_argument("--document_results", choices = ["True", "False"], help = "Document the results")
     parser.add_argument("--autosk_time_for_task", type = int, help = "Time limit in seconds for the search of appropriate models")
@@ -28,15 +28,15 @@ def create_parser():
 def get_config_from_parser(parser, config):
     args = parser.parse_args()
 
-    # List of models
-    if args.models:
-        if "merged" in args.models:
-            config["model"]["model"]["model_list"] = ["merged-files"]
-        elif "all" in args.models:
-            config["model"]["model"]["model_list"] = ['Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar-329', 'Caterpillar-330', 'Caterpillar-336', 'Caterpillar-950', 'Caterpillar-966', 'Caterpillar-D6', 'Caterpillar-M318']
-        else:
-            models_with_prefix = ["Caterpillar-" + model for model in args.models]
-            config["model"]["model"]["model_list"] = models_with_prefix
+    # List of datasets
+    if args.datasets:
+        if "merged" in args.datasets:
+            config["general"]['datasets'] = ["merged-files"]
+        # elif "all" in args.models:
+        #     config["model"]["model"]["model_list"] = ['Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar-329', 'Caterpillar-330', 'Caterpillar-336', 'Caterpillar-950', 'Caterpillar-966', 'Caterpillar-D6', 'Caterpillar-M318']
+        # else:
+        #     models_with_prefix = ["Caterpillar-" + model for model in args.models]
+        #     config["model"]["model"]["model_list"] = models_with_prefix
 
     # Algorithms
     if args.algorithms:
@@ -100,13 +100,13 @@ def main():
 
     # Load configuration files
     general_conf = read_yaml(REPO_PATH / 'conf/general_config.yml')
-    model_conf = read_yaml(REPO_PATH / 'conf/model_config.yml')
+    feature_conf = read_yaml(REPO_PATH / 'conf/feature_config.yml')
     autosklearn_conf = read_yaml(REPO_PATH / 'conf/auto_sklearn_config.yml')
 
     # Create global configuration file
     CFG = dict()
     CFG["general"] = general_conf
-    CFG["model"] = model_conf
+    CFG["feature"] = feature_conf
     CFG["autosklearn"] = autosklearn_conf
 
     CFG["general"]["repo_path"] = Path(__file__).parents[1]
@@ -122,7 +122,7 @@ def main():
     PCA_NUM = CFG["general"]['pca_num']   # get the PCA number
     RANDOM_STATE = CFG["general"]['random_state'] # get the random state
     BIN_OUTLIER = CFG["general"]['bin_outlier_detect'] # get bin outlier detection & deletion state
-    SELECTED_MACHINE_MODELS = CFG["model"]['model']['model_list'] # get list of selected models
+    DATASETS = CFG["general"]['datasets'] # get list of datasets
     M_DATE = CFG["general"]["start_date"]
     DOCUMENTATION = CFG["general"]["documentation"]
     ALGORITHMS = CFG["general"]["algorithms"]
@@ -155,7 +155,7 @@ def main():
             f.write("Measuremt date: " + M_DATE + "\n")
             f.write("Random seed: " + str(RANDOM_STATE) + "\n")
             f.write("PCA number: " + str(PCA_NUM) + "\n")
-            f.write("Models: " + str(SELECTED_MACHINE_MODELS) + "\n")
+            f.write("Datasets: " + str(DATASETS) + "\n")
             if "autosklearn" in ALGORITHMS:
                 f.write("Auto-sklearn runtime " + str(autosklearn_conf['params']['time_for_task']) + "\n")
                 f.write("Auto-sklearn limit : " + str(autosklearn_conf['params']['run_time_limit']) + "\n")
@@ -196,12 +196,12 @@ def main():
         print('\n Measurement {} of {} with random state {}'.format(measurement+1, NUM_OF_MEASUREMENTS, measurement+1))
 
         # iterate through all construction machine models
-        for count, machine_model in enumerate(SELECTED_MACHINE_MODELS):
+        for count, dataset in enumerate(DATASETS):
 
             # get model configuration
-            print('\n Construction machine model {} of {} - {}'.format(count+1, len(SELECTED_MACHINE_MODELS), machine_model))
+            print('\n Construction machine model {} of {} - {}'.format(count+1, len(DATASETS), dataset))
 
-            evaluate_data(machine_model = machine_model,
+            evaluate_data(dataset = dataset,
                                     measurement = measurement + 1,
                                     GLOBAL_TXT_SUMMERY_FILE = GLOBAL_TXT_SUMMERY_FILE,
                                     GLOBAL_YAML_SUMMERY_FILE = GLOBAL_YAML_SUMMERY_FILE,
@@ -214,7 +214,7 @@ def main():
 
     # document results as docx
     if DOCUMENTATION == True:
-        document_results_docx(const_machine_models = SELECTED_MACHINE_MODELS,
+        document_results_docx(datasets = DATASETS,
                               NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
                               GLOBAL_YAML_SUMMERY_FILE = GLOBAL_YAML_SUMMERY_FILE,
                               EXPLICIT_SUMMERY_FILE_PATH = EXPLICIT_SUMMERY_FILE_PATH,

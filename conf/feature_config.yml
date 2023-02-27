@@ -1,0 +1,11 @@
+model:
+  feature_list: ['model', 'extension', 'location', 'working_hours', 'const_year', 'price']
+  basic_subset: ['model', 'working_hours', 'const_year']
+  label: ['price']
+
+  Caterpillar-Default:
+    MAX_WORKING_HOURS: 30000
+    MIN_PRICE: 1000
+    MAX_PRICE: 500000 # set max price to 500.000 €
+    SANITY_PRICE: 50000 # set sanity price = 50.000 €
+    SANITY_HOURS: 1000 # set sanity working hours to 1.000 
