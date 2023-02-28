@@ -278,8 +278,6 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
             if LABEL in numerical_feature_list:
                 numerical_feature_list.remove(LABEL)
 
-            print('---111---', numerical_feature_list)
-
             ###########################
             # Encoding
             ###########################
