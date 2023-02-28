@@ -102,7 +102,7 @@ def evaluate_neural_nets(X_train: pd.DataFrame,
     rand_search = RandomizedSearchCV(nnregr, parameter_space, scoring='neg_mean_absolute_percentage_error', cv = 3, refit = True, n_iter = 20, n_jobs = -2)
 
     # # for testing
-    # nnregr = MLPRegressor(batch_size = 16, max_iter=1000, early_stopping=True, n_iter_no_change=1000)
+    # nnregr = MLPRegressor(batch_size = 16, max_iter=100, early_stopping=True, n_iter_no_change=100)
     # rand_search = RandomizedSearchCV(nnregr, parameter_space, scoring='neg_mean_absolute_percentage_error', cv = 3, refit = True, n_iter = 2, n_jobs = -2)
 
      # Training starting time
