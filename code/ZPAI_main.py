@@ -106,7 +106,7 @@ def main():
     # Create global configuration file
     CFG = dict()
     CFG["general"] = general_conf
-    CFG["feature"] = feature_conf
+    CFG["features"] = feature_conf
     CFG["autosklearn"] = autosklearn_conf
 
     CFG["general"]["repo_path"] = Path(__file__).parents[1]

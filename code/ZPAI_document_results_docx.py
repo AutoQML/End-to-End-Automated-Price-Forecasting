@@ -28,7 +28,7 @@ from ZPAI_common_functions import read_yaml
 
 
 
-def document_results_docx(const_machine_models: list,
+def document_results_docx(datasets: list,
                           NUM_OF_MEASUREMENTS: int,
                           GLOBAL_YAML_SUMMERY_FILE: str, 
                           EXPLICIT_SUMMERY_FILE_PATH: str,
@@ -51,16 +51,16 @@ def document_results_docx(const_machine_models: list,
 
 
     # iterate through all construction machine models
-    for const_machine_model in const_machine_models:
+    for dataset in datasets:
 
-        document = initialize_section(document, summery_result_values, const_machine_model)
+        document = initialize_section(document, summery_result_values, dataset)
 
         # get values from summery yaml file
         MEASUREMENT_DATE = summery_result_values['measurement_date']
-        INPUT_FILE_CREATION_DATE = summery_result_values[const_machine_model]['input_file_creation_date']
+        INPUT_FILE_CREATION_DATE = summery_result_values[dataset]['input_file_creation_date']
         RANDOM_SEED = summery_result_values['random_seed']
-        INPUT_FILE_SIZE =  summery_result_values[const_machine_model]['input_file_size']
-        INPUT_FILE_NAME =  summery_result_values[const_machine_model]['input_file_name']
+        INPUT_FILE_SIZE =  summery_result_values[dataset]['input_file_size']
+        INPUT_FILE_NAME =  summery_result_values[dataset]['input_file_name']
 
         if 'autosklearn_runtime' in summery_result_values:
             AUTOSKLEARN_RUNTIME = summery_result_values['autosklearn_runtime']
@@ -68,20 +68,20 @@ def document_results_docx(const_machine_models: list,
 
         # set path variables
         # File path for storing data
-        FILE_PATH_DATA = Path('./measurements', const_machine_model, 'data') 
+        FILE_PATH_DATA = Path('./measurements', dataset, 'data') 
 
         # File path for storing pictures
-        FILE_PATH_PICS = Path('./measurements', const_machine_model, 'pictures')
+        FILE_PATH_PICS = Path('./measurements', dataset, 'pictures')
 
         # create measurement date directory
-        SUB_DIR_DATA = "{}-{}-{}-{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE)
+        SUB_DIR_DATA = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
 
         # construct the file names of the results
-        nn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'nn-results','csv')
-        classic_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'classic-results','csv')
-        autosklearn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'autosklearn-results', 'csv')
-        autogluon_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'autogluon-results', 'csv')
-        flaml_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'flaml-results', 'csv')
+        nn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'nn-results','csv')
+        classic_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'classic-results','csv')
+        autosklearn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autosklearn-results', 'csv')
+        autogluon_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autogluon-results', 'csv')
+        flaml_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'flaml-results', 'csv')
 
         # init data frames
         nn_results = pd.DataFrame()
@@ -117,28 +117,28 @@ def document_results_docx(const_machine_models: list,
         for measurement in range(NUM_OF_MEASUREMENTS):
 
             # get nn results
-            NN_FILE_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'data', SUB_DIR_DATA, str(measurement + 1), nn_result_filename)
+            NN_FILE_PATH = Path(REPO_PATH, 'measurements', dataset, 'data', SUB_DIR_DATA, str(measurement + 1), nn_result_filename)
             if NN_FILE_PATH.is_file():
                 nn_results = load_csv_data(NN_FILE_PATH)
 
             # get classical results
-            CLASSIC_FILE_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'data', SUB_DIR_DATA, str(measurement + 1), classic_result_filename)
+            CLASSIC_FILE_PATH = Path(REPO_PATH, 'measurements', dataset, 'data', SUB_DIR_DATA, str(measurement + 1), classic_result_filename)
             if CLASSIC_FILE_PATH.is_file():
                 classic_results = load_csv_data(CLASSIC_FILE_PATH)
 
             # get autosklearn results
-            AUTOSKLEARN_FILE_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'data', SUB_DIR_DATA, str(measurement + 1), autosklearn_result_filename)
+            AUTOSKLEARN_FILE_PATH = Path(REPO_PATH, 'measurements', dataset, 'data', SUB_DIR_DATA, str(measurement + 1), autosklearn_result_filename)
             if AUTOSKLEARN_FILE_PATH.is_file():
                 autosklearn_results = load_csv_data(AUTOSKLEARN_FILE_PATH)
 
 
             # get autogluon results
-            AUTOGLUON_FILE_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'data', SUB_DIR_DATA, str(measurement + 1), autogluon_result_filename)
+            AUTOGLUON_FILE_PATH = Path(REPO_PATH, 'measurements', dataset, 'data', SUB_DIR_DATA, str(measurement + 1), autogluon_result_filename)
             if AUTOGLUON_FILE_PATH.is_file():
                 autogluon_results = load_csv_data(AUTOGLUON_FILE_PATH)
 
             # get flaml results
-            FLAML_FILE_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'data', SUB_DIR_DATA, str(measurement + 1), flaml_result_filename)
+            FLAML_FILE_PATH = Path(REPO_PATH, 'measurements', dataset, 'data', SUB_DIR_DATA, str(measurement + 1), flaml_result_filename)
             if FLAML_FILE_PATH.is_file():
                 flaml_results = load_csv_data(FLAML_FILE_PATH)
 
@@ -222,42 +222,42 @@ def document_results_docx(const_machine_models: list,
         # Display R2 results
         ################################
 
-        add_results_heading(document, f"R2 results for {const_machine_model}", HEADING_2_LEVELS)
+        add_results_heading(document, f"R2 results for {dataset}", HEADING_2_LEVELS)
         # r2_result_df = get_results_values("R2", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, r2_result_df, "R2", TABLE_FONT_SIZE)
-        add_bar_plot(document, r2_result_df, "R2", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
-        # add_line_plot(document, r2_result_df, "R2", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
+        add_bar_plot(document, r2_result_df, "R2", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
+        # add_line_plot(document, r2_result_df, "R2", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
         document.add_page_break()
 
         #######################
         # Display MAE results
         #######################
 
-        add_results_heading(document, f"MAE results for {const_machine_model}", HEADING_2_LEVELS)
+        add_results_heading(document, f"MAE results for {dataset}", HEADING_2_LEVELS)
         # mae_result_df = get_results_values("MAE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, mae_result_df, "MAE", TABLE_FONT_SIZE)
-        add_bar_plot(document, mae_result_df, "MAE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
-        # add_line_plot(document, mae_result_df, "MAE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
+        add_bar_plot(document, mae_result_df, "MAE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
+        # add_line_plot(document, mae_result_df, "MAE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
         document.add_page_break()
 
         #######################
         # Display MAPE results
         #######################
-        add_results_heading(document, f"MAPE results for {const_machine_model}", HEADING_2_LEVELS)
+        add_results_heading(document, f"MAPE results for {dataset}", HEADING_2_LEVELS)
         # mape_result_df = get_results_values("MAPE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, mape_result_df, "MAPE", TABLE_FONT_SIZE)
-        add_bar_plot(document, mape_result_df, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
-        # add_line_plot(document, mape_result_df, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
+        add_bar_plot(document, mape_result_df, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
+        # add_line_plot(document, mape_result_df, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
 
         #######################
         # Display scatter plot for MAPE results
         #######################
         # construct file / path to save the scatter plot
-        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE)
-        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,f'MAPE-scatter-plot', 'png')
-        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,f'MAPE-scatter-plot', 'pdf')
-        CHART_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
-        CHART_PDF_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'pictures',sub_dir, pdf_filename)
+        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
+        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'MAPE-scatter-plot', 'png')
+        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'MAPE-scatter-plot', 'pdf')
+        CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
+        CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
         # calculate min and max values for scaling the plot
         score_col_name_max, score_row_name_max, max_value =  get_max_values(scatter_r2_mape_result_df) # get max value for scaling the plot
@@ -268,7 +268,7 @@ def document_results_docx(const_machine_models: list,
         # 2. groupby the name of the algorithms and gather the results in a list
         sc_mape = sc1.groupby('names').agg(lambda x: list(x))
 
-        plot_feature_performance(sc_mape, "MAPE", CHART_PATH, CHART_PDF_PATH, max_value, min_value, const_machine_model, document, PICTURE_SIZE)
+        plot_feature_performance(sc_mape, "MAPE", CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, PICTURE_SIZE)
 
         document.add_page_break()
 
@@ -276,11 +276,11 @@ def document_results_docx(const_machine_models: list,
         # Display RMSE results
         #######################
 
-        add_results_heading(document, f"RMSE results for {const_machine_model}", HEADING_2_LEVELS)
+        add_results_heading(document, f"RMSE results for {dataset}", HEADING_2_LEVELS)
         # rmse_result_df = get_results_values("RMSE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, rmse_result_df, "RMSE", TABLE_FONT_SIZE)
-        add_bar_plot(document, rmse_result_df, "RMSE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
-        # add_line_plot(document, rmse_result_df, "RMSE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
+        add_bar_plot(document, rmse_result_df, "RMSE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
+        # add_line_plot(document, rmse_result_df, "RMSE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
 
         document.add_page_break()
 
@@ -288,7 +288,7 @@ def document_results_docx(const_machine_models: list,
         # Display training duration
         ################################
 
-        add_results_heading(document, f"Training run-time of each method and feature subset in seconds for {const_machine_model}", HEADING_2_LEVELS)
+        add_results_heading(document, f"Training run-time of each method and feature subset in seconds for {dataset}", HEADING_2_LEVELS)
 
         # ----------------
         # construct table
@@ -324,17 +324,17 @@ def document_results_docx(const_machine_models: list,
                         font.size= Pt(TABLE_FONT_SIZE)
 
         # Add duration line plot
-        # add_duration_line_plot(document, training_duration_df, "Training-Duration", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
+        # add_duration_line_plot(document, training_duration_df, "Training-Duration", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
 
         #######################
         # Display scatter plot for training duration
         #######################
         # construct file / path to save the scatter plot
-        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE)
-        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,f'Training-duration-scatter-plot', 'png')
-        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,f'Training-duration-scatter-plot', 'pdf')
-        CHART_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
-        CHART_PDF_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'pictures',sub_dir, pdf_filename)
+        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
+        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'Training-duration-scatter-plot', 'png')
+        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'Training-duration-scatter-plot', 'pdf')
+        CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
+        CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
         # calculate min and max values for scaling the plot
         score_col_name_max, score_row_name_max, max_value =  get_max_values(scatter_training_duration_result_df) # get max value for scaling the plot
@@ -345,7 +345,7 @@ def document_results_docx(const_machine_models: list,
         # 2. groupby the name of the algorithms and gather the results in a list
         sc_training = sc1.groupby('names').agg(lambda x: list(x))
         # print(sc)
-        plot_training_duration(sc_training, "MAPE", CHART_PATH, CHART_PDF_PATH, max_value, min_value, const_machine_model, document, PICTURE_SIZE)
+        plot_training_duration(sc_training, "MAPE", CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, PICTURE_SIZE)
 
         # document.add_page_break()
 
@@ -353,7 +353,7 @@ def document_results_docx(const_machine_models: list,
         # Display test duration
         ################################
 
-        add_results_heading(document, f"Prediction time of each method and feature subset in seconds for {const_machine_model}", HEADING_2_LEVELS)
+        add_results_heading(document, f"Prediction time of each method and feature subset in seconds for {dataset}", HEADING_2_LEVELS)
 
         # ----------------
         # construct table
@@ -389,17 +389,17 @@ def document_results_docx(const_machine_models: list,
                         font.size= Pt(TABLE_FONT_SIZE)
 
         # Add duration line plot
-        # add_duration_line_plot(document, testing_duration_df, "Prediction-Duration", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
+        # add_duration_line_plot(document, testing_duration_df, "Prediction-Duration", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
 
         #######################
         # Display scatter plot for testing duration
         #######################
         # construct file / path to save the scatter plot
-        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE)
-        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,f'Prediction-duration-scatter-plot', 'png')
-        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,f'Prediction-duration-scatter-plot', 'pdf')
-        CHART_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
-        CHART_PDF_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'pictures',sub_dir, pdf_filename)
+        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
+        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'Prediction-duration-scatter-plot', 'png')
+        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'Prediction-duration-scatter-plot', 'pdf')
+        CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
+        CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
 
         # calculate min and max values for scaling the plot
@@ -412,7 +412,7 @@ def document_results_docx(const_machine_models: list,
         sc_test = sc1.groupby('names').agg(lambda x: list(x))
         # print(sc)
         # print(sc.iloc[0][0])
-        plot_testing_duration(sc_test, "MAPE", CHART_PATH, CHART_PDF_PATH, max_value, min_value, const_machine_model, document, PICTURE_SIZE)
+        plot_testing_duration(sc_test, "MAPE", CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, PICTURE_SIZE)
 
         document.add_page_break()
 
@@ -423,11 +423,11 @@ def document_results_docx(const_machine_models: list,
         mev_df = calculate_mev_values(mape_result_df,training_duration_df, testing_duration_df, config)
 
          # construct file / path to save the scatter plot
-        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE)
-        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,f'MEV-scatter-plot', 'png')
-        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,f'MEV-scatter-plot', 'pdf')
-        CHART_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
-        CHART_PDF_PATH = Path(REPO_PATH, 'measurements', const_machine_model, 'pictures',sub_dir, pdf_filename)
+        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
+        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'MEV-scatter-plot', 'png')
+        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'MEV-scatter-plot', 'pdf')
+        CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
+        CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
 
         # calculate min and max values for scaling the plot
@@ -442,7 +442,7 @@ def document_results_docx(const_machine_models: list,
         mev_df = mev_df.reindex(['autogluon', 'autosklearn', 'classic', 'flaml', 'nn'])
         # print(mev_df)
 
-        plot_mev(mev_df, CHART_PATH, CHART_PDF_PATH, max_value, min_value, const_machine_model, document, PICTURE_SIZE)
+        plot_mev(mev_df, CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, PICTURE_SIZE)
 
         #######################
         # calculate standart deviation for the MAPA measurements 
@@ -467,7 +467,7 @@ def document_results_docx(const_machine_models: list,
         # Display MAPE box plot for best feature-set combination
         #####################
         add_results_heading(document, f"Boxplot for MAPE results for {best_mev_feature_set} feature set.", HEADING_2_LEVELS)
-        add_box_plot2(document, best_res_mape, best_mev_feature_set, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, const_machine_model, REPO_PATH, PICTURE_SIZE)
+        add_box_plot2(document, best_res_mape, best_mev_feature_set, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
 
         #######################
         # Calculate standart deviation for the training runtime measurements 
@@ -513,7 +513,7 @@ def document_results_docx(const_machine_models: list,
 
         if not classic_results.empty:
 
-            add_results_heading(document, f"Best classical model for {const_machine_model}", HEADING_2_LEVELS)
+            add_results_heading(document, f"Best classical model for {dataset}", HEADING_2_LEVELS)
 
             # extract the column name with the maximal R2 score
             max_col_values = classic_results.loc[ 'Test-R2', :]
@@ -560,7 +560,7 @@ def document_results_docx(const_machine_models: list,
 
         if not nn_results.empty:
 
-            add_results_heading(document, f"Best NN parameter set for {const_machine_model}", HEADING_2_LEVELS)
+            add_results_heading(document, f"Best NN parameter set for {dataset}", HEADING_2_LEVELS)
 
             # extract the column name with the maximal R2 score
             max_col_values = nn_results.loc[ 'Test-R2', :]
@@ -607,10 +607,10 @@ def document_results_docx(const_machine_models: list,
         rmse_col_name_min, rmse_row_name_min, min_value =  get_min_values(rmse_result_df)
 
         # File path for stored leaderboards
-        leaderboards_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE)
-        best_leaderboard_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'autosklearn-leaderboard',rmse_col_name_min, 'csv')
-        FILE_PATH_LEADERBOARD = Path(REPO_PATH, 'measurements', const_machine_model, 'data', leaderboards_dir, best_leaderboard_file)
-        FILE_PATH_LEADERBOARD_STR = str(Path(REPO_PATH, 'measurements', const_machine_model, 'data', leaderboards_dir, best_leaderboard_file))
+        leaderboards_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
+        best_leaderboard_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autosklearn-leaderboard',rmse_col_name_min, 'csv')
+        FILE_PATH_LEADERBOARD = Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file)
+        FILE_PATH_LEADERBOARD_STR = str(Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file))
 
         print(FILE_PATH_LEADERBOARD_STR)
 
@@ -666,10 +666,10 @@ def document_results_docx(const_machine_models: list,
         #################################
 
         # File path for stored leaderboards
-        leaderboards_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE)
-        best_leaderboard_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'autogluon-leaderboard',rmse_col_name_min, 'csv')
-        FILE_PATH_LEADERBOARD = Path(REPO_PATH, 'measurements', const_machine_model, 'data', leaderboards_dir, best_leaderboard_file)
-        FILE_PATH_LEADERBOARD_STR = str(Path(REPO_PATH, 'measurements', const_machine_model, 'data', leaderboards_dir, best_leaderboard_file))
+        leaderboards_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
+        best_leaderboard_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autogluon-leaderboard',rmse_col_name_min, 'csv')
+        FILE_PATH_LEADERBOARD = Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file)
+        FILE_PATH_LEADERBOARD_STR = str(Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file))
 
         # check if leaderboard file for autogluon exists
         if FILE_PATH_LEADERBOARD.is_file():
@@ -721,30 +721,30 @@ def document_results_docx(const_machine_models: list,
         ############################
         # Display test result chars
         ############################
-        # add_results_heading(document, f"Test results for {const_machine_model}", HEADING_2_LEVELS)
+        # add_results_heading(document, f"Test results for {dataset}", HEADING_2_LEVELS)
 
         # # Calculate the min value for RMSE and the corresponding column and index names
         # rmse_location, rmse_method, rmse_min_value = get_min_values(rmse_result_df)
         # rmse_location, rmse_method, rmse_min_value
 
         # # File path for storing pictures
-        # best_result_picture_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE)
-        # FILE_PATH_PICS = Path(REPO_PATH, 'measurements', const_machine_model, 'pictures', best_result_picture_dir)
+        # best_result_picture_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
+        # FILE_PATH_PICS = Path(REPO_PATH, 'measurements', dataset, 'pictures', best_result_picture_dir)
         # if rmse_method == 'autosklearn':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'autosklearn-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autosklearn-test-result',rmse_location, 'png')
         # elif rmse_method == 'autogluon':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'autogluon-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autogluon-test-result',rmse_location, 'png')
         # elif rmse_method == 'nn':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'nn-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'nn-test-result',rmse_location, 'png')
         # elif rmse_method == 'classic':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'classic-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'classic-test-result',rmse_location, 'png')
         # elif rmse_method == 'flaml':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, const_machine_model,'final',INPUT_FILE_CREATION_DATE,'flaml-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'flaml-test-result',rmse_location, 'png')
         # else:
         #     print('Failure in displaying the best result')
 
         #  # get the plots from the first '1' measurement
-        # FILE_PATH_PICS = str(Path(REPO_PATH, 'measurements', const_machine_model, 'pictures', best_result_picture_dir, '1', best_result_picture_file))
+        # FILE_PATH_PICS = str(Path(REPO_PATH, 'measurements', dataset, 'pictures', best_result_picture_dir, '1', best_result_picture_file))
 
         # listOfImageNames = [FILE_PATH_PICS]
         # for imageName in listOfImageNames:
@@ -754,7 +754,7 @@ def document_results_docx(const_machine_models: list,
         # Display best results
         #######################
 
-        add_results_heading(document, f"Best results for {const_machine_model}", HEADING_2_LEVELS)
+        add_results_heading(document, f"Best results for {dataset}", HEADING_2_LEVELS)
 
         # create resulting data frame
         result_df_index = ['Feature-Set', 'Method', 'Value']
@@ -769,7 +769,7 @@ def document_results_docx(const_machine_models: list,
         result_df['CV-RMSE'] = get_min_values(cvrmse_result_df)
 
         # store resulting dataframe
-        filename = "{}-{}-{}.{}".format(M_DATE, const_machine_model, 'best-results','csv')
+        filename = "{}-{}-{}.{}".format(M_DATE, dataset, 'best-results','csv')
         RESULT_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
         result_df.to_csv(str(RESULT_SUMMERY_FILE))
 
@@ -819,8 +819,8 @@ def document_results_docx(const_machine_models: list,
     best_result_df = pd.DataFrame()
 
     # iterate through all construction machine models
-    for const_machine_model in const_machine_models:
-        filename = "{}-{}-{}.{}".format(M_DATE, const_machine_model, 'best-results','csv')
+    for dataset in datasets:
+        filename = "{}-{}-{}.{}".format(M_DATE, dataset, 'best-results','csv')
         RESULT_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
 
         results = load_csv_data(RESULT_SUMMERY_FILE)
@@ -828,7 +828,7 @@ def document_results_docx(const_machine_models: list,
         # Extract Values row for results.
         value_results = results.loc[ 'Value' , : ]
         best_result_df = pd.concat([best_result_df, pd.DataFrame.from_records([value_results])])
-        best_result_df = best_result_df.rename(index={0: str(const_machine_model)})
+        best_result_df = best_result_df.rename(index={0: str(dataset)})
 
     
     #------------------------
@@ -860,49 +860,49 @@ def document_results_docx(const_machine_models: list,
 ###############################
 # FOR MANUAL DOCUMENT CREATION
 ###############################
-# # const_machine_models = ['Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar-329', 'Caterpillar-330', 'Caterpillar-336', 'Caterpillar-950', 'Caterpillar-966', 'Caterpillar-D6', 'Caterpillar-M318']
-# const_machine_models = ['merged-files']
-# # const_machine_models = ['Caterpillar-950', 'Caterpillar-966']
-# # const_machine_models = ['Caterpillar-323']
-# # get cuttent date
-# today = date.today()
-# # # YY-mm-dd
-# m_date = today.strftime("%Y-%m-%d")
+# datasets = ['Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar-329', 'Caterpillar-330', 'Caterpillar-336', 'Caterpillar-950', 'Caterpillar-966', 'Caterpillar-D6', 'Caterpillar-M318']
+datasets = ['merged-files']
+# datasets = ['Caterpillar-950', 'Caterpillar-966']
+# datasets = ['Caterpillar-323']
+# get cuttent date
+today = date.today()
+# # YY-mm-dd
+m_date = today.strftime("%Y-%m-%d")
 
-# # DELETE after testing
-# m_date = '2023-02-16'
+# DELETE after testing
+m_date = '2023-02-28'
 
-# # create summery yaml file
-# # File path within the summery directory for each measurement
-# EXPLICIT_SUMMERY_FILE_PATH = Path('./measurements', 'summery', m_date)
+# create summery yaml file
+# File path within the summery directory for each measurement
+EXPLICIT_SUMMERY_FILE_PATH = Path('./measurements', 'summery', m_date)
 
-# filename = "{}-{}.{}".format(m_date,'summery','yml')
-# GLOBAL_YAML_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
+filename = "{}-{}.{}".format(m_date,'summery','yml')
+GLOBAL_YAML_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
 
-# ######################################
-# # LOAD CONFIGURATIONS
-# ######################################
-# REPO_PATH = Path(__file__).parents[1]
+######################################
+# LOAD CONFIGURATIONS
+######################################
+REPO_PATH = Path(__file__).parents[1]
 
-# # Load configuration files
-# general_conf = read_yaml(REPO_PATH / 'conf/general_config.yml')
-# model_conf = read_yaml(REPO_PATH / 'conf/model_config.yml')
-# autosklearn_conf = read_yaml(REPO_PATH / 'conf/auto_sklearn_config.yml')
+# Load configuration files
+general_conf = read_yaml(REPO_PATH / 'conf/general_config.yml')
+feature_conf = read_yaml(REPO_PATH / 'conf/feature_config.yml')
+autosklearn_conf = read_yaml(REPO_PATH / 'conf/auto_sklearn_config.yml')
 
-# # Create global configuration file
-# CFG = dict()
-# CFG["general"] = general_conf
-# CFG["model"] = model_conf
-# CFG["autosklearn"] = autosklearn_conf
+# Create global configuration file
+CFG = dict()
+CFG["general"] = general_conf
+CFG["features"] = feature_conf
+CFG["autosklearn"] = autosklearn_conf
 
-# # CFG["general"]["start_date"] = get_current_date()
-# CFG["general"]["start_date"] = m_date
+# CFG["general"]["start_date"] = get_current_date()
+CFG["general"]["start_date"] = m_date
 
-# NUM_OF_MEASUREMENTS = 5
+NUM_OF_MEASUREMENTS = 1
 
-# # document_results_docx(const_machine_models,m_date, GLOBAL_YAML_SUMMERY_FILE, EXPLICIT_SUMMERY_FILE_PATH)
-# document_results_docx(const_machine_models,
-#                               NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
-#                               GLOBAL_YAML_SUMMERY_FILE = GLOBAL_YAML_SUMMERY_FILE, 
-#                               EXPLICIT_SUMMERY_FILE_PATH = EXPLICIT_SUMMERY_FILE_PATH, 
-#                               config = CFG)
+# document_results_docx(datasets,m_date, GLOBAL_YAML_SUMMERY_FILE, EXPLICIT_SUMMERY_FILE_PATH)
+document_results_docx(datasets,
+                              NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
+                              GLOBAL_YAML_SUMMERY_FILE = GLOBAL_YAML_SUMMERY_FILE, 
+                              EXPLICIT_SUMMERY_FILE_PATH = EXPLICIT_SUMMERY_FILE_PATH, 
+                              config = CFG)

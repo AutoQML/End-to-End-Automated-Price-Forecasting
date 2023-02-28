@@ -104,7 +104,7 @@ def evaluate_data(dataset: str,
     """
 
 
-    # assign construction machine model
+    # assign dataset
     DATASET = dataset
     NUM_OF_MEASUREMENT = measurement
     GLOBAL_TXT_SUMMERY_FILE = GLOBAL_TXT_SUMMERY_FILE
@@ -125,7 +125,7 @@ def evaluate_data(dataset: str,
     # set path to CSV data files 
     FILE_PATH_IN = Path(REPO_PATH, 'data', DATASET)
 
-    # Get all CSV files for the current construction machine model
+    # Get all CSV files for the current dataset
     list_of_files = FILE_PATH_IN.glob('*.csv')
 
     # get the most up-to-date file
@@ -149,7 +149,7 @@ def evaluate_data(dataset: str,
     working_file = latest_file
 
     # load the data
-    machine_type = load_csv_data(working_file)
+    dataset_df = load_csv_data(working_file)
 
     # extract filename
     FILE_PATH_IN = str(FILE_PATH_IN)
@@ -164,12 +164,12 @@ def evaluate_data(dataset: str,
     with open(GLOBAL_TXT_SUMMERY_FILE, "a") as f:
         f.write("Input file for " + 
                 DATASET + ": " + input_filename_with_type + 
-                " with size: " + str(len(machine_type)) + 
+                " with size: " + str(len(dataset_df)) + 
                 " created: " + str(file_creation_date) + "\n")
         
     # Delete unnamed / index column
-    if set(['Unnamed: 0']).issubset(machine_type.columns):
-        machine_type = machine_type.drop('Unnamed: 0', axis=1)
+    if set(['Unnamed: 0']).issubset(dataset_df.columns):
+        dataset_df = dataset_df.drop('Unnamed: 0', axis=1)
 
     ######################################
     # CREATE PATHS
@@ -215,10 +215,10 @@ def evaluate_data(dataset: str,
             f.write("Summery for: \n" + input_filename_without_type + "\n")
         # print("Summery file " , SUMMERY_FILE ,  " already exists")
 
-    # store machine_type.head() as csv
+    # store dataset_df.head() as csv
     filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'head','csv')
     OVERVIEW_CSV = Path(FILE_PATH_DATA, filename)
-    machine_type.head(20).to_csv(OVERVIEW_CSV)
+    dataset_df.head(20).to_csv(OVERVIEW_CSV)
 
     ######################################
     # CREATE & SAVE PLOTS
@@ -227,7 +227,7 @@ def evaluate_data(dataset: str,
     FILE_PATH_PICS = str(FILE_PATH_PICS)
 
     # Histogram
-    machine_type.hist(bins=40, figsize=(10,7))
+    dataset_df.hist(bins=40, figsize=(10,7))
     filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'histogram','png')
     title = str("Histogram for {}".format(input_filename_without_type))
     plt.title(title)
@@ -235,7 +235,7 @@ def evaluate_data(dataset: str,
     plt.close()
 
     # Construction year vs. Price scatter plot
-    machine_type.plot(kind='scatter', x='const_year', y='price', figsize=(10,7))
+    dataset_df.plot(kind='scatter', x='const_year', y='price', figsize=(10,7))
     filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'year-price','png')
     title = str("Year / price for {}".format(input_filename_without_type))
     plt.title(title)
@@ -243,7 +243,7 @@ def evaluate_data(dataset: str,
     plt.close()
 
     # Working hours vs. Price scatter plot
-    machine_type.plot(kind='scatter', x='working_hours', y='price', figsize=(10,7))
+    dataset_df.plot(kind='scatter', x='working_hours', y='price', figsize=(10,7))
     filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'hours-price','png')
     title = str("Hours / price for {}".format(input_filename_without_type))
     plt.title(title)
@@ -254,7 +254,7 @@ def evaluate_data(dataset: str,
     # CALCULATE AND SAVE STATS OF INPUT FILE
     ###################################
 
-    calculate_stats(df = machine_type, 
+    calculate_stats(df = dataset_df, 
                     dataset = DATASET,
                     filename = input_filename_with_type,  
                     creation_date = file_creation_date,
@@ -266,7 +266,7 @@ def evaluate_data(dataset: str,
 
     # Plot the date after sanity check and cleanup
     # store working hours / price scatter plot
-    machine_type.plot(kind='scatter', x='working_hours', y='price', figsize=(10,7))
+    dataset_df.plot(kind='scatter', x='working_hours', y='price', figsize=(10,7))
     filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'hours-price-after-clean','png')
     title = str("Hours / price after clean for {}".format(input_filename_without_type))
     plt.title(title)
@@ -274,7 +274,7 @@ def evaluate_data(dataset: str,
     plt.close()
 
     # store construction year / price scatter plot
-    machine_type.plot(kind='scatter', x='const_year', y='price', figsize=(10,7))
+    dataset_df.plot(kind='scatter', x='const_year', y='price', figsize=(10,7))
     filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'year-price-after-clean','png')
     title = str("Year / price after clean for {}".format(input_filename_without_type))
     plt.title(title)
@@ -282,7 +282,7 @@ def evaluate_data(dataset: str,
     plt.close()
 
     # store construction year / working hours scatter plot
-    machine_type.plot(kind='scatter', x='const_year', y='working_hours', figsize=(10,7))
+    dataset_df.plot(kind='scatter', x='const_year', y='working_hours', figsize=(10,7))
     filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'year-hours-after-clean','png')
     title = str("Year / hours after clean for {}".format(input_filename_without_type))
     plt.title(title)
@@ -295,7 +295,8 @@ def evaluate_data(dataset: str,
 
     # call next function in the ML pipeline: prepare_data_for_ml()
 
-    prepare_data_for_ml(df_dataset = machine_type, 
+    prepare_data_for_ml(df_dataset = dataset_df,
+                        dataset_name = DATASET, 
                         file_path_pics = FILE_PATH_PICS, 
                         file_path_data = FILE_PATH_DATA, 
                         input_filename = input_filename_without_type, 

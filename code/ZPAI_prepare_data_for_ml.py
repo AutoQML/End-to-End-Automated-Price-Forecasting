@@ -9,20 +9,24 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 
 def features_pca(df: pd.DataFrame,
-                 pca_num: int) -> list:
+                 dataset_name: str,
+                 pca_num: int,
+                 config: dict) -> list:
     """
-    Gets the most important model-specific features.
+    Get the features for PCA. These are all remaining features (if any) after removing the basic and extended features (and the label).
 
-    For a given dataset, gets all the model-specific features: all features except for base features (model, extension, location, price, const_year and working_hours).
-    If there are more model-specific features than the given pca_num parameter, PCA analysis is performed to determine the pca_num most important model-specific features.
-    List with the name of the base features + name of the model-specific feature from the PCA analysis.
+    For a given dataset extract all features beside the basic and extended features.
+    If there are more remaining features than the given pca_num parameter, PCA analysis is performed to determine the pca_num most important remaining features.
 
     Parameters
     ----------
     df : pd.DataFrame
         DataFrame of the dataset.
     pca_num : int
-        Number of model-specific features.
+        Number of features after PCA processing.
+
+    config: dict
+        configuration dict
 
     Returns
     -------
@@ -30,18 +34,20 @@ def features_pca(df: pd.DataFrame,
         List of columns selected after the PCA analysis.
 
     """
-    if 'model' in df.columns:
-        # extract price column, const_year & working_hours columns from dataset before combinatorial processing - these features are fixed for all combinations
-        df_temp = df.drop(['model','price', 'const_year', 'working_hours'], axis=1)
+    BASIC_SUBSET = config["features"][dataset_name]["basic_subset"]
+    LABEL = config["features"][dataset_name]["label"]
+    EXTENDET_FEATURES = config["features"][dataset_name]["extended_features"]
 
-        # DataFrame for PCA only with model-specific features
-        df_pca = df.drop(['model','extension', 'location', 'price', 'const_year', 'working_hours'], axis=1)
-    else:
-        df_temp = df.drop(['price', 'const_year', 'working_hours'], axis=1)
-        df_pca = df.drop(['extension', 'location', 'price', 'const_year', 'working_hours'], axis=1)
+    # drop basic subset + label from dataset before combinatorial processing - these features are fixed for all combinations
+    tmp_feature_set = BASIC_SUBSET + LABEL
+    df_temp = df.drop(tmp_feature_set, axis=1)
+
+    # drop basic subset + label + extended features from dataset for PCA calculation
+    tmp_feature_set_pca = tmp_feature_set + EXTENDET_FEATURES
+    df_pca = df.drop(tmp_feature_set_pca, axis=1)
 
     feature_list_important = []
-    # Select the most important PCA_NUM features beside 'extension', 'location', 'const_year' & 'working_hours' by PCA
+    # Select the most important PCA_NUM features beside basic and extended features by PCA
     if(len(df_pca.columns) > pca_num):
 
         pca = PCA(n_components=pca_num).fit(df_pca)
@@ -67,7 +73,7 @@ def features_pca(df: pd.DataFrame,
 
     return column_names
 
-def build_dataset_from_subset(df_original: pd.DataFrame, subset: tuple):
+def build_dataset_from_subset(df_original: pd.DataFrame, dataset_name: str, subset: tuple, config: dict):
     """
     Creates subset of dataset.
 
@@ -88,6 +94,11 @@ def build_dataset_from_subset(df_original: pd.DataFrame, subset: tuple):
         String with the name of the subset.
 
     """
+
+    BASIC_SUBSET = config["features"][dataset_name]["basic_subset"]
+    LABEL = config["features"][dataset_name]["label"]
+    EXTENDET_FEATURES = config["features"][dataset_name]["extended_features"]
+
     # extract the feature (name) combinations - name of the columns of the result.csv file
     feature_set = "-".join([str(x) for x in subset])
     if not feature_set:
@@ -95,12 +106,8 @@ def build_dataset_from_subset(df_original: pd.DataFrame, subset: tuple):
 
     # rebuild the column list
     col_list = list(subset)
-    col_list.append('price')
-    col_list.append('const_year')
-    col_list.append('working_hours')
-
-    if "model" in df_original.columns:
-        col_list.append('model')
+    tmp_feature_set = BASIC_SUBSET + LABEL
+    col_list = col_list + tmp_feature_set
 
     df_subset = df_original[col_list].copy()
 
@@ -110,7 +117,7 @@ def encode_categorical_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     Encodes categorical features as one-hot encoding.
 
-    Checks if a categorical feature (location, extension or model) exists in the given dataset.
+    Checks for categorical features in the given dataset.
     If categorical features exists, features are encoded based on one-hot encoding.
 
     Parameters
@@ -124,14 +131,9 @@ def encode_categorical_features(df: pd.DataFrame) -> pd.DataFrame:
         DataFrame containing the dataset with encoded categorical features.
 
     """
-    col_list = df.columns
-    categorical_cols =[]
-    if 'location' in col_list:
-        categorical_cols.append('location')
-    if 'extension' in col_list:
-        categorical_cols.append('extension')
-    if 'model' in col_list:
-        categorical_cols.append('model')
+    # get categorical features
+    categorical_cols = df.select_dtypes(include=['object','category']).columns.tolist()
+    # print('--Cat feature list: ', categorical_cols)
 
     if categorical_cols:
         df_encoded = pd.get_dummies(df, columns=categorical_cols) # Preprocess categorical attributes
@@ -142,6 +144,7 @@ def encode_categorical_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def prepare_data_for_ml(df_dataset: pd.DataFrame,
+                        dataset_name: str,
                         file_path_pics: str,
                         file_path_data: str,
                         input_filename: str,
@@ -164,7 +167,7 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
     Parameters
     ----------
     dataset : str
-        Name of the current machine model.
+        Name of the current dataset.
     df_dataset : pd.DataFrame
         Dataset to be processed.
     file_path_pics : str
@@ -243,7 +246,9 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
     ###########################
 
     column_names = features_pca(df = df_dataset,
-                                pca_num = PCA_NUM)
+                                dataset_name = dataset_name,
+                                pca_num = PCA_NUM,
+                                config = config)
 
     # combinatorial walk through all possible combinations of the features / feature columns
     for L in range(0, len(column_names)+1):
@@ -258,13 +263,15 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
 
             # create datasets with different feature set combinations
             df_dataset_subset, feature_set = build_dataset_from_subset(df_original = df_dataset,
-                                                                       subset = subset)
+                                                                       dataset_name = dataset_name,
+                                                                       subset = subset,
+                                                                       config = config)
 
             ###########################
             # Encoding
             ###########################
             # Encode categorical attributes
-            df_dataset_subset_encoded = encode_categorical_features(df = df_dataset_subset) # Encode location and extension
+            df_dataset_subset_encoded = encode_categorical_features(df = df_dataset_subset) # Encode categorical features
             df_dataset_preprocessed = df_dataset_subset_encoded.astype(int) # Numerical values as int
 
             # calculate the number of columns without the price column (therfore  -1)
