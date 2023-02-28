@@ -35,7 +35,7 @@ then
     echo 'macOS'
     if [ $CONDA_DEFAULT_ENV == "automl-autosklearn" ]
     then
-        python code/ZPAI_main.py --start_date $START_DATE --algorithms nn --datasets merged --measurements 1 --document_results True
+        python code/ZPAI_main.py --start_date $START_DATE --algorithms nn --datasets merged-files --measurements 1 --document_results True
     fi
 fi
 

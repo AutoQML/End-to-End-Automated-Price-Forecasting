@@ -4,3 +4,9 @@ merged-files:
   basic_subset: ['model', 'working_hours', 'const_year'] # this is the basic subset
   extended_features: ['extension', 'location'] # features that should be within the combinatorial
   label: ['price'] # label
+
+Caterpillar-320: 
+  # feature_list: ['extension', 'location', 'working_hours', 'const_year', 'price'] # complete feature list
+  basic_subset: ['working_hours', 'const_year'] # this is the basic subset
+  extended_features: ['extension', 'location'] # features that should be within the combinatorial
+  label: ['price'] # label

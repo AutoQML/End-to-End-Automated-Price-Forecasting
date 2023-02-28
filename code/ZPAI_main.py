@@ -12,7 +12,8 @@ def create_parser():
     parser = argparse.ArgumentParser(description="Process inputs")
     parser.add_argument("--pca", type = int, help = "Number of selected PCA components")
     parser.add_argument("--algorithms", choices = ["classical", "nn", "autosklearn", "autogluon", "flaml"], nargs="*", help = "Type of algorithms to run.")
-    parser.add_argument("--datasets", choices = ['merged'], nargs="*", help = "Selected datasets list")
+    # parser.add_argument("--datasets", choices = ['merged', '320'], nargs="*", help = "Selected datasets list")
+    parser.add_argument("--datasets", type = str, help = "Selected datasets list")
     parser.add_argument("--outlier_detection", choices = ["True", "False"], help = "Remove outliers from dataset")
     parser.add_argument("--document_results", choices = ["True", "False"], help = "Document the results")
     parser.add_argument("--autosk_time_for_task", type = int, help = "Time limit in seconds for the search of appropriate models")
@@ -30,13 +31,15 @@ def get_config_from_parser(parser, config):
 
     # List of datasets
     if args.datasets:
-        if "merged" in args.datasets:
-            config["general"]['datasets'] = ["merged-files"]
-        # elif "all" in args.models:
-        #     config["model"]["model"]["model_list"] = ['Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar-329', 'Caterpillar-330', 'Caterpillar-336', 'Caterpillar-950', 'Caterpillar-966', 'Caterpillar-D6', 'Caterpillar-M318']
-        # else:
-        #     models_with_prefix = ["Caterpillar-" + model for model in args.models]
-        #     config["model"]["model"]["model_list"] = models_with_prefix
+        config["general"]['datasets'] = args.datasets
+    # if args.datasets:
+    #     if "merged" in args.datasets:
+    #         config["general"]['datasets'] = ["merged-files"]
+    #     # elif "all" in args.models:
+    #     #     config["model"]["model"]["model_list"] = ['Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar-329', 'Caterpillar-330', 'Caterpillar-336', 'Caterpillar-950', 'Caterpillar-966', 'Caterpillar-D6', 'Caterpillar-M318']
+    #     else:
+    #         models_with_prefix = ["Caterpillar-" + model for model in args.datasets]
+    #         config["model"]["model"]["model_list"] = models_with_prefix
 
     # Algorithms
     if args.algorithms:
