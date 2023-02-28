@@ -612,8 +612,6 @@ def document_results_docx(datasets: list,
         FILE_PATH_LEADERBOARD = Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file)
         FILE_PATH_LEADERBOARD_STR = str(Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file))
 
-        print(FILE_PATH_LEADERBOARD_STR)
-
         # check if leaderboard file for autosklearn exists
         if FILE_PATH_LEADERBOARD.is_file():
 
