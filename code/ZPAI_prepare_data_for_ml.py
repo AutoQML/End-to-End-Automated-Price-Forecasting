@@ -200,6 +200,10 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
     PYTHON_ENV = config["general"]["python_env"]
     AUTOML_PREPROCESS = config["general"]["automl_preprocessing"]
 
+    BASIC_SUBSET = config["features"][dataset_name]["basic_subset"]
+    LABEL = config["features"][dataset_name]["label"][0] # extract the first element out of the list -> the string is needed!
+    EXTENDET_FEATURES = config["features"][dataset_name]["extended_features"]
+
     ##################
     # for testing
     ##################
@@ -267,6 +271,15 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
                                                                        subset = subset,
                                                                        config = config)
 
+            # Get the list of numerical features for standard scaling 
+            numerical_feature_list = df_dataset_subset.select_dtypes(include=['number']).columns.tolist()
+
+            # remove the label feature of the list of numerical features for standard scaling
+            if LABEL in numerical_feature_list:
+                numerical_feature_list.remove(LABEL)
+
+            print('---111---', numerical_feature_list)
+
             ###########################
             # Encoding
             ###########################
@@ -284,10 +297,10 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
             df_dataset_train, df_dataset_test = train_test_split(df_dataset_preprocessed,
                                                                  test_size=0.1,
                                                                  random_state=RANDOM_STATE)
-            df_dataset_X_train = df_dataset_train.drop('price', axis = 1)
-            df_dataset_y_train = df_dataset_train['price'].copy()
-            df_dataset_X_test = df_dataset_test.drop('price', axis = 1)
-            df_dataset_y_test = df_dataset_test['price'].copy()
+            df_dataset_X_train = df_dataset_train.drop(LABEL, axis = 1)
+            df_dataset_y_train = df_dataset_train[LABEL].copy()
+            df_dataset_X_test = df_dataset_test.drop(LABEL, axis = 1)
+            df_dataset_y_test = df_dataset_test[LABEL].copy()
 
             #####################
             # Scaling
@@ -295,7 +308,7 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
 
             # Build pipelines for preprocessing the attributes. Use sklearn Pipeline for pipelines and  sklearn StandardScaler for scaling the values of the attributes.
             full_pipeline = ColumnTransformer([
-                    ("num", StandardScaler(), ['working_hours', 'const_year'])
+                    ("num", StandardScaler(), numerical_feature_list)
                 ], remainder='passthrough')
 
             # Prepare the training data X_train
@@ -322,10 +335,10 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
             df_dataset_train_automl, df_dataset_test_automl = train_test_split(df_dataset_subset,
                                                                  test_size=0.1,
                                                                  random_state=RANDOM_STATE)
-            df_dataset_X_train_automl = df_dataset_train_automl.drop('price', axis = 1)
-            df_dataset_y_train_automl = df_dataset_train_automl['price'].copy()
-            df_dataset_X_test_automl = df_dataset_test_automl.drop('price', axis = 1)
-            df_dataset_y_test_automl = df_dataset_test_automl['price'].copy()
+            df_dataset_X_train_automl = df_dataset_train_automl.drop(LABEL, axis = 1)
+            df_dataset_y_train_automl = df_dataset_train_automl[LABEL].copy()
+            df_dataset_X_test_automl = df_dataset_test_automl.drop(LABEL, axis = 1)
+            df_dataset_y_test_automl = df_dataset_test_automl[LABEL].copy()
 
             # set preprocessed dataset for automl methods if configured
             if AUTOML_PREPROCESS == True:
