@@ -45,7 +45,7 @@ then
     echo 'linux'
     if [ $CONDA_DEFAULT_ENV == "automl-autosklearn" ]
     then
-        python code/ZPAI_main.py --start_date $START_DATE --algorithms classical nn autosklearn flaml --datasets merged --measurements 5 --autosk_time_for_task 1800 --autosk_runtime_limit 180 --document_results False
+        python code/ZPAI_main.py --start_date $START_DATE --algorithms classical nn autosklearn flaml --datasets Caterpillar-320 --measurements 2 --pca 2 --autosk_time_for_task 600 --autosk_runtime_limit 60 --document_results False
     fi
 
     conda deactivate
@@ -56,7 +56,7 @@ then
 
     if [ $CONDA_DEFAULT_ENV == "automl-autogluon" ]
     then
-        python code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets merged --measurements 5 --document_results True
+        python code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets Caterpillar-320 --measurements 2 --pca 2 --document_results True
     fi
 
     conda deactivate
