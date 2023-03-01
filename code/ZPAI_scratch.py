@@ -299,11 +299,11 @@ def plot_training_duration(score_result_df, score, CHART_PATH, CHART_PDF_PATH, m
 # Testing duration plot
 ###########################
     
-def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, const_machine_model: str, document, picture_size):
+def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, dataset: str, document, picture_size):
 
     MIN_VAL = min_value
     MAX_VAL = max_value
-    const_machine_model = const_machine_model
+    dataset = dataset
 
     # values: frameworks x dataset x repetitions
     rows = values.shape[1]
@@ -340,7 +340,7 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
         ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx],
                    **color)
 
-    graphics_title = f"MAPE-scores for {const_machine_model}"
+    graphics_title = f"MAPE-scores for {dataset}"
     # plt.title(graphics_title) # uncomment for publication
 
     ################
@@ -389,10 +389,10 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
 
     plt.close()
     
-def plot_testing_duration(score_result_df, score, CHART_PATH, CHART_PDF_PATH, max_value, min_value, const_machine_model, document, picture_size):
+def plot_testing_duration(score_result_df, score, CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, picture_size):
     max_value =  max_value
     min_value = min_value
-    const_machine_model = const_machine_model
+    dataset = dataset
 
     feature_set_names = list(score_result_df.columns.values) # get names of the feature sets
     # print(feature_set_names)
@@ -424,7 +424,7 @@ def plot_testing_duration(score_result_df, score, CHART_PATH, CHART_PDF_PATH, ma
         CHART_PDF_PATH,
         min_value,
         max_value,
-        const_machine_model,
+        dataset,
         document, 
         picture_size
 )
@@ -434,11 +434,11 @@ def plot_testing_duration(score_result_df, score, CHART_PATH, CHART_PDF_PATH, ma
 # MEV plot
 ###########################
     
-def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, const_machine_model: str, document, picture_size):
+def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, dataset: str, document, picture_size):
 
     MIN_VAL = min_value
     MAX_VAL = max_value
-    const_machine_model = const_machine_model
+    dataset = dataset
 
     # values: frameworks x dataset x repetitions
     rows = values.shape[1]
@@ -471,7 +471,7 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
         ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx],
                    **color)
 
-    graphics_title = f"MEV-scores for {const_machine_model}"
+    graphics_title = f"MEV-scores for {dataset}"
     # plt.title(graphics_title) # uncomment for publication
 
     ################
@@ -481,12 +481,8 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     labels = [item.get_text() for item in ax.get_yticklabels()]
     # Capitalize the first letters of the label names
     # labels = [label.capitalize() for label in labels]
-    # Replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels = [label.replace('extension', 'basic-subset +\nseries') for label in labels]
-    labels = [label.replace('location', 'basic-subset +\nlocation') for label in labels]
-    labels = [label.replace('series-basic-subset', 'series') for label in labels]
-    # replace 'nn' string by 'Neural Networkt' string
-    # labels = [label.replace('Nn', 'Neural Network') for label in labels]
+    # Add 'basic-subset' to all labels except tha basic-subset label
+    labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
     ax.set_yticklabels(labels)
 
@@ -512,7 +508,7 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     # fig.legend(handles, labels_txt, ncol=len(labels) // 2, loc='lower center', borderaxespad=1.0, fontsize=12)
     fig.legend(handles, labels_txt, ncol=5, loc='lower center', borderaxespad=1.9, fontsize=13)
 
-    plt.xlabel("Method evaluation value", fontsize=16)
+    plt.xlabel("Method evaluation score", fontsize=16)
     plt.ylabel("Feature combination", fontsize=16)
     # save grafics
     plt.savefig(CHART_PATH)
@@ -522,10 +518,10 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
 
     plt.close()
     
-def plot_mev(score_result_df, CHART_PATH, CHART_PDF_PATH, max_value, min_value, const_machine_model, document, picture_size):
+def plot_mev(score_result_df, CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, picture_size):
     max_value =  max_value
     min_value = min_value
-    const_machine_model = const_machine_model
+    dataset = dataset
 
     feature_set_names = list(score_result_df.columns.values) # get names of the feature sets
     # print(feature_set_names)
@@ -557,7 +553,7 @@ def plot_mev(score_result_df, CHART_PATH, CHART_PDF_PATH, max_value, min_value, 
         CHART_PDF_PATH,
         min_value,
         max_value,
-        const_machine_model,
+        dataset,
         document, 
         picture_size
 )
