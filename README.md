@@ -1,4 +1,4 @@
-# Benchmarking ML & AutoML methods for price forecasting applications
+# Benchmarking ML & AutoML methods with tabular data
 The presented framework examins and compares different ML and AutoML methods for predicting the price for used construction machines. 
 The data has been cleaned in advance and preprocessed (scaled and one-hot-encoded) for the ML methods.
 
