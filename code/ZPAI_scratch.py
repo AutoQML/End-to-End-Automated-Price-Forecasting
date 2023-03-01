@@ -19,11 +19,11 @@ from ZPAI_document_results_utility import get_min_values, get_max_values
 #     [0.19] # extension-XE-location
 # ]
 
-def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, const_machine_model: str, document, picture_size):
+def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, dataset: str, document, picture_size):
 
     MIN_VAL = min_value
     MAX_VAL = max_value
-    const_machine_model = const_machine_model
+    dataset = dataset
 
     # values: frameworks x dataset x repetitions
     rows = values.shape[1]
@@ -33,17 +33,24 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
 
     fig, ax = plt.subplots(1, 1, gridspec_kw={'wspace': 0.01, 'hspace': 0})
     fig.set_size_inches(a4_size)
+
+    plt.subplots_adjust(left=0.20)
+
     ax.set_frame_on(False)
     ax.grid(True, linewidth=0.5, alpha=0.25, color='black')
     ax.set_axisbelow(True)
     ax.set_yticks(np.arange(rows))
     # ax.set_xticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    ax.set_xticks(np.arange(0.0, 1.0, 0.01))
+    # set dynamic xticks steps
+    xticks_step_size_range = (MAX_VAL - MIN_VAL)
+    xticks_step_size = 0.1 if xticks_step_size_range > 0.2 else 0.01
+    ax.set_xticks(np.arange(0.0, 1.1, xticks_step_size))
+
     ax.tick_params(axis=u'both', which=u'both', length=0)
     ax.set_yticklabels(datasets)
     # ax.set_xlim([-0.05, 1.05])
     # ax.set_xlim([ 0.145, 0.255])
-    ax.set_xlim([MIN_VAL - 0.005, MAX_VAL + 0.005])
+    ax.set_xlim([MIN_VAL - xticks_step_size, MAX_VAL + xticks_step_size])
     ax.tick_params(axis='both', which='major', labelsize=14)
 
     y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
@@ -59,7 +66,7 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
         ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 0.33, alpha=0.45, linewidths=0, **color)
         ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx], **color)
 
-    graphics_title = f"MAPE-scores for {const_machine_model}"
+    graphics_title = f"MAPE-scores for {dataset}"
     # plt.title(graphics_title) # uncomment for publication
 
     ################
@@ -69,12 +76,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     labels = [item.get_text() for item in ax.get_yticklabels()]
     # Capitalize the first letters of the label names
     # labels = [label.capitalize() for label in labels]
-    # Replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels = [label.replace('extension', 'basic-subset +\nseries') for label in labels]
-    labels = [label.replace('location', 'basic-subset +\nlocation') for label in labels]
-    labels = [label.replace('series-basic-subset', 'series') for label in labels]
-    # replace 'nn' string by 'Neural Networkt' string
-    # labels = [label.replace('Nn', 'Neural Network') for label in labels]
+    # Add 'basic-subset' to all labels except tha basic-subset label
+    labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
     ax.set_yticklabels(labels)
 
@@ -97,10 +100,10 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
 
     fig.subplots_adjust(bottom=0.8 / rows)
-    # fig.legend(handles, labels_txt, ncol=len(labels) // 2, loc='lower center', borderaxespad=1.0, fontsize=12)
+    fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
-    fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Mean absolute percentage error", fontsize=16)
     plt.ylabel("Feature combination", fontsize=16)
@@ -112,10 +115,10 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
 
     plt.close()
 
-def plot_feature_performance(score_result_df, score, CHART_PATH, CHART_PDF_PATH, max_value, min_value, const_machine_model, document, picture_size):
+def plot_feature_performance(score_result_df, score, CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, picture_size):
     max_value =  max_value
     min_value = min_value
-    const_machine_model = const_machine_model
+    dataset = dataset
 
     feature_set_names = list(score_result_df.columns.values) # get names of the feature sets
     # print(feature_set_names)
@@ -147,7 +150,7 @@ def plot_feature_performance(score_result_df, score, CHART_PATH, CHART_PDF_PATH,
         CHART_PDF_PATH,
         min_value,
         max_value,
-        const_machine_model,
+        dataset,
         document, 
         picture_size
 )
