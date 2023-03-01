@@ -711,100 +711,176 @@ def calculate_mev_values(mape_result_df,training_duration_df, testing_duration_d
 
     SUM_WEIGHTING_VALUES = CORRECTNESS_FACTOR + COMPLEXITY_FACTOR + EXPERTISE_FACTOR + RESPONSIVENESS_FACTOR
 
+    feature_set_names = list(mape_result_df.columns.values) # get names of the feature sets
+    algorithm_names = list(mape_result_df.index.values) # get names of the algorithms
+
+    feature_name_list = []
+    for feature_set_name in feature_set_names:
+        feature_name_list.append(feature_set_name + '_df')
+
     # 1. merge the average MAPE, training runtime & preiction time results int different subset dataframes
-    basic_subset_df = pd.concat([mape_result_df['basic-subset'], training_duration_df['basic-subset'], testing_duration_df['basic-subset']], axis=1)
-    extension_df = pd.concat([mape_result_df['extension'], training_duration_df['extension'], testing_duration_df['extension']], axis=1)
-    location_df = pd.concat([mape_result_df['location'], training_duration_df['location'], testing_duration_df['location']], axis=1)
-    extension_location_df = pd.concat([mape_result_df['extension-location'], training_duration_df['extension-location'], testing_duration_df['extension-location']], axis=1)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i] = pd.concat([mape_result_df[feature_set_names[i]], training_duration_df[feature_set_names[i]], testing_duration_df[feature_set_names[i]]], axis=1)
+        # print(feature_name_list[i])
 
     # 2. rename culumn names
-    basic_subset_df.columns = ['MAPE', 'Training-time', 'Test-time']
-    extension_df.columns = ['MAPE', 'Training-time', 'Test-time']
-    location_df.columns = ['MAPE', 'Training-time', 'Test-time']
-    extension_location_df.columns = ['MAPE', 'Training-time', 'Test-time']
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i].columns = ['MAPE', 'Training-time', 'Test-time']
+        # print(feature_name_list[i])
 
     # 3. add knowledge levels
-    row_names = list(basic_subset_df.index.values)
     k_levels = []
-    for i,  val in enumerate(row_names):
+    for i,  val in enumerate(algorithm_names):
         if val == 'classic' or val == 'nn':
             k_levels.append(K_LEVEL_MANUEL)
         elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml':
             k_levels.append(K_LEVEL_AUTOML)
 
-    basic_subset_df['K-level'] = k_levels
-    extension_df['K-level'] = k_levels
-    location_df['K-level'] = k_levels
-    extension_location_df['K-level'] = k_levels
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['K-level'] = k_levels
+        # print(feature_name_list[i])
 
     # 4. normalize the MAPE values
-    basic_subset_df['MAPE-norm'] = basic_subset_df['MAPE'] / basic_subset_df['MAPE'].max()
-    extension_df['MAPE-norm'] = extension_df['MAPE'] / extension_df['MAPE'].max()
-    location_df['MAPE-norm'] = location_df['MAPE'] / location_df['MAPE'].max()
-    extension_location_df['MAPE-norm'] = extension_location_df['MAPE'] / extension_location_df['MAPE'].max()
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['MAPE-norm'] = feature_name_list[i]['MAPE'] / feature_name_list[i]['MAPE'].max()
+        # print(feature_name_list[i])
 
     # 5. normalize the training duration values
-    basic_subset_df['Training-norm'] = basic_subset_df['Training-time'] / basic_subset_df['Training-time'].max()
-    extension_df['Training-norm'] = extension_df['Training-time'] / extension_df['Training-time'].max()
-    location_df['Training-norm'] = location_df['Training-time'] / location_df['Training-time'].max()
-    extension_location_df['Training-norm'] = extension_location_df['Training-time'] / extension_location_df['Training-time'].max()
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['Training-norm'] = feature_name_list[i]['Training-time'] / feature_name_list[i]['Training-time'].max()
 
     # 6. normalize the test duration values
-    basic_subset_df['Test-norm'] = basic_subset_df['Test-time'] / basic_subset_df['Test-time'].max()
-    extension_df['Test-norm'] = extension_df['Test-time'] / extension_df['Test-time'].max()
-    location_df['Test-norm'] = location_df['Test-time'] / location_df['Test-time'].max()
-    extension_location_df['Test-norm'] = extension_location_df['Test-time'] / extension_location_df['Test-time'].max()
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['Test-norm'] = feature_name_list[i]['Test-time'] / feature_name_list[i]['Test-time'].max()
 
     # 7. normalize knowledge values
-    basic_subset_df['K-level-norm'] = basic_subset_df['K-level'] / basic_subset_df['K-level'].max()
-    extension_df['K-level-norm'] = extension_df['K-level'] / extension_df['K-level'].max()
-    location_df['K-level-norm'] = location_df['K-level'] / location_df['K-level'].max()
-    extension_location_df['K-level-norm'] = extension_location_df['K-level'] / extension_location_df['K-level'].max()
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['K-level-norm'] = feature_name_list[i]['K-level'] / feature_name_list[i]['K-level'].max()
 
     # 8. Weight normed MAPE results
-    basic_subset_df['MAPE-weighted'] = basic_subset_df['MAPE-norm'] * CORRECTNESS_FACTOR
-    extension_df['MAPE-weighted'] = extension_df['MAPE-norm'] * CORRECTNESS_FACTOR
-    location_df['MAPE-weighted'] = location_df['MAPE-norm'] * CORRECTNESS_FACTOR
-    extension_location_df['MAPE-weighted'] = extension_location_df['MAPE-norm'] * CORRECTNESS_FACTOR
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['MAPE-weighted'] = feature_name_list[i]['MAPE-norm'] * CORRECTNESS_FACTOR
 
     # 9. Weight normed training time results
-    basic_subset_df['Training-weighted'] = basic_subset_df['Training-norm'] * COMPLEXITY_FACTOR
-    extension_df['Training-weighted'] = extension_df['Training-norm'] * COMPLEXITY_FACTOR
-    location_df['Training-weighted'] = location_df['Training-norm'] * COMPLEXITY_FACTOR
-    extension_location_df['Training-weighted'] = extension_location_df['Training-norm'] * COMPLEXITY_FACTOR
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['Training-weighted'] = feature_name_list[i]['Training-norm'] * COMPLEXITY_FACTOR
 
     # 10. Weight normed test time results
-    basic_subset_df['Test-weighted'] = basic_subset_df['Test-norm'] * RESPONSIVENESS_FACTOR
-    extension_df['Test-weighted'] = extension_df['Test-norm'] * RESPONSIVENESS_FACTOR
-    location_df['Test-weighted'] = location_df['Test-norm'] * RESPONSIVENESS_FACTOR
-    extension_location_df['Test-weighted'] = extension_location_df['Test-norm'] * RESPONSIVENESS_FACTOR
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['Test-weighted'] = feature_name_list[i]['Test-norm'] * RESPONSIVENESS_FACTOR
 
     # 11. Weight normed knowledge levels
-    basic_subset_df['K-level-weighted'] = basic_subset_df['K-level-norm'] * EXPERTISE_FACTOR
-    extension_df['K-level-weighted'] = extension_df['K-level-norm'] * EXPERTISE_FACTOR
-    location_df['K-level-weighted'] = location_df['K-level-norm'] * EXPERTISE_FACTOR
-    extension_location_df['K-level-weighted'] = extension_location_df['K-level-norm'] * EXPERTISE_FACTOR
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['K-level-weighted'] = feature_name_list[i]['K-level-norm'] * EXPERTISE_FACTOR
 
     # 12. MEV calculation
-    basic_subset_df['MEV'] = ((basic_subset_df['MAPE-weighted'] + basic_subset_df['Training-weighted'] + basic_subset_df['Test-weighted'] + basic_subset_df['K-level-weighted']) / SUM_WEIGHTING_VALUES).round(decimals=6)
-    extension_df['MEV'] = ((extension_df['MAPE-weighted'] + extension_df['Training-weighted'] + extension_df['Test-weighted'] + extension_df['K-level-weighted']) / SUM_WEIGHTING_VALUES).round(decimals=6)
-    location_df['MEV'] = ((location_df['MAPE-weighted'] + location_df['Training-weighted'] + location_df['Test-weighted'] + location_df['K-level-weighted']) / SUM_WEIGHTING_VALUES).round(decimals=6)
-    extension_location_df['MEV'] = ((extension_location_df['MAPE-weighted'] + extension_location_df['Training-weighted'] + extension_location_df['Test-weighted'] + extension_location_df['K-level-weighted']) / SUM_WEIGHTING_VALUES).round(decimals=6)
-    # print(extension_location_df)
+    for i, val in enumerate(feature_name_list):
+        feature_name_list[i]['MEV'] = ((feature_name_list[i]['MAPE-weighted'] + feature_name_list[i]['Training-weighted'] + feature_name_list[i]['Test-weighted'] + feature_name_list[i]['K-level-weighted']) / SUM_WEIGHTING_VALUES).round(decimals=6)
+        # print(feature_name_list[i])
 
     # 13. merge resulting MEV values into one MEV dataframe
-    mev_df = pd.concat([basic_subset_df['MEV'], extension_df['MEV'], location_df['MEV'], extension_location_df['MEV'] ], axis=1)
-    mev_df.columns = ['basic-subset', 'extension', 'location', 'extension-location']
+    mev_df = pd.DataFrame()
+    for i, val in enumerate(feature_name_list):
+        mev_df = mev_df.assign(i = feature_name_list[i]['MEV']) # add MEV column to the mev_df dataframe
+        mev_df.set_axis([*mev_df.columns[:-1], feature_set_names[i]], axis=1, inplace=True) # rename the added column by the appropriate feature set
+    # print(mev_df)
+    # mev_df.columns = feature_set_names
+    # print(mev_df)
+
+    # # 1. merge the average MAPE, training runtime & preiction time results int different subset dataframes
+    # basic_subset_df = pd.concat([mape_result_df['basic-subset'], training_duration_df['basic-subset'], testing_duration_df['basic-subset']], axis=1)
+    # extension_df = pd.concat([mape_result_df['extension'], training_duration_df['extension'], testing_duration_df['extension']], axis=1)
+    # location_df = pd.concat([mape_result_df['location'], training_duration_df['location'], testing_duration_df['location']], axis=1)
+    # extension_location_df = pd.concat([mape_result_df['extension-location'], training_duration_df['extension-location'], testing_duration_df['extension-location']], axis=1)
+
+    # # 2. rename culumn names
+    # basic_subset_df.columns = ['MAPE', 'Training-time', 'Test-time']
+    # extension_df.columns = ['MAPE', 'Training-time', 'Test-time']
+    # location_df.columns = ['MAPE', 'Training-time', 'Test-time']
+    # extension_location_df.columns = ['MAPE', 'Training-time', 'Test-time']
+    # # print(extension_location_df)
+
+    # # 3. add knowledge levels
+    # row_names = list(basic_subset_df.index.values)
+    # k_levels = []
+    # for i,  val in enumerate(row_names):
+    #     if val == 'classic' or val == 'nn':
+    #         k_levels.append(K_LEVEL_MANUEL)
+    #     elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml':
+    #         k_levels.append(K_LEVEL_AUTOML)
+
+    # basic_subset_df['K-level'] = k_levels
+    # extension_df['K-level'] = k_levels
+    # location_df['K-level'] = k_levels
+    # extension_location_df['K-level'] = k_levels
+    # # print(extension_location_df)
+
+    # # 4. normalize the MAPE values
+    # basic_subset_df['MAPE-norm'] = basic_subset_df['MAPE'] / basic_subset_df['MAPE'].max()
+    # extension_df['MAPE-norm'] = extension_df['MAPE'] / extension_df['MAPE'].max()
+    # location_df['MAPE-norm'] = location_df['MAPE'] / location_df['MAPE'].max()
+    # extension_location_df['MAPE-norm'] = extension_location_df['MAPE'] / extension_location_df['MAPE'].max()
+    # # print(extension_location_df)
+
+    # # 5. normalize the training duration values
+    # basic_subset_df['Training-norm'] = basic_subset_df['Training-time'] / basic_subset_df['Training-time'].max()
+    # extension_df['Training-norm'] = extension_df['Training-time'] / extension_df['Training-time'].max()
+    # location_df['Training-norm'] = location_df['Training-time'] / location_df['Training-time'].max()
+    # extension_location_df['Training-norm'] = extension_location_df['Training-time'] / extension_location_df['Training-time'].max()
+    # # print(extension_location_df)
+
+    # # 6. normalize the test duration values
+    # basic_subset_df['Test-norm'] = basic_subset_df['Test-time'] / basic_subset_df['Test-time'].max()
+    # extension_df['Test-norm'] = extension_df['Test-time'] / extension_df['Test-time'].max()
+    # location_df['Test-norm'] = location_df['Test-time'] / location_df['Test-time'].max()
+    # extension_location_df['Test-norm'] = extension_location_df['Test-time'] / extension_location_df['Test-time'].max()
+    # # print(extension_location_df)
+
+    # # 7. normalize knowledge values
+    # basic_subset_df['K-level-norm'] = basic_subset_df['K-level'] / basic_subset_df['K-level'].max()
+    # extension_df['K-level-norm'] = extension_df['K-level'] / extension_df['K-level'].max()
+    # location_df['K-level-norm'] = location_df['K-level'] / location_df['K-level'].max()
+    # extension_location_df['K-level-norm'] = extension_location_df['K-level'] / extension_location_df['K-level'].max()
+    # # print(extension_location_df)
+
+    # # 8. Weight normed MAPE results
+    # basic_subset_df['MAPE-weighted'] = basic_subset_df['MAPE-norm'] * CORRECTNESS_FACTOR
+    # extension_df['MAPE-weighted'] = extension_df['MAPE-norm'] * CORRECTNESS_FACTOR
+    # location_df['MAPE-weighted'] = location_df['MAPE-norm'] * CORRECTNESS_FACTOR
+    # extension_location_df['MAPE-weighted'] = extension_location_df['MAPE-norm'] * CORRECTNESS_FACTOR
+    # # print(extension_location_df)
+
+    # # 9. Weight normed training time results
+    # basic_subset_df['Training-weighted'] = basic_subset_df['Training-norm'] * COMPLEXITY_FACTOR
+    # extension_df['Training-weighted'] = extension_df['Training-norm'] * COMPLEXITY_FACTOR
+    # location_df['Training-weighted'] = location_df['Training-norm'] * COMPLEXITY_FACTOR
+    # extension_location_df['Training-weighted'] = extension_location_df['Training-norm'] * COMPLEXITY_FACTOR
+    # # print(extension_location_df)
+
+    # # 10. Weight normed test time results
+    # basic_subset_df['Test-weighted'] = basic_subset_df['Test-norm'] * RESPONSIVENESS_FACTOR
+    # extension_df['Test-weighted'] = extension_df['Test-norm'] * RESPONSIVENESS_FACTOR
+    # location_df['Test-weighted'] = location_df['Test-norm'] * RESPONSIVENESS_FACTOR
+    # extension_location_df['Test-weighted'] = extension_location_df['Test-norm'] * RESPONSIVENESS_FACTOR
+    # # print(extension_location_df)
+
+    # # 11. Weight normed knowledge levels
+    # basic_subset_df['K-level-weighted'] = basic_subset_df['K-level-norm'] * EXPERTISE_FACTOR
+    # extension_df['K-level-weighted'] = extension_df['K-level-norm'] * EXPERTISE_FACTOR
+    # location_df['K-level-weighted'] = location_df['K-level-norm'] * EXPERTISE_FACTOR
+    # extension_location_df['K-level-weighted'] = extension_location_df['K-level-norm'] * EXPERTISE_FACTOR
+    # # print(extension_location_df)
+
+    # # 12. MEV calculation
+    # basic_subset_df['MEV'] = ((basic_subset_df['MAPE-weighted'] + basic_subset_df['Training-weighted'] + basic_subset_df['Test-weighted'] + basic_subset_df['K-level-weighted']) / SUM_WEIGHTING_VALUES).round(decimals=6)
+    # extension_df['MEV'] = ((extension_df['MAPE-weighted'] + extension_df['Training-weighted'] + extension_df['Test-weighted'] + extension_df['K-level-weighted']) / SUM_WEIGHTING_VALUES).round(decimals=6)
+    # location_df['MEV'] = ((location_df['MAPE-weighted'] + location_df['Training-weighted'] + location_df['Test-weighted'] + location_df['K-level-weighted']) / SUM_WEIGHTING_VALUES).round(decimals=6)
+    # extension_location_df['MEV'] = ((extension_location_df['MAPE-weighted'] + extension_location_df['Training-weighted'] + extension_location_df['Test-weighted'] + extension_location_df['K-level-weighted']) / SUM_WEIGHTING_VALUES).round(decimals=6)
+    # # print(extension_location_df)
+
+    # # 13. merge resulting MEV values into one MEV dataframe
+    # mev_df = pd.concat([basic_subset_df['MEV'], extension_df['MEV'], location_df['MEV'], extension_location_df['MEV'] ], axis=1)
+    # mev_df.columns = ['basic-subset', 'extension', 'location', 'extension-location']
     # print(mev_df)
 
     return mev_df
