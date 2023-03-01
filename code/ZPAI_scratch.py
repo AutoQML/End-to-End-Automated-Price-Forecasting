@@ -431,7 +431,7 @@ def plot_testing_duration(score_result_df, score, CHART_PATH, CHART_PDF_PATH, ma
 
 
 ###########################
-# MEV plot
+# MES plot
 ###########################
     
 def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, dataset: str, document, picture_size):
@@ -447,6 +447,9 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
 
     fig, ax = plt.subplots(1, 1, gridspec_kw={'wspace': 0.01, 'hspace': 0})
     fig.set_size_inches(a4_size)
+
+    plt.subplots_adjust(left=0.20)
+
     ax.set_frame_on(False)
     ax.grid(True, linewidth=0.5, alpha=0.25, color='black')
     ax.set_axisbelow(True)
@@ -505,8 +508,10 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
 
     fig.subplots_adjust(bottom=0.8 / rows)
-    # fig.legend(handles, labels_txt, ncol=len(labels) // 2, loc='lower center', borderaxespad=1.0, fontsize=12)
-    fig.legend(handles, labels_txt, ncol=5, loc='lower center', borderaxespad=1.9, fontsize=13)
+    fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Method evaluation score", fontsize=16)
     plt.ylabel("Feature combination", fontsize=16)
