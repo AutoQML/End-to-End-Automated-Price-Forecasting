@@ -1,4 +1,5 @@
 import matplotlib
+import math
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -159,11 +160,15 @@ def plot_feature_performance(score_result_df, score, CHART_PATH, CHART_PDF_PATH,
 # Training duration plot
 ###########################
     
-def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, const_machine_model: str, document, picture_size):
+def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, dataset: str, document, picture_size):
 
     MIN_VAL = min_value
     MAX_VAL = max_value
-    const_machine_model = const_machine_model
+    dataset = dataset
+
+    rounded_max_val = math.ceil(MAX_VAL / 1000) * 1000
+    rounded_min_val = math.floor(MIN_VAL / 1000) * 1000
+
 
     # values: frameworks x dataset x repetitions
     rows = values.shape[1]
@@ -172,12 +177,15 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
 
     fig, ax = plt.subplots(1, 1, gridspec_kw={'wspace': 0.01, 'hspace': 0})
     fig.set_size_inches(a4_size)
+
+    plt.subplots_adjust(left=0.20)
+
     ax.set_frame_on(False)
     ax.grid(True, linewidth=0.5, alpha=0.25, color='black')
     ax.set_axisbelow(True)
     ax.set_yticks(np.arange(rows))
     # ax.set_xticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    ax.set_xticks(np.arange(0.0, 5000.0, 500))
+    ax.set_xticks(np.arange(rounded_min_val, rounded_max_val, 500))
     ax.tick_params(axis=u'both', which=u'both', length=0)
     ax.set_yticklabels(datasets)
     # ax.set_xlim([-0.05, 1.05])
@@ -198,7 +206,7 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
         ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx],
                    **color)
 
-    graphics_title = f"MAPE-scores for {const_machine_model}"
+    graphics_title = f"MAPE-scores for {dataset}"
     # plt.title(graphics_title) # uncomment for publication
 
     ################
@@ -208,12 +216,8 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     labels = [item.get_text() for item in ax.get_yticklabels()]
     # Capitalize the first letters of the label names
     # labels = [label.capitalize() for label in labels]
-    # Replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels = [label.replace('extension', 'basic-subset +\nseries') for label in labels]
-    labels = [label.replace('location', 'basic-subset +\nlocation') for label in labels]
-    labels = [label.replace('series-basic-subset', 'series') for label in labels]
-    # replace 'nn' string by 'Neural Networkt' string
-    # labels = [label.replace('Nn', 'Neural Network') for label in labels]
+    # Add 'basic-subset' to all labels except tha basic-subset label
+    labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
     ax.set_yticklabels(labels)
 
@@ -236,9 +240,10 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
 
     fig.subplots_adjust(bottom=0.8 / rows)
-    # fig.legend(handles, labels_txt, ncol=len(labels) // 2, loc='lower center', borderaxespad=1.0, fontsize=12)
+    fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
-    fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Training time (sec)", fontsize=16)
     plt.ylabel("Feature combination", fontsize=16)
@@ -250,10 +255,10 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
 
     plt.close()
     
-def plot_training_duration(score_result_df, score, CHART_PATH, CHART_PDF_PATH, max_value, min_value, const_machine_model, document, picture_size):
+def plot_training_duration(score_result_df, score, CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, picture_size):
     max_value =  max_value
     min_value = min_value
-    const_machine_model = const_machine_model
+    dataset = dataset
 
     feature_set_names = list(score_result_df.columns.values) # get names of the feature sets
     # print(feature_set_names)
@@ -285,7 +290,7 @@ def plot_training_duration(score_result_df, score, CHART_PATH, CHART_PDF_PATH, m
         CHART_PDF_PATH,
         min_value,
         max_value,
-        const_machine_model,
+        dataset,
         document, 
         picture_size
 )
@@ -307,18 +312,19 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
 
     fig, ax = plt.subplots(1, 1, gridspec_kw={'wspace': 0.01, 'hspace': 0})
     fig.set_size_inches(a4_size)
+
+    plt.subplots_adjust(left=0.20)
+
     ax.set_frame_on(False)
     ax.grid(True, linewidth=0.5, alpha=0.25, color='black')
     ax.set_axisbelow(True)
     ax.set_yticks(np.arange(rows))
-    # ax.set_xticks([0.0, 0.0002, 0.0004, 0.0006, 0.0008, 0.001, 0.0012, 0.0014, 0.0016, 0.0018, 0.002])
-    ax.set_xticks([0.0, 0.0004, 0.0008, 0.0012, 0.0016, 0.002])
-    # ax.set_xticks(np.arange(0.0, 4000.0, 500))
+    ax.set_xticks(np.arange(0.0, MAX_VAL, 0.002))
     ax.tick_params(axis=u'both', which=u'both', length=0)
     ax.set_yticklabels(datasets)
     # ax.set_xlim([-0.05, 1.05])
     # ax.set_xlim([ -100.0, 1700])
-    ax.set_xlim([MIN_VAL - 0.00005, MAX_VAL + 0.00005])
+    ax.set_xlim([MIN_VAL - 0.00015, MAX_VAL + 0.00015])
     ax.tick_params(axis='both', which='major', labelsize=14)
 
     y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
@@ -344,12 +350,8 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     labels = [item.get_text() for item in ax.get_yticklabels()]
     # Capitalize the first letters of the label names
     # labels = [label.capitalize() for label in labels]
-    # Replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels = [label.replace('extension', 'basic-subset +\nseries') for label in labels]
-    labels = [label.replace('location', 'basic-subset +\nlocation') for label in labels]
-    labels = [label.replace('series-basic-subset', 'series') for label in labels]
-    # replace 'nn' string by 'Neural Networkt' string
-    # labels = [label.replace('Nn', 'Neural Network') for label in labels]
+    # Add 'basic-subset' to all labels except tha basic-subset label
+    labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
     ax.set_yticklabels(labels)
 
@@ -372,8 +374,10 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
 
     fig.subplots_adjust(bottom=0.8 / rows)
-    # fig.legend(handles, labels_txt, ncol=len(labels) // 2, loc='lower center', borderaxespad=1.0, fontsize=12)
-    fig.legend(handles, labels_txt, ncol=5, loc='lower center', borderaxespad=0.5, fontsize=13)
+    fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Prediction time (sec)", fontsize=16)
     plt.ylabel("Feature combination", fontsize=16)
