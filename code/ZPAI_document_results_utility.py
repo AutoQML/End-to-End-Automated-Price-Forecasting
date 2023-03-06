@@ -93,7 +93,7 @@ def add_results_heading(document, heading, heading_level):
     heading_2 = heading
     document.add_heading(heading_2, level=heading_level)
 
-def get_results_values(score, classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results):
+def get_results_values(score, manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results):
     score_result_df = pd.DataFrame()
     
     # Extract value for neural nets.
@@ -102,11 +102,11 @@ def get_results_values(score, classic_results, nn_results, autosklearn_results, 
         score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([nn_score_results])])
         score_result_df = score_result_df.rename(index={0: 'nn'})
 
-    # Extract value for classical algorithms.
-    if not classic_results.empty:
-        classic_score_results = classic_results.loc[ f'Test-{score}' , : ]
-        score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([classic_score_results])])
-        score_result_df = score_result_df.rename(index={0: 'classic'})
+    # Extract value for manual algorithms.
+    if not manual_results.empty:
+        manual_score_results = manual_results.loc[ f'Test-{score}' , : ]
+        score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([manual_score_results])])
+        score_result_df = score_result_df.rename(index={0: 'manual'})
 
 
     # Extract value for auto-sklearn method.
@@ -218,8 +218,8 @@ def add_bar_plot(document, score_result_df, score, measurement_date, input_file_
     labels = [item.get_text() for item in ax.get_xticklabels()]
     # Capitalize the first letters of the label names
     labels = [label.capitalize() for label in labels]
-    # Replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels = [label.replace('Classic', 'Rand. Forest') for label in labels]
+    # Replace 'manual' string by the actual algorithm 'Rand. Forest'
+    labels = [label.replace('Manual', 'Rand. Forest') for label in labels]
     # replace 'nn' string by 'Neural Networkt' string
     labels = [label.replace('Nn', 'Neural Network') for label in labels]
     # replace 'Autogluon' string by 'AutoGluon' string
@@ -237,7 +237,7 @@ def add_bar_plot(document, score_result_df, score, measurement_date, input_file_
     handles, labels_txt = ax.get_legend_handles_labels()
     # Capitalize the first letters
     # labels_txt = [name.capitalize() for name in labels_txt]
-    # replace 'classic' string by the actual algorithm 'Rand. Forest'
+    # replace 'manual' string by the actual algorithm 'Rand. Forest'
     labels_txt = [w.replace('extension', 'series') for w in labels_txt]
     # replace 'nn' string by the actual algorithm 'Neural Networkt'
     # labels_txt = [w.replace('Nn', 'Neural Network') for w in labels_txt]
@@ -292,8 +292,8 @@ def add_line_plot(document, score_result_df, score, measurement_date, input_file
     handles, labels_txt = ax.get_legend_handles_labels()
     # Capitalize the first letters
     labels_txt = [name.capitalize() for name in labels_txt]
-    # replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [w.replace('Classic', 'Rand. Forest') for w in labels_txt]
+    # replace 'manual' string by the actual algorithm 'Rand. Forest'
+    labels_txt = [w.replace('Manual', 'Rand. Forest') for w in labels_txt]
     # replace 'nn' string by the actual algorithm 'Neural Networkt'
     labels_txt = [w.replace('Nn', 'Neural Network') for w in labels_txt]
     # replace 'Autogluon' string by 'AutoGluon' string
@@ -349,8 +349,8 @@ def add_duration_line_plot(document, score_result_df, name, measurement_date, in
     handles, labels_txt = ax.get_legend_handles_labels()
     # Capitalize the first letters
     labels_txt = [name.capitalize() for name in labels_txt]
-    # replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [w.replace('Classic', 'Rand. Forest') for w in labels_txt]
+    # replace 'manual' string by the actual algorithm 'Rand. Forest'
+    labels_txt = [w.replace('Manual', 'Rand. Forest') for w in labels_txt]
     # replace 'nn' string by the actual algorithm 'Neural Networkt'
     labels_txt = [w.replace('Nn', 'Neural Network') for w in labels_txt]
     # replace 'Autogluon' string by 'AutoGluon' string
@@ -503,7 +503,7 @@ def add_summary_table(document, best_result_df, summery_result_values, table_fon
                         font = run.font
                         font.size= Pt(table_font_size)
 
-def get_duration_results_values(score, classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results):
+def get_duration_results_values(score, manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results):
     score_result_df = pd.DataFrame()
     
     # Extract value for neural nets.
@@ -512,11 +512,11 @@ def get_duration_results_values(score, classic_results, nn_results, autosklearn_
         score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([nn_score_results])])
         score_result_df = score_result_df.rename(index={0: 'nn'})
 
-    # Extract value for classical algorithms.
-    if not classic_results.empty:
-        classic_score_results = classic_results.loc[ f'{score}' , : ]
-        score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([classic_score_results])])
-        score_result_df = score_result_df.rename(index={0: 'classic'})
+    # Extract value for manual algorithms.
+    if not manual_results.empty:
+        manual_score_results = manual_results.loc[ f'{score}' , : ]
+        score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([manual_score_results])])
+        score_result_df = score_result_df.rename(index={0: 'manual'})
 
 
     # Extract value for auto-sklearn method.
@@ -586,8 +586,8 @@ def add_box_plot(document, score_result_df, score, measurement_date, input_file_
     # handles, labels_txt = ax.get_legend_handles_labels()
     # # Capitalize the first letters
     # labels_txt = [name.capitalize() for name in labels_txt]
-    # # replace 'classic' string by the actual algorithm 'Rand. Forest'
-    # labels_txt = [w.replace('Classic', 'Rand. Forest') for w in labels_txt]
+    # # replace 'manual' string by the actual algorithm 'Rand. Forest'
+    # labels_txt = [w.replace('manual', 'Rand. Forest') for w in labels_txt]
     # # replace 'nn' string by the actual algorithm 'Neural Networkt'
     # labels_txt = [w.replace('Nn', 'Neural Network') for w in labels_txt]
 
@@ -636,7 +636,7 @@ def add_box_plot2(document, score_result_df, column_name, score, measurement_dat
     # print(labels)
     # Capitalize the first letters of the label names
     labels = [label.capitalize() for label in labels]
-    # Replace 'classic' string by the actual algorithm 'Rand. Forest'
+    # Replace 'manual' string by the actual algorithm 'Rand. Forest'
     labels = [label.replace('0', 'Autogluon') for label in labels]
     labels = [label.replace('1', 'auto-sklearn') for label in labels]
     labels = [label.replace('2', 'Rand. Forest') for label in labels]
@@ -731,7 +731,7 @@ def calculate_mev_values(mape_result_df,training_duration_df, testing_duration_d
     # 3. add knowledge levels
     k_levels = []
     for i,  val in enumerate(algorithm_names):
-        if val == 'classic' or val == 'nn':
+        if val == 'manual' or val == 'nn':
             k_levels.append(K_LEVEL_MANUEL)
         elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml':
             k_levels.append(K_LEVEL_AUTOML)

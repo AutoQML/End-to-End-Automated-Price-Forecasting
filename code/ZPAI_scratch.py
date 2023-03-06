@@ -89,8 +89,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
 
     # Capitalize the first letters
     labels_txt = [label.capitalize() for label in labels_txt]
-    # replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [label.replace('Classic', 'Random Forest') for label in labels_txt]
+    # replace 'manual' string by the actual algorithm 'Rand. Forest'
+    labels_txt = [label.replace('Manual', 'Random Forest') for label in labels_txt]
     # replace 'nn' string by the actual algorithm 'Neural Networkt'
     labels_txt = [label.replace('Nn', 'MLP') for label in labels_txt]
     # replace 'Autogluon' string by 'AutoGluon' string
@@ -228,8 +228,8 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
 
     # Capitalize the first letters
     labels_txt = [label.capitalize() for label in labels_txt]
-    # replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [label.replace('Classic', 'Random Forest') for label in labels_txt]
+    # replace 'manual' string by the actual algorithm 'Rand. Forest'
+    labels_txt = [label.replace('Manual', 'Random Forest') for label in labels_txt]
     # replace 'nn' string by the actual algorithm 'Neural Networkt'
     labels_txt = [label.replace('Nn', 'MLP') for label in labels_txt]
     # replace 'Autogluon' string by 'AutoGluon' string
@@ -362,8 +362,8 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
 
     # Capitalize the first letters
     labels_txt = [label.capitalize() for label in labels_txt]
-    # replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [label.replace('Classic', 'Random Forest') for label in labels_txt]
+    # replace 'manual' string by the actual algorithm 'Rand. Forest'
+    labels_txt = [label.replace('Manual', 'Random Forest') for label in labels_txt]
     # replace 'nn' string by the actual algorithm 'Neural Networkt'
     labels_txt = [label.replace('Nn', 'MLP') for label in labels_txt]
     # replace 'Autogluon' string by 'AutoGluon' string
@@ -496,8 +496,8 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
 
     # Capitalize the first letters
     labels_txt = [label.capitalize() for label in labels_txt]
-    # replace 'classic' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [label.replace('Classic', 'Random Forest') for label in labels_txt]
+    # replace 'manual' string by the actual algorithm 'Rand. Forest'
+    labels_txt = [label.replace('Manual', 'Random Forest') for label in labels_txt]
     # replace 'nn' string by the actual algorithm 'Neural Networkt'
     labels_txt = [label.replace('Nn', 'MLP') for label in labels_txt]
     # replace 'Autogluon' string by 'AutoGluon' string

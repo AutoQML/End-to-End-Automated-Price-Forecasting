@@ -189,7 +189,7 @@ def get_best_model(pipeline: Pipeline,
     model = result.best_estimator_
     return model
 
-def eval_classic_ml_models(X_train: pd.DataFrame, 
+def eval_manual_ml_models(X_train: pd.DataFrame, 
                            y_train: pd.DataFrame, 
                            X_test: pd.DataFrame, 
                            y_test: pd.DataFrame, 
@@ -201,7 +201,7 @@ def eval_classic_ml_models(X_train: pd.DataFrame,
                            feature_set: str,
                            config: dict) -> None:
     """
-    Runs classical ML algorithms on dataset
+    Runs manual ML algorithms on dataset
 
     Implemented algorithms: Polynomial Regression, Decision Tree, Random Forest, Support Vector Regressor, k-Nearest Neighbors and AdaBoost Regression. 
     For each algorithm, a nested cross-validation is performed on the training dataset and the mean RMSE, MAE and R2-score of the 10 folds is computed. 
@@ -242,7 +242,7 @@ def eval_classic_ml_models(X_train: pd.DataFrame,
 
     SKLEARN_VERSION = tuple([int(x) for x in sklearn.__version__.split(".")])
 
-    print('\n--Classic approach-- for feature set: {}'.format(feature_set))
+    print('\n--Manual approach-- for feature set: {}'.format(feature_set))
     # open the summery file
     f = open(summery_file, "a")
 
@@ -573,8 +573,8 @@ def eval_classic_ml_models(X_train: pd.DataFrame,
     plt.grid(which='major', linestyle='-', linewidth='0.5', color='grey')
     plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
     #plt.savefig(file_path_pics+'/'+'Test5.png')
-    filename = "{}-{}-{}-{}.{}".format(M_DATE,input_filename,'classic-test-result',feature_set,'png')
-    title = str("Classic results for {} on feat. set {}".format(input_filename, feature_set))
+    filename = "{}-{}-{}-{}.{}".format(M_DATE,input_filename,'manual-test-result',feature_set,'png')
+    title = str("Manual results for {} on feat. set {}".format(input_filename, feature_set))
     plt.title(title)
     plt.savefig(file_path_pics+'/'+filename)
     # close open windows 

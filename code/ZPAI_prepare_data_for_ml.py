@@ -161,7 +161,7 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
     Dataset is splitted into training (90%) and test set (10%).
     All but the "price" column are selected as inputs. "Price" is selected as output.
     Numerical features (working_hours & const_year) are scaled using StandardScaler.
-    Depending on the configurations, selected evaluation function (classical ML/neural nets/autosklearn) is called.
+    Depending on the configurations, selected evaluation function (manual ML/neural nets/autosklearn) is called.
     Results are saved as .csv file.
 
     Parameters
@@ -209,9 +209,9 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
     ##################
     loop_count = 0
 
-    if "classical" in ALGORITHMS:
-        # create result data frame to store the measurements for classic approach
-        classic_index = ['CV - LinReg - Mean MAE', 'CV - LinReg - Mean MAPE', 'CV - LinReg - Mean RMSE', 'CV - LinReg - Mean R2Score',
+    if "manual" in ALGORITHMS:
+        # create result data frame to store the measurements for manual approach
+        manual_index = ['CV - LinReg - Mean MAE', 'CV - LinReg - Mean MAPE', 'CV - LinReg - Mean RMSE', 'CV - LinReg - Mean R2Score',
                         'CV - Tree - Mean MAE', 'CV - Tree - Mean MAPE', 'CV - Tree - Mean RMSE', 'CV - Tree - Mean R2Score',
                         'CV - RandForest - Mean MAE', 'CV - RandForest - Mean MAPE', 'CV - RandForest - Mean RMSE', 'CV - RandForest - Mean R2Score',
                         'CV - SVR - Mean MAE', 'CV - SVR - Mean MAPE', 'CV - SVR - Mean RMSE', 'CV - SVR - Mean R2Score',
@@ -219,7 +219,7 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
                         'CV - AdaBoost - Mean MAE', 'CV - AdaBoost - Mean MAPE', 'CV - AdaBoost - Mean RMSE', 'CV - AdaBoost - Mean R2Score',
                         'final-model', 'Test-MAE', 'Test-MAPE','Test-RMSE', 'Test-N-RMSE', 'Test-IQR-RMSE', 'Test-CV-RMSE', 'Test-R2', 'Training-Duration', 'Test-Duration']
         # # create result data frame
-        classic_result_df = pd.DataFrame(index=classic_index)
+        manual_result_df = pd.DataFrame(index=manual_index)
 
     if "nn" in ALGORITHMS:
         # create result data frame to store the measurements for NN
@@ -349,11 +349,11 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
                 df_dataset_train_automl = df_dataset_train
                 df_dataset_test_automl = df_dataset_test
 
-            if "classical" in ALGORITHMS:
+            if "manual" in ALGORITHMS:
                 if PYTHON_ENV == 'automl-autosklearn':
-                    # evaluate classical ml models like lin. regression, trees, forests, SVM
-                    from ZPAI_evaluate_classic_ml_models import eval_classic_ml_models
-                    eval_classic_ml_models(X_train = df_dataset_X_train,
+                    # evaluate manual ml models like lin. regression, trees, forests, SVM
+                    from ZPAI_evaluate_manual_ml_models import eval_manual_ml_models
+                    eval_manual_ml_models(X_train = df_dataset_X_train,
                                         y_train = df_dataset_y_train,
                                         X_test = df_dataset_X_test,
                                         y_test = df_dataset_y_test,
@@ -361,7 +361,7 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
                                         column_count = column_count,
                                         input_filename = input_filename,
                                         file_path_pics = FILE_PATH_PICS,
-                                        result_df = classic_result_df,
+                                        result_df = manual_result_df,
                                         feature_set = feature_set,
                                         config = config)
                 else:
@@ -447,11 +447,11 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
                     print('Wrong python environment!')
 
 
-    if "classical" in ALGORITHMS:
-        # store classical results within the results.csv
-        filename = "{}-{}-{}.{}".format(M_DATE, input_filename, 'classic-results','csv')
+    if "manual" in ALGORITHMS:
+        # store manual results within the results.csv
+        filename = "{}-{}-{}.{}".format(M_DATE, input_filename, 'manual-results','csv')
         RESULT_CSV = Path(FILE_PATH_DATA, filename)
-        classic_result_df.to_csv(RESULT_CSV)
+        manual_result_df.to_csv(RESULT_CSV)
 
     if "nn" in ALGORITHMS:
         # store NN results within the results.csv

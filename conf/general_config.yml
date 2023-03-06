@@ -6,7 +6,7 @@ bin_outlier_detect: True # set the additional outlier detection within bins (Tru
 
 datasets: ['merged-files']
 
-algorithms: ["classical", "nn", "autosklearn", "autogluon", "flaml"]
+algorithms: ["manual", "nn", "autosklearn", "autogluon", "flaml"]
 
 documentation: True # set the documentation (True or False)
 

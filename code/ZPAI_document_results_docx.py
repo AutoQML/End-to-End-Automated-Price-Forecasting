@@ -78,14 +78,14 @@ def document_results_docx(datasets: list,
 
         # construct the file names of the results
         nn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'nn-results','csv')
-        classic_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'classic-results','csv')
+        manual_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'manual-results','csv')
         autosklearn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autosklearn-results', 'csv')
         autogluon_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autogluon-results', 'csv')
         flaml_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'flaml-results', 'csv')
 
         # init data frames
         nn_results = pd.DataFrame()
-        classic_results = pd.DataFrame()
+        manual_results = pd.DataFrame()
         autosklearn_results = pd.DataFrame()
         autogluon_results = pd.DataFrame()
         flaml_results = pd.DataFrame()
@@ -121,10 +121,10 @@ def document_results_docx(datasets: list,
             if NN_FILE_PATH.is_file():
                 nn_results = load_csv_data(NN_FILE_PATH)
 
-            # get classical results
-            CLASSIC_FILE_PATH = Path(REPO_PATH, 'measurements', dataset, 'data', SUB_DIR_DATA, str(measurement + 1), classic_result_filename)
-            if CLASSIC_FILE_PATH.is_file():
-                classic_results = load_csv_data(CLASSIC_FILE_PATH)
+            # get manual results
+            MANUAL_FILE_PATH = Path(REPO_PATH, 'measurements', dataset, 'data', SUB_DIR_DATA, str(measurement + 1), manual_result_filename)
+            if MANUAL_FILE_PATH.is_file():
+                manual_results = load_csv_data(MANUAL_FILE_PATH)
 
             # get autosklearn results
             AUTOSKLEARN_FILE_PATH = Path(REPO_PATH, 'measurements', dataset, 'data', SUB_DIR_DATA, str(measurement + 1), autosklearn_result_filename)
@@ -143,15 +143,15 @@ def document_results_docx(datasets: list,
                 flaml_results = load_csv_data(FLAML_FILE_PATH)
 
             # get the result values
-            temp_r2_result_df = get_results_values("R2", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_mae_result_df = get_results_values("MAE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_mape_result_df = get_results_values("MAPE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_rmse_result_df = get_results_values("RMSE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_nrmse_result_df = get_results_values("N-RMSE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_iqrrmse_result_df = get_results_values("IQR-RMSE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_cvrmse_result_df = get_results_values("CV-RMSE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_training_duration_result_df = get_duration_results_values("Training-Duration", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_testing_duration_result_df = get_duration_results_values("Test-Duration", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_r2_result_df = get_results_values("R2", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_mae_result_df = get_results_values("MAE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_mape_result_df = get_results_values("MAPE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_rmse_result_df = get_results_values("RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_nrmse_result_df = get_results_values("N-RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_iqrrmse_result_df = get_results_values("IQR-RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_cvrmse_result_df = get_results_values("CV-RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_training_duration_result_df = get_duration_results_values("Training-Duration", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_testing_duration_result_df = get_duration_results_values("Test-Duration", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
 
 
             # init the dataframe for the first time
@@ -223,7 +223,7 @@ def document_results_docx(datasets: list,
         ################################
 
         add_results_heading(document, f"R2 results for {dataset}", HEADING_2_LEVELS)
-        # r2_result_df = get_results_values("R2", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+        # r2_result_df = get_results_values("R2", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, r2_result_df, "R2", TABLE_FONT_SIZE)
         add_bar_plot(document, r2_result_df, "R2", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
         # add_line_plot(document, r2_result_df, "R2", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
@@ -234,7 +234,7 @@ def document_results_docx(datasets: list,
         #######################
 
         add_results_heading(document, f"MAE results for {dataset}", HEADING_2_LEVELS)
-        # mae_result_df = get_results_values("MAE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+        # mae_result_df = get_results_values("MAE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, mae_result_df, "MAE", TABLE_FONT_SIZE)
         add_bar_plot(document, mae_result_df, "MAE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
         # add_line_plot(document, mae_result_df, "MAE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
@@ -244,7 +244,7 @@ def document_results_docx(datasets: list,
         # Display MAPE results
         #######################
         add_results_heading(document, f"MAPE results for {dataset}", HEADING_2_LEVELS)
-        # mape_result_df = get_results_values("MAPE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+        # mape_result_df = get_results_values("MAPE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, mape_result_df, "MAPE", TABLE_FONT_SIZE)
         add_bar_plot(document, mape_result_df, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
         # add_line_plot(document, mape_result_df, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
@@ -277,7 +277,7 @@ def document_results_docx(datasets: list,
         #######################
 
         add_results_heading(document, f"RMSE results for {dataset}", HEADING_2_LEVELS)
-        # rmse_result_df = get_results_values("RMSE", classic_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+        # rmse_result_df = get_results_values("RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, rmse_result_df, "RMSE", TABLE_FONT_SIZE)
         add_bar_plot(document, rmse_result_df, "RMSE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
         # add_line_plot(document, rmse_result_df, "RMSE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
@@ -439,7 +439,7 @@ def document_results_docx(datasets: list,
         best_mev_feature_set, best_mev_method, best_mev_value = get_min_values(mev_df)
 
         # print(mev_df)
-        mev_df = mev_df.reindex(['autogluon', 'autosklearn', 'classic', 'flaml', 'nn'])
+        mev_df = mev_df.reindex(['autogluon', 'autosklearn', 'manual', 'flaml', 'nn'])
         # print(mev_df)
 
         plot_mev(mev_df, CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, PICTURE_SIZE)
@@ -508,26 +508,26 @@ def document_results_docx(datasets: list,
         add_simple_score_table(document, std_dataframe, TABLE_FONT_SIZE)
 
         ################################################
-        # Display best classical model for best R2-score
+        # Display best manual model for best R2-score
         ################################################
 
-        if not classic_results.empty:
+        if not manual_results.empty:
 
-            add_results_heading(document, f"Best classical model for {dataset}", HEADING_2_LEVELS)
+            add_results_heading(document, f"Best manual model for {dataset}", HEADING_2_LEVELS)
 
             # extract the column name with the maximal R2 score
-            max_col_values = classic_results.loc[ 'Test-R2', :]
+            max_col_values = manual_results.loc[ 'Test-R2', :]
             max_col_values = max_col_values.to_frame()
             max_col_values['Test-R2'] = pd.to_numeric(max_col_values['Test-R2'])
             max_column = max_col_values.idxmax().iloc[0]
 
             # extract/copy the column with the best R2-score
-            best_classic_model = classic_results[max_column].copy()
+            best_manual_model = manual_results[max_column].copy()
 
-            # print(best_classic_model.loc['final-model'])
+            # print(best_manual_model.loc['final-model'])
 
             # construct table with the following column names
-            column_names = ['Best classical model']
+            column_names = ['Best manual model']
 
             table = document.add_table(rows=1, cols=len(column_names))
 
@@ -543,7 +543,7 @@ def document_results_docx(datasets: list,
             # add a cell to the table & fill it with the data
             cells = table.add_row().cells
             for j in range(len(column_names)):
-                cells[j].text = str(best_classic_model.loc['final-model'])
+                cells[j].text = str(best_manual_model.loc['final-model'])
 
             # set table font size
             for row in table.rows:
@@ -734,8 +734,8 @@ def document_results_docx(datasets: list,
         #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autogluon-test-result',rmse_location, 'png')
         # elif rmse_method == 'nn':
         #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'nn-test-result',rmse_location, 'png')
-        # elif rmse_method == 'classic':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'classic-test-result',rmse_location, 'png')
+        # elif rmse_method == 'manual':
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'manual-test-result',rmse_location, 'png')
         # elif rmse_method == 'flaml':
         #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'flaml-test-result',rmse_location, 'png')
         # else:

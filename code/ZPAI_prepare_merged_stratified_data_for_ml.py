@@ -22,7 +22,7 @@ from sklearn.model_selection import cross_val_score
 # Use PCA to detect the most important features
 from sklearn.decomposition import PCA
 
-from ZPAI_evaluate_classic_ml_models import eval_classic_ml_models
+from ZPAI_evaluate_manual_ml_models import eval_manual_ml_models
 from ZPAI_evaluate_neural_nets import evaluate_neural_nets
 from ZPAI_evaluate_autosklearn import evaluate_autosklearn
 
@@ -64,8 +64,8 @@ def prepare_merged_data_for_ml(machine_model, machine_type, file_path_pics, file
     # # YY-mm-dd
     # d = today.strftime("%Y-%m-%d")
 
-    # create result data frame to store the measurements for classic approach
-    classic_index = ['CV - LinReg - Mean MAE', 'CV - LinReg - Mean RMSE', 'CV - LinReg - Mean R2Score',
+    # create result data frame to store the measurements for manual approach
+    manual_index = ['CV - LinReg - Mean MAE', 'CV - LinReg - Mean RMSE', 'CV - LinReg - Mean R2Score',
                     'CV - Tree - Mean MAE', 'CV - Tree - Mean RMSE', 'CV - Tree - Mean R2Score',
                     'CV - RandForest - Mean MAE', 'CV - RandForest - Mean RMSE', 'CV - RandForest - Mean R2Score',
                     'CV - SVR - Mean MAE', 'CV - SVR - Mean RMSE', 'CV - SVR - Mean R2Score',
@@ -74,7 +74,7 @@ def prepare_merged_data_for_ml(machine_model, machine_type, file_path_pics, file
                     'final-model', 'Test-MWE', 'Test-RMSE', 'Test-R2', 'Duration']
 
     # create result data frame
-    classic_result_df = pd.DataFrame(index=classic_index)
+    manual_result_df = pd.DataFrame(index=manual_index)
 
     # create result data frame to store the measurements for NN
     nn_index = ['Test-MWE', 'Test-RMSE', 'Test-R2', 'Duration']
@@ -159,8 +159,8 @@ def prepare_merged_data_for_ml(machine_model, machine_type, file_path_pics, file
 
     feature_set = 'all-features'
 
-    # evaluate classical ml models like lin. regression, trees, forests, SVM
-    eval_classic_ml_models(machine_type_X_train, machine_type_y_train, X_test_prepared, machine_type_y_test, SUMMERY_FILE, column_count, input_filename, FILE_PATH_PICS, classic_result_df, feature_set, RANDOM_STATE, m_date)
+    # evaluate manual ml models like lin. regression, trees, forests, SVM
+    eval_manual_ml_models(machine_type_X_train, machine_type_y_train, X_test_prepared, machine_type_y_test, SUMMERY_FILE, column_count, input_filename, FILE_PATH_PICS, manual_result_df, feature_set, RANDOM_STATE, m_date)
 
     # evaluate NN
     evaluate_neural_nets(machine_type_X_train, machine_type_y_train, X_test_prepared, machine_type_y_test, SUMMERY_FILE, input_filename, FILE_PATH_PICS, nn_result_df, feature_set, RANDOM_STATE, m_date)
@@ -175,10 +175,10 @@ def prepare_merged_data_for_ml(machine_model, machine_type, file_path_pics, file
 
     # store results within the results.csv
     # FILE_PATH_DATA = Path('./measurements', MACHINE_MODEL, 'data')
-    # filename = "{}-{}-{}.{}".format(MACHINE_MODEL, d, 'classic-results','csv')
-    filename = "{}-{}-{}.{}".format(m_date, input_filename, 'classic-results','csv')
+    # filename = "{}-{}-{}.{}".format(MACHINE_MODEL, d, 'manual-results','csv')
+    filename = "{}-{}-{}.{}".format(m_date, input_filename, 'manual-results','csv')
     RESULT_CSV = Path(FILE_PATH_DATA, filename)
-    classic_result_df.to_csv(RESULT_CSV)
+    manual_result_df.to_csv(RESULT_CSV)
 
     # store NN results within the results.csv
     # FILE_PATH_DATA = Path('./measurements', MACHINE_MODEL, 'data')
