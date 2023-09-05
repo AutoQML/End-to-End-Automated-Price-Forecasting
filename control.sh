@@ -34,7 +34,7 @@ echo "Conda env after activate automl-autosklearn: $CONDA_DEFAULT_ENV"
 echo "Conda env: $CONDA_DEFAULT_ENV"
 
 # set variables
-MEASUREMENTS=5
+MEASUREMENTS=1
 DATASET='Caterpillar-320'
 PCA_NUM=0
 
