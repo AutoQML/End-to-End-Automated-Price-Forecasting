@@ -8,6 +8,10 @@ clear
 START_DATE=`date +%F`
 echo $START_DATE
 
+# Get the directory where the script is located
+script_directory=$(dirname "$0")
+echo "Script directory: $script_directory"
+
 # get conda base directory path
 CONDA_BASE=$(conda info --base)
 echo "Base env: $CONDA_BASE"
@@ -29,13 +33,22 @@ conda activate automl-autosklearn
 echo "Conda env after activate automl-autosklearn: $CONDA_DEFAULT_ENV"
 echo "Conda env: $CONDA_DEFAULT_ENV"
 
+# set variables
+MEASUREMENTS=5
+DATASET='Caterpillar-320'
+PCA_NUM=1
+
+echo "Num of measurements: $MEASUREMENTS"
+echo "Dataset: $DATASET"
+
+
 # start computation if os == darwin (macos)
 if [[ $OSTYPE == 'darwin'* ]]
 then
     echo 'macOS'
     if [ $CONDA_DEFAULT_ENV == "automl-autosklearn" ]
     then
-        python code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn --datasets Caterpillar-320 --pca 1 --measurements 2 --document_results True
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn --datasets $DATASET --pca 1 --measurements $MEASUREMENTS --document_results True
     fi
 fi
 
@@ -45,7 +58,7 @@ then
     echo 'linux'
     if [ $CONDA_DEFAULT_ENV == "automl-autosklearn" ]
     then
-        python code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn autosklearn flaml --datasets Caterpillar-320 --measurements 2 --pca 2 --autosk_time_for_task 600 --autosk_runtime_limit 60 --document_results False
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn autosklearn flaml --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task 600 --autosk_runtime_limit 60 --document_results False
     fi
 
     conda deactivate
@@ -56,7 +69,7 @@ then
 
     if [ $CONDA_DEFAULT_ENV == "automl-autogluon" ]
     then
-        python code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets Caterpillar-320 --measurements 2 --pca 2 --document_results True
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results True
     fi
 
     conda deactivate
