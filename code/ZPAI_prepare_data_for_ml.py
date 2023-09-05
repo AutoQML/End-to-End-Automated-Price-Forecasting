@@ -132,7 +132,7 @@ def encode_categorical_features(df: pd.DataFrame) -> pd.DataFrame:
 
     """
     # get categorical features
-    categorical_cols = df.select_dtypes(include=['object','category']).columns.tolist()
+    categorical_cols = df.select_dtypes(include=["object", "string", "category"]).columns.tolist()
     # print('--Cat feature list: ', categorical_cols)
 
     if categorical_cols:
