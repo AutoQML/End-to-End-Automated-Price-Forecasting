@@ -1,4 +1,4 @@
-pca_num: 1 # max number of principal components (features)
+pca_num: 0 # max number of principal components (features)
 
 random_state: 1 # set random state
 
