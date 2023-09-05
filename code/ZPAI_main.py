@@ -19,8 +19,8 @@ def create_parser():
     parser.add_argument("--autosk_runtime_limit", type = int, help = "Time limit for a single call to the machine learning model")
     parser.add_argument("--start_date", type = str, help = "Start date of measurement")
     parser.add_argument("--measurements", type = int, help = "Number of measurements")
-    parser.add_argument("--automl_preprocessing", type = bool, help = "Set autoML preprocessing")
-    parser.add_argument("--evaluate_dataset_variance", type = bool, help = "Set evaluation of data set variance")
+    parser.add_argument("--automl_preprocessing", choices = ["True", "False"], help = "Set autoML preprocessing")
+    parser.add_argument("--evaluate_dataset_variance", choices = ["True", "False"], help = "Set evaluation of data set variance")
     parser.add_argument("--random_state", type = int, help = "Random state")
 
     return parser
@@ -71,11 +71,17 @@ def get_config_from_parser(parser, config):
 
     # autoML preprocessing
     if args.automl_preprocessing:
-        config["general"]["automl_preprocessing"] = args.automl_preprocessing
+        if args.automl_preprocessing == 'True':
+            config["general"]["automl_preprocessing"] = True
+        else:
+            config["general"]["automl_preprocessing"] = False
 
     # Set evaluation of data set variance
     if args.evaluate_dataset_variance:
-        config["general"]["evaluate_dataset_variance"] = args.evaluate_dataset_variance
+        if args.evaluate_dataset_variance == 'True':
+            config["general"]["evaluate_dataset_variance"] = True
+        else:
+            config["general"]["evaluate_dataset_variance"] = False
 
     # Random State
     if args.random_state:
