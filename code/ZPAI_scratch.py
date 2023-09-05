@@ -20,6 +20,24 @@ from ZPAI_document_results_utility import get_min_values, get_max_values
 #     [0.19] # extension-XE-location
 # ]
 
+def modify_legend(ax):
+    handles, labels_txt = ax.get_legend_handles_labels()
+
+    # Capitalize the first letters
+    labels_txt = [label.capitalize() for label in labels_txt]
+    # replace 'manual' string by the actual algorithm 'Rand. Forest'
+    labels_txt = [label.replace('Manual', 'Random Forest') for label in labels_txt]
+    # replace 'nn' string by the actual algorithm 'Neural Networkt'
+    labels_txt = [label.replace('Nn', 'MLP') for label in labels_txt]
+    # replace 'Autogluon' string by 'AutoGluon' string
+    labels_txt = [label.replace('Autogluon', 'AutoGluon') for label in labels_txt]
+    # replace 'Autosklearn' string by 'auto-sklearn' string
+    labels_txt = [label.replace('Autosklearn', 'auto-sklearn') for label in labels_txt]
+    # replace 'Flaml' string by 'FLAML' string
+    labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
+
+    return handles, labels_txt
+
 def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, CHART_PATH: Path, CHART_PDF_PATH: Path, min_value: float, max_value: float, dataset: str, document, picture_size):
 
     MIN_VAL = min_value
@@ -64,8 +82,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
 
         # display singe measurements and mean value of all measurements
         color = next(ax._get_lines.prop_cycler)
-        ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 0.33, alpha=0.45, linewidths=0, **color)
-        ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx], **color)
+        ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 0.33, alpha=0.45, linewidths=0, **color) # display dots for sigle measurements
+        ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx], **color) # display diamonds 
 
     graphics_title = f"MAPE-scores for {dataset}"
     # plt.title(graphics_title) # uncomment for publication
@@ -85,20 +103,7 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     ################
     # modify legend
     #################
-    handles, labels_txt = ax.get_legend_handles_labels()
-
-    # Capitalize the first letters
-    labels_txt = [label.capitalize() for label in labels_txt]
-    # replace 'manual' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [label.replace('Manual', 'Random Forest') for label in labels_txt]
-    # replace 'nn' string by the actual algorithm 'Neural Networkt'
-    labels_txt = [label.replace('Nn', 'MLP') for label in labels_txt]
-    # replace 'Autogluon' string by 'AutoGluon' string
-    labels_txt = [label.replace('Autogluon', 'AutoGluon') for label in labels_txt]
-    # replace 'Autosklearn' string by 'auto-sklearn' string
-    labels_txt = [label.replace('Autosklearn', 'auto-sklearn') for label in labels_txt]
-    # replace 'Flaml' string by 'FLAML' string
-    labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
+    handles, labels_txt = modify_legend(ax)
 
     fig.subplots_adjust(bottom=0.8 / rows)
     fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
@@ -224,20 +229,7 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     ################
     # modify legend
     #################
-    handles, labels_txt = ax.get_legend_handles_labels()
-
-    # Capitalize the first letters
-    labels_txt = [label.capitalize() for label in labels_txt]
-    # replace 'manual' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [label.replace('Manual', 'Random Forest') for label in labels_txt]
-    # replace 'nn' string by the actual algorithm 'Neural Networkt'
-    labels_txt = [label.replace('Nn', 'MLP') for label in labels_txt]
-    # replace 'Autogluon' string by 'AutoGluon' string
-    labels_txt = [label.replace('Autogluon', 'AutoGluon') for label in labels_txt]
-    # replace 'Autosklearn' string by 'auto-sklearn' string
-    labels_txt = [label.replace('Autosklearn', 'auto-sklearn') for label in labels_txt]
-    # replace 'Flaml' string by 'FLAML' string
-    labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
+    handles, labels_txt = modify_legend(ax)
 
     fig.subplots_adjust(bottom=0.8 / rows)
     fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
@@ -358,20 +350,7 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     ################
     # modify legend
     #################
-    handles, labels_txt = ax.get_legend_handles_labels()
-
-    # Capitalize the first letters
-    labels_txt = [label.capitalize() for label in labels_txt]
-    # replace 'manual' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [label.replace('Manual', 'Random Forest') for label in labels_txt]
-    # replace 'nn' string by the actual algorithm 'Neural Networkt'
-    labels_txt = [label.replace('Nn', 'MLP') for label in labels_txt]
-    # replace 'Autogluon' string by 'AutoGluon' string
-    labels_txt = [label.replace('Autogluon', 'AutoGluon') for label in labels_txt]
-    # replace 'Autosklearn' string by 'auto-sklearn' string
-    labels_txt = [label.replace('Autosklearn', 'auto-sklearn') for label in labels_txt]
-    # replace 'Flaml' string by 'FLAML' string
-    labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
+    handles, labels_txt = modify_legend(ax)
 
     fig.subplots_adjust(bottom=0.8 / rows)
     fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
@@ -492,20 +471,7 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     ################
     # modify legend
     #################
-    handles, labels_txt = ax.get_legend_handles_labels()
-
-    # Capitalize the first letters
-    labels_txt = [label.capitalize() for label in labels_txt]
-    # replace 'manual' string by the actual algorithm 'Rand. Forest'
-    labels_txt = [label.replace('Manual', 'Random Forest') for label in labels_txt]
-    # replace 'nn' string by the actual algorithm 'Neural Networkt'
-    labels_txt = [label.replace('Nn', 'MLP') for label in labels_txt]
-    # replace 'Autogluon' string by 'AutoGluon' string
-    labels_txt = [label.replace('Autogluon', 'AutoGluon') for label in labels_txt]
-    # replace 'Autosklearn' string by 'auto-sklearn' string
-    labels_txt = [label.replace('Autosklearn', 'auto-sklearn') for label in labels_txt]
-    # replace 'Flaml' string by 'FLAML' string
-    labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
+    handles, labels_txt = modify_legend(ax)
 
     fig.subplots_adjust(bottom=0.8 / rows)
     fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
