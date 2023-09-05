@@ -36,7 +36,7 @@ echo "Conda env: $CONDA_DEFAULT_ENV"
 # set variables
 MEASUREMENTS=5
 DATASET='Caterpillar-320'
-PCA_NUM=1
+PCA_NUM=0
 
 echo "Num of measurements: $MEASUREMENTS"
 echo "Dataset: $DATASET"
@@ -48,7 +48,7 @@ then
     echo 'macOS'
     if [ $CONDA_DEFAULT_ENV == "automl-autosklearn" ]
     then
-        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn --datasets $DATASET --pca 1 --measurements $MEASUREMENTS --document_results True
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn --datasets $DATASET --pca $PCA_NUM --measurements $MEASUREMENTS --document_results True
     fi
 fi
 
