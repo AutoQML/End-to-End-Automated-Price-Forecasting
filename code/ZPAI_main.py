@@ -138,20 +138,20 @@ def main():
         create_path(path = MEASUREMENT_FILE_PATH, verbose = False)
 
     # File path for the common summary
-    SUMMERY_FILE_PATH = Path(REPO_PATH, 'measurements', 'summery')
-    if not Path.exists(SUMMERY_FILE_PATH):
-        create_path(path = SUMMERY_FILE_PATH, verbose = False)
+    SUMMARY_FILE_PATH = Path(REPO_PATH, 'measurements', 'summary')
+    if not Path.exists(SUMMARY_FILE_PATH):
+        create_path(path = SUMMARY_FILE_PATH, verbose = False)
 
-    # File path within the summery directory for each measurement
-    EXPLICIT_SUMMERY_FILE_PATH = Path(REPO_PATH, 'measurements', 'summery', M_DATE)
-    if not Path.exists(EXPLICIT_SUMMERY_FILE_PATH):
-        create_path(path = EXPLICIT_SUMMERY_FILE_PATH, verbose = False)
+    # File path within the summary directory for each measurement
+    EXPLICIT_SUMMARY_FILE_PATH = Path(REPO_PATH, 'measurements', 'summary', M_DATE)
+    if not Path.exists(EXPLICIT_SUMMARY_FILE_PATH):
+        create_path(path = EXPLICIT_SUMMARY_FILE_PATH, verbose = False)
 
-    # create summery txt file
-    filename = "{}-{}.{}".format(M_DATE,'summery','txt')
-    GLOBAL_TXT_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
-    if not Path.exists(GLOBAL_TXT_SUMMERY_FILE):
-        with open(GLOBAL_TXT_SUMMERY_FILE, "w") as f:
+    # create summary txt file
+    filename = "{}-{}.{}".format(M_DATE,'summary','txt')
+    GLOBAL_TXT_SUMMARY_FILE = Path(EXPLICIT_SUMMARY_FILE_PATH, filename)
+    if not Path.exists(GLOBAL_TXT_SUMMARY_FILE):
+        with open(GLOBAL_TXT_SUMMARY_FILE, "w") as f:
             f.write("Measuremt date: " + M_DATE + "\n")
             f.write("Random seed: " + str(RANDOM_STATE) + "\n")
             f.write("PCA number: " + str(PCA_NUM) + "\n")
@@ -161,9 +161,9 @@ def main():
                 f.write("Auto-sklearn limit : " + str(autosklearn_conf['params']['run_time_limit']) + "\n")
 
 
-    # create summery yaml file
-    filename = "{}-{}.{}".format(M_DATE,'summery','yml')
-    GLOBAL_YAML_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
+    # create summary yaml file
+    filename = "{}-{}.{}".format(M_DATE,'summary','yml')
+    GLOBAL_YAML_SUMMARY_FILE = Path(EXPLICIT_SUMMARY_FILE_PATH, filename)
 
     if "autosklearn" in ALGORITHMS:
         dict_file = {'measurement_date': M_DATE,
@@ -181,8 +181,8 @@ def main():
                     'bin_outlier_detect': BIN_OUTLIER }
 
     # create first entry once at the creation of the file
-    if not Path.exists(GLOBAL_YAML_SUMMERY_FILE):
-        with open(GLOBAL_YAML_SUMMERY_FILE, 'w') as file:
+    if not Path.exists(GLOBAL_YAML_SUMMARY_FILE):
+        with open(GLOBAL_YAML_SUMMARY_FILE, 'w') as file:
             documents = yaml.dump(dict_file, file)
 
 
@@ -203,8 +203,8 @@ def main():
 
             evaluate_data(dataset = dataset,
                                     measurement = measurement + 1,
-                                    GLOBAL_TXT_SUMMERY_FILE = GLOBAL_TXT_SUMMERY_FILE,
-                                    GLOBAL_YAML_SUMMERY_FILE = GLOBAL_YAML_SUMMERY_FILE,
+                                    GLOBAL_TXT_SUMMARY_FILE = GLOBAL_TXT_SUMMARY_FILE,
+                                    GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE,
                                     config = CFG)
 
 
@@ -216,8 +216,8 @@ def main():
     if DOCUMENTATION == True:
         document_results_docx(datasets = DATASETS,
                               NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
-                              GLOBAL_YAML_SUMMERY_FILE = GLOBAL_YAML_SUMMERY_FILE,
-                              EXPLICIT_SUMMERY_FILE_PATH = EXPLICIT_SUMMERY_FILE_PATH,
+                              GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE,
+                              EXPLICIT_SUMMARY_FILE_PATH = EXPLICIT_SUMMARY_FILE_PATH,
                               config = CFG)
 
 if __name__ == '__main__':

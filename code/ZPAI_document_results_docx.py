@@ -30,8 +30,8 @@ from ZPAI_common_functions import read_yaml
 
 def document_results_docx(datasets: list,
                           NUM_OF_MEASUREMENTS: int,
-                          GLOBAL_YAML_SUMMERY_FILE: str, 
-                          EXPLICIT_SUMMERY_FILE_PATH: str,
+                          GLOBAL_YAML_SUMMARY_FILE: str, 
+                          EXPLICIT_SUMMARY_FILE_PATH: str,
                           config: dict) -> None:
 
     HEADING_2_LEVELS = 3
@@ -43,28 +43,28 @@ def document_results_docx(datasets: list,
 
     NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS
 
-    with open(GLOBAL_YAML_SUMMERY_FILE, 'r') as file: # open the file in append mode
-        summery_result_values = yaml.safe_load(file)
+    with open(GLOBAL_YAML_SUMMARY_FILE, 'r') as file: # open the file in append mode
+        summary_result_values = yaml.safe_load(file)
 
 
-    document = initialize_document(summery_result_values=summery_result_values, m_date=M_DATE)
+    document = initialize_document(summary_result_values=summary_result_values, m_date=M_DATE)
 
 
     # iterate through all construction machine models
     for dataset in datasets:
 
-        document = initialize_section(document, summery_result_values, dataset)
+        document = initialize_section(document, summary_result_values, dataset)
 
-        # get values from summery yaml file
-        MEASUREMENT_DATE = summery_result_values['measurement_date']
-        INPUT_FILE_CREATION_DATE = summery_result_values[dataset]['input_file_creation_date']
-        RANDOM_SEED = summery_result_values['random_seed']
-        INPUT_FILE_SIZE =  summery_result_values[dataset]['input_file_size']
-        INPUT_FILE_NAME =  summery_result_values[dataset]['input_file_name']
+        # get values from summary yaml file
+        MEASUREMENT_DATE = summary_result_values['measurement_date']
+        INPUT_FILE_CREATION_DATE = summary_result_values[dataset]['input_file_creation_date']
+        RANDOM_SEED = summary_result_values['random_seed']
+        INPUT_FILE_SIZE =  summary_result_values[dataset]['input_file_size']
+        INPUT_FILE_NAME =  summary_result_values[dataset]['input_file_name']
 
-        if 'autosklearn_runtime' in summery_result_values:
-            AUTOSKLEARN_RUNTIME = summery_result_values['autosklearn_runtime']
-            AUTOSKLEARN_LIMIT = summery_result_values['autosklearn_limit']
+        if 'autosklearn_runtime' in summary_result_values:
+            AUTOSKLEARN_RUNTIME = summary_result_values['autosklearn_runtime']
+            AUTOSKLEARN_LIMIT = summary_result_values['autosklearn_limit']
 
         # set path variables
         # File path for storing data
@@ -768,8 +768,8 @@ def document_results_docx(datasets: list,
 
         # store resulting dataframe
         filename = "{}-{}-{}.{}".format(M_DATE, dataset, 'best-results','csv')
-        RESULT_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
-        result_df.to_csv(str(RESULT_SUMMERY_FILE))
+        RESULT_SUMMARY_FILE = Path(EXPLICIT_SUMMARY_FILE_PATH, filename)
+        result_df.to_csv(str(RESULT_SUMMARY_FILE))
 
         # construct table
         extended_column_names = list(result_df.columns.values)
@@ -808,10 +808,10 @@ def document_results_docx(datasets: list,
 
 
     ##########################
-    # Build the summery table
+    # Build the summary table
     ##########################
 
-    add_results_heading(document, "Summery of the best results for all data sets", 1)
+    add_results_heading(document, "Summary of the best results for all data sets", 1)
 
     # create result data frame
     best_result_df = pd.DataFrame()
@@ -819,9 +819,9 @@ def document_results_docx(datasets: list,
     # iterate through all construction machine models
     for dataset in datasets:
         filename = "{}-{}-{}.{}".format(M_DATE, dataset, 'best-results','csv')
-        RESULT_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
+        RESULT_SUMMARY_FILE = Path(EXPLICIT_SUMMARY_FILE_PATH, filename)
 
-        results = load_csv_data(RESULT_SUMMERY_FILE)
+        results = load_csv_data(RESULT_SUMMARY_FILE)
 
         # Extract Values row for results.
         value_results = results.loc[ 'Value' , : ]
@@ -832,7 +832,7 @@ def document_results_docx(datasets: list,
     #------------------------
     # get the min and max values
     #------------------------
-    add_summary_table(document, best_result_df, summery_result_values, TABLE_FONT_SIZE)
+    add_summary_table(document, best_result_df, summary_result_values, TABLE_FONT_SIZE)
 
 
     ##########################
@@ -840,17 +840,17 @@ def document_results_docx(datasets: list,
     ##########################
 
     add_results_heading(document, "Statistics for all data sets", 1)
-    add_stats_table(document, best_result_df, summery_result_values, TABLE_FONT_SIZE)
+    add_stats_table(document, best_result_df, summary_result_values, TABLE_FONT_SIZE)
 
     # save best_result_df
     filename = "{}-{}.{}".format(M_DATE, 'best-results-for-all-machines','csv')
-    RESULT_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
-    best_result_df.to_csv(str(RESULT_SUMMERY_FILE))
+    RESULT_SUMMARY_FILE = Path(EXPLICIT_SUMMARY_FILE_PATH, filename)
+    best_result_df.to_csv(str(RESULT_SUMMARY_FILE))
 
     ######################
     # Save the docx file
     ######################
-    SUMMERY_FILE_PATH = Path(REPO_PATH, 'measurements', 'summery', M_DATE)
+    SUMMARY_FILE_PATH = Path(REPO_PATH, 'measurements', 'summary', M_DATE)
     filename = "{}-{}.{}".format(M_DATE,'measurement-documentation','docx')
-    DOCX_FILE = Path(SUMMERY_FILE_PATH, filename)
+    DOCX_FILE = Path(SUMMARY_FILE_PATH, filename)
     document.save(str(DOCX_FILE))

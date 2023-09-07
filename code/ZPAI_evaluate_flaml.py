@@ -29,7 +29,7 @@ def evaluate_flaml(X_train: pd.DataFrame,
                          y_train: pd.DataFrame, 
                          X_test: pd.DataFrame, 
                          y_test: pd.DataFrame, 
-                         summery_file: str, 
+                         summary_file: str, 
                          input_filename: str, 
                          file_path_pics: str, 
                          file_path_data: str, 
@@ -46,7 +46,7 @@ def evaluate_flaml(X_train: pd.DataFrame,
     # machine_type = machine_type
     FILE_PATH_PICS = file_path_pics
     FILE_PATH_DATA = file_path_data
-    SUMMERY_FILE = summery_file
+    SUMMARY_FILE = summary_file
     input_filename = input_filename
     result_df = result_df
     feature_set = feature_set
@@ -57,8 +57,8 @@ def evaluate_flaml(X_train: pd.DataFrame,
     TIME_FOR_TASK = config["autosklearn"]['params']['time_for_task']
 
     print('\n --Flaml approach-- for feature set: {}'.format(feature_set))
-    # open the summery file
-    f = open(SUMMERY_FILE, "a")
+    # open the summary file
+    f = open(SUMMARY_FILE, "a")
 
     # create the data list for storing the results of the computation
     data_list = []
@@ -186,5 +186,5 @@ def evaluate_flaml(X_train: pd.DataFrame,
     # put the data into the result file
     result_df[feature_set] = data_list
 
-    # close the summery file
+    # close the summary file
     f.close()

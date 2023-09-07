@@ -44,10 +44,10 @@ def calculate_stats(df: pd.DataFrame,
 
     # open yaml file to check if entry already exists
     with open(yaml_file, 'r') as file: # open the file in append mode
-        summery_result_values = yaml.safe_load(file)
+        summary_result_values = yaml.safe_load(file)
 
     # insert statistics if it does not already exists
-    if dataset not in summery_result_values:
+    if dataset not in summary_result_values:
 
         # print('-- Instert statistics to model: ', dataset)
          
@@ -78,8 +78,8 @@ def calculate_stats(df: pd.DataFrame,
 
 def evaluate_data(dataset: str,
                             measurement: int,
-                            GLOBAL_TXT_SUMMERY_FILE: str, 
-                            GLOBAL_YAML_SUMMERY_FILE: str,
+                            GLOBAL_TXT_SUMMARY_FILE: str, 
+                            GLOBAL_YAML_SUMMARY_FILE: str,
                             config: dict) -> None:
     """
     Summary.
@@ -90,9 +90,9 @@ def evaluate_data(dataset: str,
     ----------
     machine_model : str
         Description of arg1
-    GLOBAL_TXT_SUMMERY_FILE : str
+    GLOBAL_TXT_SUMMARY_FILE : str
         Description of arg2
-    GLOBAL_YAML_SUMMERY_FILE : str
+    GLOBAL_YAML_SUMMARY_FILE : str
         Description
     config : dict
         Description
@@ -107,8 +107,8 @@ def evaluate_data(dataset: str,
     # assign dataset
     DATASET = dataset
     NUM_OF_MEASUREMENT = measurement
-    GLOBAL_TXT_SUMMERY_FILE = GLOBAL_TXT_SUMMERY_FILE
-    GLOBAL_YAML_SUMMERY_FILE = GLOBAL_YAML_SUMMERY_FILE
+    GLOBAL_TXT_SUMMARY_FILE = GLOBAL_TXT_SUMMARY_FILE
+    GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE
     
 
     # Get parameters from configuration file
@@ -160,8 +160,8 @@ def evaluate_data(dataset: str,
     date_input_filename = "{}-{}".format(M_DATE, input_filename_without_type)
     # print('Input filename: {}'.format(date_input_filename))
 
-    # write name of input file to global summery.txt
-    with open(GLOBAL_TXT_SUMMERY_FILE, "a") as f:
+    # write name of input file to global summary.txt
+    with open(GLOBAL_TXT_SUMMARY_FILE, "a") as f:
         f.write("Input file for " + 
                 DATASET + ": " + input_filename_with_type + 
                 " with size: " + str(len(dataset_df)) + 
@@ -203,17 +203,17 @@ def evaluate_data(dataset: str,
     FILE_PATH_DATA = Path(REPO_PATH, 'measurements', DATASET, 'data', date_input_filename, str(NUM_OF_MEASUREMENT))
     create_path(path = FILE_PATH_DATA, verbose = False)
 
-    # create summery txt file
-    filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'summery','txt')
-    SUMMERY_FILE = Path(FILE_PATH_DATA, filename)
-    if not Path.exists(SUMMERY_FILE):
-        with open(SUMMERY_FILE, "w") as f:
-            f.write("Summery for: \n" + input_filename_without_type + "\n")
-        # print("Summery file " , SUMMERY_FILE ,  " Created ")
+    # create summary txt file
+    filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'summary','txt')
+    SUMMARY_FILE = Path(FILE_PATH_DATA, filename)
+    if not Path.exists(SUMMARY_FILE):
+        with open(SUMMARY_FILE, "w") as f:
+            f.write("Summary for: \n" + input_filename_without_type + "\n")
+        # print("Summary file " , SUMMARY_FILE ,  " Created ")
     else:
-        with open(SUMMERY_FILE, "a") as f:
-            f.write("Summery for: \n" + input_filename_without_type + "\n")
-        # print("Summery file " , SUMMERY_FILE ,  " already exists")
+        with open(SUMMARY_FILE, "a") as f:
+            f.write("Summary for: \n" + input_filename_without_type + "\n")
+        # print("Summary file " , SUMMARY_FILE ,  " already exists")
 
     # store dataset_df.head() as csv
     filename = "{}-{}-{}.{}".format(M_DATE,input_filename_without_type,'head','csv')
@@ -258,7 +258,7 @@ def evaluate_data(dataset: str,
                     dataset = DATASET,
                     filename = input_filename_with_type,  
                     creation_date = file_creation_date,
-                    yaml_file = GLOBAL_YAML_SUMMERY_FILE)
+                    yaml_file = GLOBAL_YAML_SUMMARY_FILE)
 
     ######################################
     # CREATE & SAVE PLOTS OF "CLEAN" INPUT FILE
@@ -300,7 +300,7 @@ def evaluate_data(dataset: str,
                         file_path_pics = FILE_PATH_PICS, 
                         file_path_data = FILE_PATH_DATA, 
                         input_filename = input_filename_without_type, 
-                        summery_file = SUMMERY_FILE, 
+                        summary_file = SUMMARY_FILE, 
                         config = config,
                         random_state = RANDOM_STATE,
                         measurements = NUM_OF_MEASUREMENT)

@@ -27,12 +27,12 @@ datasets = ['Caterpillar-320']
 # Set date
 m_date = '2023-08-20'
 
-# create summery yaml file
-# File path within the summery directory for each measurement
-EXPLICIT_SUMMERY_FILE_PATH = Path('./measurements', 'summery', m_date)
+# create summary yaml file
+# File path within the summary directory for each measurement
+EXPLICIT_SUMMARY_FILE_PATH = Path('./measurements', 'summary', m_date)
 
-filename = "{}-{}.{}".format(m_date,'summery','yml')
-GLOBAL_YAML_SUMMERY_FILE = Path(EXPLICIT_SUMMERY_FILE_PATH, filename)
+filename = "{}-{}.{}".format(m_date,'summary','yml')
+GLOBAL_YAML_SUMMARY_FILE = Path(EXPLICIT_SUMMARY_FILE_PATH, filename)
 
 ######################################
 # LOAD CONFIGURATIONS
@@ -55,9 +55,9 @@ CFG["general"]["start_date"] = m_date
 
 NUM_OF_MEASUREMENTS = 5
 
-# document_results_docx(datasets,m_date, GLOBAL_YAML_SUMMERY_FILE, EXPLICIT_SUMMERY_FILE_PATH)
+# document_results_docx(datasets,m_date, GLOBAL_YAML_SUMMARY_FILE, EXPLICIT_SUMMARY_FILE_PATH)
 document_results_docx(datasets,
                               NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
-                              GLOBAL_YAML_SUMMERY_FILE = GLOBAL_YAML_SUMMERY_FILE, 
-                              EXPLICIT_SUMMERY_FILE_PATH = EXPLICIT_SUMMERY_FILE_PATH, 
+                              GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE, 
+                              EXPLICIT_SUMMARY_FILE_PATH = EXPLICIT_SUMMARY_FILE_PATH, 
                               config = CFG)

@@ -46,7 +46,7 @@ def get_max_values(df):
 
     return(max_column[0], max_index[0], max_value)
 
-def initialize_document(summery_result_values, m_date):
+def initialize_document(summary_result_values, m_date):
     document = Document()
 
     # set page size
@@ -65,23 +65,23 @@ def initialize_document(summery_result_values, m_date):
     # document.add_heading("Results for measurement on {}!".format(data_x['measurement_date'], 0))
 
     document.add_paragraph('Measurement date: {}'.format(m_date), style='List Bullet')
-    document.add_paragraph('Random seed: {}'.format(summery_result_values['random_seed']), style='List Bullet')
-    document.add_paragraph('Number of PCA calculated features: {}'.format(summery_result_values['pca_numbers']), style='List Bullet')
-    document.add_paragraph('Outliert detection per bin: {}'.format(summery_result_values['bin_outlier_detect']), style='List Bullet')
+    document.add_paragraph('Random seed: {}'.format(summary_result_values['random_seed']), style='List Bullet')
+    document.add_paragraph('Number of PCA calculated features: {}'.format(summary_result_values['pca_numbers']), style='List Bullet')
+    document.add_paragraph('Outliert detection per bin: {}'.format(summary_result_values['bin_outlier_detect']), style='List Bullet')
 
-    if 'autosklearn_runtime' in summery_result_values:
-        document.add_paragraph('Autosklearn runtime per dataset: {} seconds'.format(summery_result_values['autosklearn_runtime']), style='List Bullet')
-        document.add_paragraph('Autosklearn time limit per algorithm: {} seconds'.format(summery_result_values['autosklearn_limit']), style='List Bullet')
+    if 'autosklearn_runtime' in summary_result_values:
+        document.add_paragraph('Autosklearn runtime per dataset: {} seconds'.format(summary_result_values['autosklearn_runtime']), style='List Bullet')
+        document.add_paragraph('Autosklearn time limit per algorithm: {} seconds'.format(summary_result_values['autosklearn_limit']), style='List Bullet')
 
     return document
 
-def initialize_section(document, summery_result_values, const_machine_model):
+def initialize_section(document, summary_result_values, const_machine_model):
     heading_1 = "Results for {}".format(const_machine_model)
     document.add_heading(heading_1, level=1)
 
-    document.add_paragraph('Input data file name: {}'.format(summery_result_values[const_machine_model]['input_file_name']), style='List Bullet')
-    document.add_paragraph('Input data file creation date: {}'.format(summery_result_values[const_machine_model]['input_file_creation_date']), style='List Bullet')
-    document.add_paragraph('Number of processed data points: {}'.format(summery_result_values[const_machine_model]['input_file_size']), style='List Bullet')
+    document.add_paragraph('Input data file name: {}'.format(summary_result_values[const_machine_model]['input_file_name']), style='List Bullet')
+    document.add_paragraph('Input data file creation date: {}'.format(summary_result_values[const_machine_model]['input_file_creation_date']), style='List Bullet')
+    document.add_paragraph('Number of processed data points: {}'.format(summary_result_values[const_machine_model]['input_file_size']), style='List Bullet')
 
     return document
 
@@ -374,7 +374,7 @@ def add_duration_line_plot(document, score_result_df, name, measurement_date, in
 
     plt.close()
 
-def add_stats_table(document, best_result_df, summery_result_values, table_font_size):
+def add_stats_table(document, best_result_df, summary_result_values, table_font_size):
     extended_column_names = [' ','# data points', 'Mean', 'Median', 'Std. diviation', 'Max', 'Min']
     row_names = list(best_result_df.index.values)
     
@@ -398,17 +398,17 @@ def add_stats_table(document, best_result_df, summery_result_values, table_font_
             if j == 0: # set construction machine name
                 cells[j].text = row_names[i]
             elif j == 1: # set input file size
-                cells[j].text = str(summery_result_values[str(row_names[i])]['input_file_size'])
+                cells[j].text = str(summary_result_values[str(row_names[i])]['input_file_size'])
             elif j == 2: # set mean
-                cells[j].text = str(summery_result_values[str(row_names[i])]['input_file_mean'])
+                cells[j].text = str(summary_result_values[str(row_names[i])]['input_file_mean'])
             elif j == 3: # set median
-                cells[j].text = str(summery_result_values[str(row_names[i])]['input_file_50'])
+                cells[j].text = str(summary_result_values[str(row_names[i])]['input_file_50'])
             elif j == 4: # set stand. deviation
-                cells[j].text = str(summery_result_values[str(row_names[i])]['input_file_std'])
+                cells[j].text = str(summary_result_values[str(row_names[i])]['input_file_std'])
             elif j == 5: # set max value
-                cells[j].text = str(summery_result_values[str(row_names[i])]['input_file_max'])
+                cells[j].text = str(summary_result_values[str(row_names[i])]['input_file_max'])
             elif j == 6: # set min value
-                cells[j].text = str(summery_result_values[str(row_names[i])]['input_file_min'])
+                cells[j].text = str(summary_result_values[str(row_names[i])]['input_file_min'])
 
     for row in stats_table.rows:
             for cell in row.cells:
@@ -418,7 +418,7 @@ def add_stats_table(document, best_result_df, summery_result_values, table_font_
                         font = run.font
                         font.size= Pt(table_font_size)
 
-def add_summary_table(document, best_result_df, summery_result_values, table_font_size):
+def add_summary_table(document, best_result_df, summary_result_values, table_font_size):
     best_max_scores = best_result_df.astype('float64').idxmax(axis=0)
     best_min_scores = best_result_df.astype('float64').idxmin(axis=0)
 
@@ -447,7 +447,7 @@ def add_summary_table(document, best_result_df, summery_result_values, table_fon
             if j == 0: # set construction machine name
                 cells[j].text = row_names[i]
             elif j == 1: # set input file size
-                cells[j].text = str(summery_result_values[str(row_names[i])]['input_file_size'])
+                cells[j].text = str(summary_result_values[str(row_names[i])]['input_file_size'])
             else: # set values for R2, MAE & RMSE
                 cells[j].text = str(best_result_df.iat[i, j-2])
 

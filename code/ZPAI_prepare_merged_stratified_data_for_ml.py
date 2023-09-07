@@ -42,12 +42,12 @@ with open(REPO_PATH / 'conf/auto_sklearn_config.yml', 'r') as file:
 # value -2 -> use all but one CPU ...
 n_cpus = -2
 
-def prepare_merged_data_for_ml(machine_model, machine_type, file_path_pics, file_path_data, input_filename, summery_file, pca_num, random_state, m_date):
+def prepare_merged_data_for_ml(machine_model, machine_type, file_path_pics, file_path_data, input_filename, summary_file, pca_num, random_state, m_date):
     MACHINE_MODEL = machine_model
     machine_type = machine_type
     FILE_PATH_PICS = file_path_pics
     FILE_PATH_DATA = file_path_data
-    SUMMERY_FILE = summery_file
+    SUMMARY_FILE = summary_file
     input_filename = input_filename
     PCA_NUM = pca_num
     RANDOM_STATE = random_state
@@ -160,15 +160,15 @@ def prepare_merged_data_for_ml(machine_model, machine_type, file_path_pics, file
     feature_set = 'all-features'
 
     # evaluate manual ml models like lin. regression, trees, forests, SVM
-    eval_manual_ml_models(machine_type_X_train, machine_type_y_train, X_test_prepared, machine_type_y_test, SUMMERY_FILE, column_count, input_filename, FILE_PATH_PICS, manual_result_df, feature_set, RANDOM_STATE, m_date)
+    eval_manual_ml_models(machine_type_X_train, machine_type_y_train, X_test_prepared, machine_type_y_test, SUMMARY_FILE, column_count, input_filename, FILE_PATH_PICS, manual_result_df, feature_set, RANDOM_STATE, m_date)
 
     # evaluate NN
-    evaluate_neural_nets(machine_type_X_train, machine_type_y_train, X_test_prepared, machine_type_y_test, SUMMERY_FILE, input_filename, FILE_PATH_PICS, nn_result_df, feature_set, RANDOM_STATE, m_date)
+    evaluate_neural_nets(machine_type_X_train, machine_type_y_train, X_test_prepared, machine_type_y_test, SUMMARY_FILE, input_filename, FILE_PATH_PICS, nn_result_df, feature_set, RANDOM_STATE, m_date)
 
     # evaluate AutoML - autosklearn
     # check for OS - autosklearn is not running on MAC (Darwin) at the moment
     if my_os == 'Linux':
-        evaluate_autosklearn(machine_type_X_train, machine_type_y_train, X_test_prepared, machine_type_y_test, SUMMERY_FILE, input_filename, FILE_PATH_PICS, auto_result_df, feature_set, RANDOM_STATE, m_date)
+        evaluate_autosklearn(machine_type_X_train, machine_type_y_train, X_test_prepared, machine_type_y_test, SUMMARY_FILE, input_filename, FILE_PATH_PICS, auto_result_df, feature_set, RANDOM_STATE, m_date)
     if my_os == 'Darwin':
         print("System OS: ",my_os)
 

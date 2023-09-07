@@ -193,7 +193,7 @@ def eval_manual_ml_models(X_train: pd.DataFrame,
                            y_train: pd.DataFrame, 
                            X_test: pd.DataFrame, 
                            y_test: pd.DataFrame, 
-                           summery_file: str, 
+                           summary_file: str, 
                            column_count: int, 
                            input_filename: str, 
                            file_path_pics: str, 
@@ -217,7 +217,7 @@ def eval_manual_ml_models(X_train: pd.DataFrame,
         Input variables of the test set
     y_test : pd.DataFrame
         Target variable of the training set
-    summery_file: str
+    summary_file: str
         Path to summary file
     column_count: int
         Number of input variables
@@ -243,8 +243,8 @@ def eval_manual_ml_models(X_train: pd.DataFrame,
     SKLEARN_VERSION = tuple([int(x) for x in sklearn.__version__.split(".")])
 
     print('\n--Manual approach-- for feature set: {}'.format(feature_set))
-    # open the summery file
-    f = open(summery_file, "a")
+    # open the summary file
+    f = open(summary_file, "a")
 
     # create the data list for storing the results of the computation
     data_list = []
@@ -633,5 +633,5 @@ def eval_manual_ml_models(X_train: pd.DataFrame,
     # put the data into the result file
     result_df[feature_set] = data_list
 
-    # close the summery file
+    # close the summary file
     f.close()

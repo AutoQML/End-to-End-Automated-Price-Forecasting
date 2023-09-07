@@ -25,7 +25,7 @@ def evaluate_neural_nets(X_train: pd.DataFrame,
                          y_train: pd.DataFrame, 
                          X_test: pd.DataFrame, 
                          y_test: pd.DataFrame, 
-                         summery_file: str, 
+                         summary_file: str, 
                          input_filename: str, 
                          file_path_pics: str, 
                          result_df: pd.DataFrame, 
@@ -48,7 +48,7 @@ def evaluate_neural_nets(X_train: pd.DataFrame,
         Input variables of the test set
     y_test : pd.DataFrame
         Target variable of the training set
-    summery_file: str
+    summary_file: str
         Path to summary file
     input_filename: str
         Name of the input file
@@ -72,8 +72,8 @@ def evaluate_neural_nets(X_train: pd.DataFrame,
 
 
     print('\n --NN approach-- for feature set: {}'.format(feature_set))
-    # open the summery file
-    f = open(summery_file, "a")
+    # open the summary file
+    f = open(summary_file, "a")
 
     # create the data list for storing the results of the computation
     data_list = []
@@ -217,5 +217,5 @@ def evaluate_neural_nets(X_train: pd.DataFrame,
     # put the data into the result file
     result_df[feature_set] = data_list
 
-    # close the summery file
+    # close the summary file
     f.close()
