@@ -409,7 +409,7 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
                     print('Wrong python environment!')
 
             if "autogluon" in ALGORITHMS:
-                if PYTHON_ENV == 'automl-autogluon':
+                if PYTHON_ENV == 'autogluon':
                     # evaluate AutoML - autogluon
                     # check for OS - autogluon is not running on MAC (Darwin) at the moment
                     if MY_OS == 'Linux':

@@ -64,10 +64,10 @@ then
     conda deactivate
     echo "Conda env after deactivate: $CONDA_DEFAULT_ENV"
 
-    conda activate automl-autogluon
-    echo "Conda env after activate automl-autogluon: $CONDA_DEFAULT_ENV"
+    conda activate autogluon
+    echo "Conda env after activate autogluon: $CONDA_DEFAULT_ENV"
 
-    if [ $CONDA_DEFAULT_ENV == "automl-autogluon" ]
+    if [ $CONDA_DEFAULT_ENV == "autogluon" ]
     then
         python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results True
     fi
