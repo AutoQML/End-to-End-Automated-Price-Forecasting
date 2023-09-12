@@ -58,7 +58,7 @@ then
     echo 'linux'
     if [ $CONDA_DEFAULT_ENV == "automl-autosklearn" ]
     then
-        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn autosklearn flaml --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task 600 --autosk_runtime_limit 60 --document_results False
+                python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn autosklearn flaml --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task 600 --autosk_runtime_limit 60 --document_results False
     fi
 
     conda deactivate
@@ -69,7 +69,17 @@ then
 
     if [ $CONDA_DEFAULT_ENV == "autogluon" ]
     then
-        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results True
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results False
+    fi
+
+    conda deactivate
+
+    conda activate autokeras-2
+    echo "Conda env after activate autokeras-2: $CONDA_DEFAULT_ENV"
+
+    if [ $CONDA_DEFAULT_ENV == "autokeras-2" ]
+    then
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autokeras --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results False
     fi
 
     conda deactivate

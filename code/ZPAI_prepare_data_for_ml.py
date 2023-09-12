@@ -245,6 +245,12 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
         # # create result data frame
         flaml_result_df = pd.DataFrame(index=flaml_index)
 
+    if "autokeras" in ALGORITHMS:
+        # create result data frame to store the measurements for autosklearn
+        autokeras_index = ['Test-MAE', 'Test-MAPE', 'Test-RMSE', 'Test-N-RMSE', 'Test-IQR-RMSE', 'Test-CV-RMSE', 'Test-R2', 'Training-Duration', 'Test-Duration']
+        # # create result data frame
+        autokeras_result_df = pd.DataFrame(index=autokeras_index)
+
     ###########################
     # Data preparation
     ###########################
@@ -446,6 +452,24 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
                 else:
                     print('Wrong python environment!')
 
+            if "autokeras" in ALGORITHMS:
+                if PYTHON_ENV == 'autokeras-2':
+                    # evaluate autokeras
+                    from ZPAI_evaluate_autokeras import evaluate_autokeras
+                    evaluate_autokeras(X_train = df_dataset_X_train_automl,
+                                        y_train = df_dataset_y_train_automl,
+                                        X_test = df_dataset_X_test_automl,
+                                        y_test = df_dataset_y_test_automl,
+                                        summary_file = SUMMARY_FILE,
+                                        input_filename = input_filename,
+                                        file_path_pics = FILE_PATH_PICS,
+                                        file_path_data = FILE_PATH_DATA,
+                                        result_df = autokeras_result_df,
+                                        feature_set = feature_set,
+                                        config = config)
+                else:
+                    print('Wrong python environment!')
+
 
     if "manual" in ALGORITHMS:
         # store manual results within the results.csv
@@ -472,7 +496,13 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
         autogluon_result_df.to_csv(RESULT_CSV)
 
     if "flaml" in ALGORITHMS:
-        # store autogluon results within the results.csv
+        # store flaml results within the results.csv
         filename = "{}-{}-{}.{}".format(M_DATE, input_filename, 'flaml-results','csv')
         RESULT_CSV = Path(FILE_PATH_DATA, filename)
         flaml_result_df.to_csv(RESULT_CSV)
+
+    if "autokeras" in ALGORITHMS:
+        # store autokeras results within the results.csv
+        filename = "{}-{}-{}.{}".format(M_DATE, input_filename, 'autokeras-results','csv')
+        RESULT_CSV = Path(FILE_PATH_DATA, filename)
+        autokeras_result_df.to_csv(RESULT_CSV)
