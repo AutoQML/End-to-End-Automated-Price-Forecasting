@@ -4,9 +4,9 @@ random_state: 1 # set random state
 
 bin_outlier_detect: True # set the additional outlier detection within bins (True or False)
 
-datasets: ['merged-files']
+datasets: ['merged-files', 'Caterpillar-320', 'Caterpillar-308']
 
-algorithms: ["manual", "nn", "autosklearn", "autogluon", "flaml"]
+algorithms: ["manual", "nn", "autosklearn", "autogluon", "flaml", "autokeras"]
 
 documentation: True # set the documentation (True or False)
 
@@ -16,7 +16,7 @@ measurement_num: 5 # number of repetitive measurements
 automl_preprocessing: False
 
 # evaluate data set variance
-evaluate_dataset_variance: False
+evaluate_dataset_variance: True
 
 # set method evaluation value weights
 mev_weights:

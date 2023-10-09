@@ -35,7 +35,7 @@ echo "Conda env: $CONDA_DEFAULT_ENV"
 
 # set variables
 MEASUREMENTS=1
-DATASET='Caterpillar-320'
+DATASET='merged-files'
 PCA_NUM=0
 
 echo "Num of measurements: $MEASUREMENTS"
@@ -79,7 +79,7 @@ then
 
     if [ $CONDA_DEFAULT_ENV == "autokeras-2" ]
     then
-        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autokeras --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results False
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autokeras --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results True
     fi
 
     conda deactivate
