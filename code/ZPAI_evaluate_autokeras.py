@@ -71,7 +71,7 @@ def evaluate_autokeras(X_train: pd.DataFrame,
    # flaml built-in metric: https://microsoft.github.io/FLAML/docs/Use-Cases/Task-Oriented-AutoML#customize-automlfit
 
     # automl = StructuredDataRegressor(max_trials=15, loss='mean_absolute_percentage_error', metrics='mean_absolute_percentage_error')
-    automl = StructuredDataRegressor(max_trials=15, loss='mean_absolute_error')
+    automl = StructuredDataRegressor(max_trials=100, loss='mean_absolute_error')
 
     # Training starting time
     train_start_time = time()
@@ -95,7 +95,7 @@ def evaluate_autokeras(X_train: pd.DataFrame,
 
 
     train_predictions = automl.predict(X_train)
-    print("Train MSE score:", mean_absolute_percentage_error(y_train, train_predictions))
+    print("Train MAPE score:", mean_absolute_percentage_error(y_train, train_predictions))
 
     # Test start time
     test_start_time = time()
