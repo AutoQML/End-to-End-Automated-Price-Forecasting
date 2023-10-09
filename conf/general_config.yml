@@ -4,7 +4,7 @@ random_state: 1 # set random state
 
 bin_outlier_detect: True # set the additional outlier detection within bins (True or False)
 
-datasets: ['merged-files', 'Caterpillar-320', 'Caterpillar-308']
+datasets: ['merged-files', 'Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar-329', 'Caterpillar-330', 'Caterpillar-336', 'Caterpillar-950', 'Caterpillar-966', 'Caterpillar-D6', 'Caterpillar-M318',]
 
 algorithms: ["manual", "nn", "autosklearn", "autogluon", "flaml", "autokeras"]
 
