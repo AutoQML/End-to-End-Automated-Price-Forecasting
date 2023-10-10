@@ -117,7 +117,7 @@ def load_and_preprocess_data(datasets: list,
         else:
             merged_df = pd.concat([merged_df, dataframe_list[i+1]], axis=0, ignore_index=True)
 
-    print(merged_df)
+    # print(merged_df)
     
     ##############################
     # replace NaN values by 0 for all 
@@ -135,4 +135,6 @@ def load_and_preprocess_data(datasets: list,
     # Replace NaN values with zeros
     merged_df[columns_to_replace] = merged_df[columns_to_replace].fillna(0)
 
-    print(merged_df)
+    # print(merged_df)
+
+    return(merged_df)
