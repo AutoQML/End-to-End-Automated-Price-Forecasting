@@ -7,12 +7,13 @@ import os
 from ZPAI_common_functions import get_current_date, create_path, read_yaml
 from ZPAI_evaluate_dataset import evaluate_data
 from ZPAI_document_results_docx import document_results_docx
+from ZPAI_load_and_preprocess_data import load_and_preprocess_data
 
 def create_parser():
     parser = argparse.ArgumentParser(description="Process inputs")
     parser.add_argument("--pca", type = int, help = "Number of selected PCA components")
     parser.add_argument("--algorithms", choices = ["manual", "nn", "autosklearn", "autogluon", "flaml", "autokeras"], nargs="*", help = "Type of algorithms to run.")
-    parser.add_argument("--datasets", nargs='+', help = "Enter dataset(s) - use the subdirectory names of the data folder", required=True)
+    parser.add_argument("--datasets", nargs='+', help = "Enter dataset(s) - use the subdirectory names of the data folder", required=False)
     parser.add_argument("--outlier_detection", choices = ["True", "False"], help = "Remove outliers from dataset")
     parser.add_argument("--document_results", choices = ["True", "False"], help = "Document the results")
     parser.add_argument("--autosk_time_for_task", type = int, help = "Time limit in seconds for the search of appropriate models")
@@ -185,40 +186,46 @@ def main():
         with open(GLOBAL_YAML_SUMMARY_FILE, 'w') as file:
             documents = yaml.dump(dict_file, file)
 
+    ################################################
+    # load and preprocess input files
+    ################################################
 
-    ######################################
-    # RUN PIPELINE AND ALGORITHMS FOR ALL SELECTED MODELS
-    ######################################
-    # outmost loop -> configure number of repetitive runs
-    for measurement in range(NUM_OF_MEASUREMENTS):
-
-        # print number of measurements
-        print('\n Measurement {} of {} with random state {}'.format(measurement+1, NUM_OF_MEASUREMENTS, measurement+1))
-
-        # iterate through all construction machine models
-        for count, dataset in enumerate(DATASETS):
-
-            # get model configuration
-            print('\n Construction machine model {} of {} - {}'.format(count+1, len(DATASETS), dataset))
-
-            evaluate_data(dataset = dataset,
-                                    measurement = measurement + 1,
-                                    GLOBAL_TXT_SUMMARY_FILE = GLOBAL_TXT_SUMMARY_FILE,
-                                    GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE,
-                                    config = CFG)
-
-
-    ######################################
-    # CREATE WORD FILE WITH ALL RESULTS
-    ######################################
-
-    # document results as docx
-    if DOCUMENTATION == True:
-        document_results_docx(datasets = DATASETS,
-                              NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
-                              GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE,
-                              EXPLICIT_SUMMARY_FILE_PATH = EXPLICIT_SUMMARY_FILE_PATH,
+    load_and_preprocess_data(datasets = DATASETS,
                               config = CFG)
+    
+    # ######################################
+    # # RUN PIPELINE AND ALGORITHMS FOR ALL SELECTED MODELS
+    # ######################################
+    # # outmost loop -> configure number of repetitive runs
+    # for measurement in range(NUM_OF_MEASUREMENTS):
+
+    #     # print number of measurements
+    #     print('\n Measurement {} of {} with random state {}'.format(measurement+1, NUM_OF_MEASUREMENTS, measurement+1))
+
+    #     # iterate through all construction machine models
+    #     for count, dataset in enumerate(DATASETS):
+
+    #         # get model configuration
+    #         print('\n Construction machine model {} of {} - {}'.format(count+1, len(DATASETS), dataset))
+
+    #         evaluate_data(dataset = dataset,
+    #                                 measurement = measurement + 1,
+    #                                 GLOBAL_TXT_SUMMARY_FILE = GLOBAL_TXT_SUMMARY_FILE,
+    #                                 GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE,
+    #                                 config = CFG)
+
+
+    # ######################################
+    # # CREATE WORD FILE WITH ALL RESULTS
+    # ######################################
+
+    # # document results as docx
+    # if DOCUMENTATION == True:
+    #     document_results_docx(datasets = DATASETS,
+    #                           NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
+    #                           GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE,
+    #                           EXPLICIT_SUMMARY_FILE_PATH = EXPLICIT_SUMMARY_FILE_PATH,
+    #                           config = CFG)
 
 if __name__ == '__main__':
     main()
