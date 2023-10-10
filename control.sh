@@ -48,7 +48,8 @@ then
     echo 'macOS'
     if [ $CONDA_DEFAULT_ENV == "automl-autosklearn" ]
     then
-        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn --datasets $DATASET --pca $PCA_NUM --measurements $MEASUREMENTS --document_results True
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn  --pca $PCA_NUM --measurements $MEASUREMENTS --document_results True
+        # python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn --datasets Caterpillar-308 Caterpillar-320 --pca $PCA_NUM --measurements $MEASUREMENTS --document_results True
     fi
 fi
 
