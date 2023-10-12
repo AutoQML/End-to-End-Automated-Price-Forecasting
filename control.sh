@@ -61,10 +61,10 @@ then
 
     conda deactivate
     echo "Conda env after deactivate: $CONDA_DEFAULT_ENV"
-    # activate lead_preproc_data conda env
-    conda activate lead_preproc_data
+    # activate load_preproc_data conda env
+    conda activate load_preproc_data
 
-    if [ $CONDA_DEFAULT_ENV == "lead_preproc_data" ]
+    if [ $CONDA_DEFAULT_ENV == "load_preproc_data" ]
     then
                 python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms load_preprocess --document_results False
                 # python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn autosklearn flaml --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task 600 --autosk_runtime_limit 60 --document_results False
