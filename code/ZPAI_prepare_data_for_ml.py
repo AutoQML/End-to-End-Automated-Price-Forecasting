@@ -356,119 +356,101 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
                 df_dataset_test_automl = df_dataset_test
 
             if "manual" in ALGORITHMS:
-                if PYTHON_ENV == 'automl-autosklearn':
-                    # evaluate manual ml models like lin. regression, trees, forests, SVM
-                    from ZPAI_evaluate_manual_ml_models import eval_manual_ml_models
-                    eval_manual_ml_models(X_train = df_dataset_X_train,
-                                        y_train = df_dataset_y_train,
-                                        X_test = df_dataset_X_test,
-                                        y_test = df_dataset_y_test,
-                                        summary_file = SUMMARY_FILE,
-                                        column_count = column_count,
-                                        input_filename = input_filename,
-                                        file_path_pics = FILE_PATH_PICS,
-                                        result_df = manual_result_df,
-                                        feature_set = feature_set,
-                                        config = config)
-                else:
-                    print('Wrong python environment!')
+                # evaluate manual ml models like lin. regression, trees, forests, SVM
+                from ZPAI_evaluate_manual_ml_models import eval_manual_ml_models
+                eval_manual_ml_models(X_train = df_dataset_X_train,
+                                    y_train = df_dataset_y_train,
+                                    X_test = df_dataset_X_test,
+                                    y_test = df_dataset_y_test,
+                                    summary_file = SUMMARY_FILE,
+                                    column_count = column_count,
+                                    input_filename = input_filename,
+                                    file_path_pics = FILE_PATH_PICS,
+                                    result_df = manual_result_df,
+                                    feature_set = feature_set,
+                                    config = config)
 
             if "nn" in ALGORITHMS:
-                if PYTHON_ENV == 'automl-autosklearn':
-                    # evaluate MLP
-                    from ZPAI_evaluate_neural_nets import evaluate_neural_nets
-                    evaluate_neural_nets(X_train = df_dataset_X_train,
-                                        y_train = df_dataset_y_train,
-                                        X_test = df_dataset_X_test,
-                                        y_test = df_dataset_y_test,
-                                        summary_file = SUMMARY_FILE,
-                                        input_filename = input_filename,
-                                        file_path_pics = FILE_PATH_PICS,
-                                        result_df = nn_result_df,
-                                        feature_set = feature_set,
-                                        config = config)
-                else:
-                    print('Wrong python environment!')
+                # evaluate MLP
+                from ZPAI_evaluate_neural_nets import evaluate_neural_nets
+                evaluate_neural_nets(X_train = df_dataset_X_train,
+                                    y_train = df_dataset_y_train,
+                                    X_test = df_dataset_X_test,
+                                    y_test = df_dataset_y_test,
+                                    summary_file = SUMMARY_FILE,
+                                    input_filename = input_filename,
+                                    file_path_pics = FILE_PATH_PICS,
+                                    result_df = nn_result_df,
+                                    feature_set = feature_set,
+                                    config = config)
 
             if "autosklearn" in ALGORITHMS:
-                if PYTHON_ENV == 'automl-autosklearn':
-                    # evaluate AutoML - autosklearn
-                    # check for OS - autosklearn is not running on MAC (Darwin) at the moment
-                    if MY_OS == 'Linux':
-                        from ZPAI_evaluate_autosklearn import evaluate_autosklearn
-                        evaluate_autosklearn(X_train = df_dataset_X_train_automl,
-                                            y_train = df_dataset_y_train_automl,
-                                            X_test = df_dataset_X_test_automl,
-                                            y_test = df_dataset_y_test_automl,
-                                            summary_file = SUMMARY_FILE,
-                                            input_filename = input_filename,
-                                            file_path_pics = FILE_PATH_PICS,
-                                            file_path_data = FILE_PATH_DATA,
-                                            result_df = autosklearn_result_df,
-                                            feature_set = feature_set,
-                                            config = config,
-                                            loop_count = loop_count, 
-                                            measurements = MEASUREMENTS)
-                    if MY_OS == 'Darwin':
-                        print("System OS: ",MY_OS)
-                else:
-                    print('Wrong python environment!')
+                # evaluate AutoML - autosklearn
+                # check for OS - autosklearn is not running on MAC (Darwin) at the moment
+                if MY_OS == 'Linux':
+                    from ZPAI_evaluate_autosklearn import evaluate_autosklearn
+                    evaluate_autosklearn(X_train = df_dataset_X_train_automl,
+                                        y_train = df_dataset_y_train_automl,
+                                        X_test = df_dataset_X_test_automl,
+                                        y_test = df_dataset_y_test_automl,
+                                        summary_file = SUMMARY_FILE,
+                                        input_filename = input_filename,
+                                        file_path_pics = FILE_PATH_PICS,
+                                        file_path_data = FILE_PATH_DATA,
+                                        result_df = autosklearn_result_df,
+                                        feature_set = feature_set,
+                                        config = config,
+                                        loop_count = loop_count, 
+                                        measurements = MEASUREMENTS)
+                if MY_OS == 'Darwin':
+                    print("System OS: ",MY_OS)
 
             if "autogluon" in ALGORITHMS:
-                if PYTHON_ENV == 'autogluon':
-                    # evaluate AutoML - autogluon
-                    # check for OS - autogluon is not running on MAC (Darwin) at the moment
-                    if MY_OS == 'Linux':
-                        from ZPAI_evaluate_autogluon import evaluate_autogluon
-                        evaluate_autogluon(X_train = df_dataset_train_automl,
-                                            X_test = df_dataset_test_automl,
-                                            summary_file = SUMMARY_FILE,
-                                            input_filename = input_filename,
-                                            file_path_pics = FILE_PATH_PICS,
-                                            file_path_data = FILE_PATH_DATA,
-                                            result_df = autogluon_result_df,
-                                            feature_set = feature_set,
-                                            config = config)
-                    if MY_OS == 'Darwin':
-                        print("System OS: ",MY_OS)
-                else:
-                    print('Wrong python environment!')
+                # evaluate AutoML - autogluon
+                # check for OS - autogluon is not running on MAC (Darwin) at the moment
+                if MY_OS == 'Linux':
+                    from ZPAI_evaluate_autogluon import evaluate_autogluon
+                    evaluate_autogluon(X_train = df_dataset_train_automl,
+                                        X_test = df_dataset_test_automl,
+                                        summary_file = SUMMARY_FILE,
+                                        input_filename = input_filename,
+                                        file_path_pics = FILE_PATH_PICS,
+                                        file_path_data = FILE_PATH_DATA,
+                                        result_df = autogluon_result_df,
+                                        feature_set = feature_set,
+                                        config = config)
+                if MY_OS == 'Darwin':
+                    print("System OS: ",MY_OS)
 
             if "flaml" in ALGORITHMS:
-                if PYTHON_ENV == 'automl-autosklearn':
-                    # evaluate NN
-                    from ZPAI_evaluate_flaml import evaluate_flaml
-                    evaluate_flaml(X_train = df_dataset_X_train_automl,
-                                        y_train = df_dataset_y_train_automl,
-                                        X_test = df_dataset_X_test_automl,
-                                        y_test = df_dataset_y_test_automl,
-                                        summary_file = SUMMARY_FILE,
-                                        input_filename = input_filename,
-                                        file_path_pics = FILE_PATH_PICS,
-                                        file_path_data = FILE_PATH_DATA,
-                                        result_df = flaml_result_df,
-                                        feature_set = feature_set,
-                                        config = config)
-                else:
-                    print('Wrong python environment!')
+                # evaluate NN
+                from ZPAI_evaluate_flaml import evaluate_flaml
+                evaluate_flaml(X_train = df_dataset_X_train_automl,
+                                    y_train = df_dataset_y_train_automl,
+                                    X_test = df_dataset_X_test_automl,
+                                    y_test = df_dataset_y_test_automl,
+                                    summary_file = SUMMARY_FILE,
+                                    input_filename = input_filename,
+                                    file_path_pics = FILE_PATH_PICS,
+                                    file_path_data = FILE_PATH_DATA,
+                                    result_df = flaml_result_df,
+                                    feature_set = feature_set,
+                                    config = config)
 
             if "autokeras" in ALGORITHMS:
-                if PYTHON_ENV == 'autokeras-2':
-                    # evaluate autokeras
-                    from ZPAI_evaluate_autokeras import evaluate_autokeras
-                    evaluate_autokeras(X_train = df_dataset_X_train_automl,
-                                        y_train = df_dataset_y_train_automl,
-                                        X_test = df_dataset_X_test_automl,
-                                        y_test = df_dataset_y_test_automl,
-                                        summary_file = SUMMARY_FILE,
-                                        input_filename = input_filename,
-                                        file_path_pics = FILE_PATH_PICS,
-                                        file_path_data = FILE_PATH_DATA,
-                                        result_df = autokeras_result_df,
-                                        feature_set = feature_set,
-                                        config = config)
-                else:
-                    print('Wrong python environment!')
+                # evaluate autokeras
+                from ZPAI_evaluate_autokeras import evaluate_autokeras
+                evaluate_autokeras(X_train = df_dataset_X_train_automl,
+                                    y_train = df_dataset_y_train_automl,
+                                    X_test = df_dataset_X_test_automl,
+                                    y_test = df_dataset_y_test_automl,
+                                    summary_file = SUMMARY_FILE,
+                                    input_filename = input_filename,
+                                    file_path_pics = FILE_PATH_PICS,
+                                    file_path_data = FILE_PATH_DATA,
+                                    result_df = autokeras_result_df,
+                                    feature_set = feature_set,
+                                    config = config)
 
 
     if "manual" in ALGORITHMS:
