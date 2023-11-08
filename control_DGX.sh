@@ -42,7 +42,7 @@ echo "Conda env: $CONDA_DEFAULT_ENV"
 
 # set variables
 MEASUREMENTS=1
-DATASET='merged-files'
+DATASET='Caterpillar-320'
 PCA_NUM=0
 
 echo "Num of measurements: $MEASUREMENTS"
@@ -78,37 +78,37 @@ then
     fi
 
     conda deactivate
-    # echo "Conda env after deactivate: $CONDA_DEFAULT_ENV"
+    echo "Conda env after deactivate: $CONDA_DEFAULT_ENV"
 
-    # conda activate $ENV_automl_autosklearn
-    # echo "Conda env after activate $ENV_automl_autosklearn: $CONDA_DEFAULT_ENV"
+    conda activate $ENV_automl_autosklearn
+    echo "Conda env after activate $ENV_automl_autosklearn: $CONDA_DEFAULT_ENV"
 
-    # if [ $CONDA_DEFAULT_ENV == $ENV_automl_autosklearn ]
-    # then
-    #             python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn autosklearn flaml --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task 600 --autosk_runtime_limit 60 --document_results False
-    #             # python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn autosklearn flaml --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task 600 --autosk_runtime_limit 60 --document_results False
-    # fi
+    if [ $CONDA_DEFAULT_ENV == $ENV_automl_autosklearn ]
+    then
+                # python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn autosklearn flaml --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task 600 --autosk_runtime_limit 60 --document_results False
+                python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn autosklearn flaml --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task 60 --autosk_runtime_limit 6 --document_results False
+    fi
 
     conda deactivate
-    # echo "Conda env after deactivate: $CONDA_DEFAULT_ENV"
+    echo "Conda env after deactivate: $CONDA_DEFAULT_ENV"
 
-    # conda activate $ENV_autogluon
-    # echo "Conda env after activate $ENV_autogluon: $CONDA_DEFAULT_ENV"
+    conda activate $ENV_autogluon
+    echo "Conda env after activate $ENV_autogluon: $CONDA_DEFAULT_ENV"
 
-    # if [ $CONDA_DEFAULT_ENV == $ENV_autogluon ]
-    # then
-    #     python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results False
-    # fi
+    if [ $CONDA_DEFAULT_ENV == $ENV_autogluon ]
+    then
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results False
+    fi
 
-    # conda deactivate
+    conda deactivate
 
-    # conda activate $ENV_autokeras2
-    # echo "Conda env after activate $ENV_autokeras2: $CONDA_DEFAULT_ENV"
+    conda activate $ENV_autokeras2
+    echo "Conda env after activate $ENV_autokeras2: $CONDA_DEFAULT_ENV"
 
-    # if [ $CONDA_DEFAULT_ENV == $ENV_autokeras2 ]
-    # then
-    #     python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autokeras --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results True
-    # fi
+    if [ $CONDA_DEFAULT_ENV == $ENV_autokeras2 ]
+    then
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autokeras --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results False
+    fi
 
-    # conda deactivate
+    conda deactivate
 fi
