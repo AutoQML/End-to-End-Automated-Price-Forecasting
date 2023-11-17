@@ -155,7 +155,7 @@ def load_and_preprocess_data(datasets: list,
     # merged_df.to_csv("./data/merged-files/merged-files-final-2023-10-15-NaN.csv", index=False)
     
     # Delete unnamed / index column
-    if set(['Unnamed: 0']).issubset(data.columns):
+    if set(['Unnamed: 0']).issubset(merged_df.columns):
         data = merged_df.drop('Unnamed: 0', axis=1)
     else:
         data = merged_df.copy()
