@@ -316,9 +316,128 @@ def load_and_preprocess_data(datasets: list,
     print(mean_absolute_percentage_error(y, y_pred))
 
     ######################
-    # # Standard SHAP values
+    # Standard SHAP values
     ######################
+    # get shap values
+    explainer = shap.Explainer(model)
+    shap_values = explainer(X)
 
+    # waterfall plot
+    shap.plots.waterfall(shap_values[1], show=False)
+    # plt.figure()
+    plt.savefig(path.format('standard_shap.png'),dpi=100,bbox_inches='tight')
+
+    ######################
+    # SHAP for catgeorical features 
+    ######################
+    #get number of unique categories for each feature 
+    n_categories = []
+    for feat in feature_names[:-1]:
+        n = X_cat[feat].nunique()
+        n_categories.append(n)
+
+    new_shap_values = []
+    for values in shap_values.values:
+        
+        #split shap values into a list for each feature
+        values_split = np.split(values , np.cumsum(n_categories))
+        
+        #sum values within each list
+        values_sum = [sum(l) for l in values_split]
+        
+        new_shap_values.append(values_sum)
+
+    #replace shap values
+    shap_values.values = np.array(new_shap_values)
+
+    #replace data with categorical feature values 
+    new_data = np.array(X_cat)
+    shap_values.data = np.array(new_data)
+    # print(shap_values)
+
+    #update feature names
+    shap_values.feature_names = list(X_cat.columns)
+
+    # get the SHAP values
+    vals = np.abs(shap_values.values).mean(0)
+
+    # calculate the percentage values
+    perc_vals = vals / sum(vals)
+
+    feature_importance = pd.DataFrame(list(zip(feature_names, vals, perc_vals)), columns=['feature_name','feature_importance_vals','feature_importance_percentage'])
+    feature_importance.sort_values(by=['feature_importance_vals'], ascending=False, inplace=True)
+    filename = "{}{}{}{}.{}".format('./measurements/summary/', M_DATE, '/', 'feature-importance', 'csv')
+    feature_importance.to_csv(filename, index=False)
+
+    # Sort the DataFrame by the 'Values' column in descending order for correct plot
+    feature_importance.sort_values('feature_importance_percentage', inplace=True, ascending=True)
+
+    # Plotting
+    plt.figure()
+    plt.barh(feature_importance['feature_name'], feature_importance['feature_importance_percentage'],  color='r')
+    # feature_importance.plot(kind='barh',y='faeture_name', x='feature_importance_percentage', color='r')
+
+    # Adding labels and title
+    plt.xlabel('Feature importance in %')
+    plt.ylabel('Features')
+    plt.title('Feature importance')
+
+    plt.savefig(path.format('feature_importance.png'),dpi=100,bbox_inches='tight')
+
+    # waterfall plot
+    plt.figure()
+    shap.plots.waterfall(shap_values[1], show=False)
+
+    plt.savefig(path.format('category_shap.png'),dpi=100,bbox_inches='tight')
+
+    #Mean SHAP
+    plt.figure()
+    shap.plots.bar(shap_values,show=False)
+
+    plt.savefig(path.format('mean_shap.png'),dpi=100,bbox_inches='tight')
+
+    # Beeswarm
+    plt.figure()
+    shap.plots.beeswarm(shap_values ,show=False)
+
+    plt.savefig(path.format('beeswarm.png'),dpi=100,bbox_inches='tight')
+
+    #get shaply values and data
+    model_values = shap_values[:,"model"].values
+    model_data = shap_values[:,"model"].data
+
+
+    #split odor shap values based on odor category
+    model_categories = list(set(model_data))
+
+    model_groups = []
+    for o in model_categories:
+        relevant_values = model_values[model_data == o]
+        model_groups.append(relevant_values)
+        
+    #replace categories with labels
+    model_labels = {'1':'308',
+                '2':'320', 
+                '3':'323', 
+                '4':'329', 
+                '5':'330', 
+                '6':'336', 
+                '7':'950', 
+                '8':'966',
+                '9':'D6', 
+                '10':'M318'}
+
+    labels = [model_labels[u] for u in model_labels]
+
+    #plot boxplot
+    plt.figure(figsize=(8, 5))
+
+    plt.boxplot(model_groups,labels=labels)
+
+    plt.ylabel('Shap values',size=15)
+    plt.xlabel('Odor',size=15)
+
+    plt.savefig(path.format('boxplot_rd.png'),dpi=100,bbox_inches='tight')
 
 
     return(merged_df)
