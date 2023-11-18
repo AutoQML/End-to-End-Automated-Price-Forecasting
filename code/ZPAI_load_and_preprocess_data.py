@@ -147,7 +147,8 @@ def load_and_preprocess_data(datasets: list,
         else:
             merged_df = pd.concat([merged_df, dataframe_list[i+1]], axis=0, ignore_index=True)
 
-    # print(merged_df)
+    print(f"Length of merged dataframe: {len(merged_df)}")
+    print(f"Number of features of merged data frame: {merged_df.shape[1]}")
 
     # Save the DataFrame as a CSV file with the NaN values
     filename = "{}-{}-{}.{}".format("./data/merged-files/merged-files-final", M_DATE, 'NaN','csv')
@@ -260,24 +261,19 @@ def load_and_preprocess_data(datasets: list,
         threshold_stds=threshold_stds,
         bps_flag=False,
         return_state=True,
-        # show_top_n_anomalies=None,
-        # show_top_n_anomalies=10,
-        explain_top_n_anomalies=1,
+        show_top_n_anomalies=None,
+        explain_top_n_anomalies=None,
         show_help_text=False,
-        fig_args={
-            'figsize': (6, 4)
-        },
-        chart_args={
-            'normal.color': 'lightgrey',
-            'anomaly.color': 'orange',
-        }
+        fig_args=None
     )
 
     # get the train and test anomalies
     train_anomaly = state.anomaly_detection.anomalies.train_data
     test_anomaly = state.anomaly_detection.anomalies.test_data
 
+    #######################################
     # drop the anomalies from the dataset
+    #######################################
     test_indeces = test_anomaly.index.values
     # print(test_indeces)
     data1 = new_fm.drop(test_indeces)
@@ -285,10 +281,15 @@ def load_and_preprocess_data(datasets: list,
     # print(train_indices)
     data = data1.drop(train_indices)
 
+    print(f"Length of preprocessed dataframe: {len(data)}")
+    print(f"Number of features of preprocessed data frame: {data.shape[1]}")
 
-    #get features
+    #########################################
+    # Calculate feature importance via SHAP
+    ########################################
+
     y = data['price']
-    print(y.head())
+    # print(y.head())
 
     X_cat = data.drop('price', axis=1)
 
@@ -313,7 +314,7 @@ def load_and_preprocess_data(datasets: list,
     y_pred = model.predict(X)
 
     #Get predictions
-    print(mean_absolute_percentage_error(y, y_pred))
+    # print(mean_absolute_percentage_error(y, y_pred))
 
     ######################
     # Standard SHAP values
@@ -323,9 +324,9 @@ def load_and_preprocess_data(datasets: list,
     shap_values = explainer(X)
 
     # waterfall plot
+    plt.figure()
     shap.plots.waterfall(shap_values[1], show=False)
-    # plt.figure()
-    plt.savefig(path.format('standard_shap.png'),dpi=100,bbox_inches='tight')
+    plt.savefig(path.format('standard_shap_py.png'),dpi=100,bbox_inches='tight')
 
     ######################
     # SHAP for catgeorical features 
@@ -382,25 +383,25 @@ def load_and_preprocess_data(datasets: list,
     plt.ylabel('Features')
     plt.title('Feature importance')
 
-    plt.savefig(path.format('feature_importance.png'),dpi=100,bbox_inches='tight')
+    plt.savefig(path.format('feature_importance_py.png'),dpi=100,bbox_inches='tight')
 
     # waterfall plot
     plt.figure()
     shap.plots.waterfall(shap_values[1], show=False)
 
-    plt.savefig(path.format('category_shap.png'),dpi=100,bbox_inches='tight')
+    plt.savefig(path.format('category_shap_py.png'),dpi=100,bbox_inches='tight')
 
     #Mean SHAP
     plt.figure()
     shap.plots.bar(shap_values,show=False)
 
-    plt.savefig(path.format('mean_shap.png'),dpi=100,bbox_inches='tight')
+    plt.savefig(path.format('mean_shap_py.png'),dpi=100,bbox_inches='tight')
 
     # Beeswarm
     plt.figure()
     shap.plots.beeswarm(shap_values ,show=False)
 
-    plt.savefig(path.format('beeswarm.png'),dpi=100,bbox_inches='tight')
+    plt.savefig(path.format('beeswarm_py.png'),dpi=100,bbox_inches='tight')
 
     #get shaply values and data
     model_values = shap_values[:,"model"].values
@@ -437,7 +438,23 @@ def load_and_preprocess_data(datasets: list,
     plt.ylabel('Shap values',size=15)
     plt.xlabel('Odor',size=15)
 
-    plt.savefig(path.format('boxplot_rd.png'),dpi=100,bbox_inches='tight')
+    plt.savefig(path.format('boxplot_py.png'),dpi=100,bbox_inches='tight')
 
+    # Save the DataFrame as a CSV file
+    filename = "{}-{}.{}".format("./data/merged-files/merged-files-final", M_DATE,'csv')
+    data.to_csv(filename, index=False)
 
-    return(merged_df)
+    ########################
+    # build final dataset
+    ########################
+    # extract/keep features with more than 1%
+    selected_values = feature_importance.loc[feature_importance['feature_importance_percentage'] > 0.01, 'feature_name']
+
+    # create final dataframe with the selected features
+    selectetd_data = data[selected_values].copy()
+
+    # Save the DataFrame as a CSV file
+    filename = "{}-{}.{}".format("./data/merged-files/merged-files-final-selected-features", M_DATE,'csv')
+    selectetd_data.to_csv(filename, index=False)
+
+    return(selectetd_data)
