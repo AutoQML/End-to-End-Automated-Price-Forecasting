@@ -219,7 +219,9 @@ def main():
                 # print number of measurements
                 print('\n Measurement {} of {} with random state {} for preprocessed data file.'.format(measurement+1, NUM_OF_MEASUREMENTS, measurement+1))
 
-                evaluate_data(dataset = merged_df,
+                dataset = 'merged-files'
+
+                evaluate_data(dataset = dataset,
                                         measurement = measurement + 1,
                                         GLOBAL_TXT_SUMMARY_FILE = GLOBAL_TXT_SUMMARY_FILE,
                                         GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE,
