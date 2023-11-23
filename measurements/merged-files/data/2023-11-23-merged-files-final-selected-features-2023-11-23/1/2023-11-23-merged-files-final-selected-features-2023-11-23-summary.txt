@@ -1,0 +1,92 @@
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set for AutoGluon: 	basic-subset
+Mean Absolute Error: 	17159.19
+Mean Absolute Percentage Error: 	309.6803
+Root Mean Squared Error: 	36049.55
+N-RMSE: 	0.0632
+IQR-RMSE: 	0.6551
+CV-RMSE: 	0.3873
+R2 test score: 	0.53
+
+
+
+Feature set for AutoGluon: 	location
+Mean Absolute Error: 	17266.08
+Mean Absolute Percentage Error: 	356.8976
+Root Mean Squared Error: 	36459.92
+N-RMSE: 	0.064
+IQR-RMSE: 	0.6626
+CV-RMSE: 	0.3917
+R2 test score: 	0.52
+
+
+
+Feature set for AutoGluon: 	extension
+Mean Absolute Error: 	16007.71
+Mean Absolute Percentage Error: 	334.2741
+Root Mean Squared Error: 	34572.31
+N-RMSE: 	0.0607
+IQR-RMSE: 	0.6283
+CV-RMSE: 	0.3715
+R2 test score: 	0.568
+
+
+
+Feature set for AutoGluon: 	location-extension
+Mean Absolute Error: 	15906.88
+Mean Absolute Percentage Error: 	336.1865
+Root Mean Squared Error: 	35208.38
+N-RMSE: 	0.0618
+IQR-RMSE: 	0.6399
+CV-RMSE: 	0.3783
+R2 test score: 	0.552
+
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set for AutoGluon: 	basic-subset
+Mean Absolute Error: 	17137.55
+Mean Absolute Percentage Error: 	0.1694
+Root Mean Squared Error: 	34766.77
+N-RMSE: 	0.0632
+IQR-RMSE: 	0.5541
+CV-RMSE: 	0.3547
+R2 test score: 	0.61
+
+
+
+Feature set for AutoGluon: 	location
+Mean Absolute Error: 	15612.94
+Mean Absolute Percentage Error: 	0.1591
+Root Mean Squared Error: 	34519.44
+N-RMSE: 	0.0627
+IQR-RMSE: 	0.5501
+CV-RMSE: 	0.3522
+R2 test score: 	0.615
+
+
+
+Feature set for AutoGluon: 	extension
+Mean Absolute Error: 	15366.62
+Mean Absolute Percentage Error: 	0.1575
+Root Mean Squared Error: 	32822.87
+N-RMSE: 	0.0596
+IQR-RMSE: 	0.5231
+CV-RMSE: 	0.3349
+R2 test score: 	0.652
+
+
+
+Feature set for AutoGluon: 	location-extension
+Mean Absolute Error: 	13817.07
+Mean Absolute Percentage Error: 	0.1431
+Root Mean Squared Error: 	32272.69
+N-RMSE: 	0.0586
+IQR-RMSE: 	0.5143
+CV-RMSE: 	0.3293
+R2 test score: 	0.664
+
