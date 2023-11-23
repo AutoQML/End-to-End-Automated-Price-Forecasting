@@ -9,6 +9,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+import time
+
 from ZPAI_prepare_data_for_ml import prepare_data_for_ml
 from ZPAI_common_functions import load_csv_data, create_path, read_yaml
 
@@ -250,7 +252,7 @@ def load_and_preprocess_data(datasets: list,
 
     # This parameter specifies how many standard deviations above mean anomaly score are considered
     # to be anomalies (only needed for visualization, does not affect scores calculation).
-    threshold_stds = 3
+    threshold_stds = 2
 
     target_col = 'price'
 
@@ -450,11 +452,15 @@ def load_and_preprocess_data(datasets: list,
     # extract/keep features with more than 1%
     selected_values = feature_importance.loc[feature_importance['feature_importance_percentage'] > 0.01, 'feature_name']
 
+    selected_values = selected_values.append(pd.Series(['price']))
+
     # create final dataframe with the selected features
     selectetd_data = data[selected_values].copy()
 
+    time.sleep(5)
+
     # Save the DataFrame as a CSV file
     filename = "{}-{}.{}".format("./data/merged-files/merged-files-final-selected-features", M_DATE,'csv')
-    selectetd_data.to_csv(filename, index=False)
+    selectetd_data.to_csv(filename, index=True)
 
     return(selectetd_data)
