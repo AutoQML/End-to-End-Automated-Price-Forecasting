@@ -191,20 +191,20 @@ def evaluate_autogluon(X_train: pd.DataFrame,
     # close the summary file
     f.close()
 
-    xai_config = {
-        "MODEL_SAVE_PATH" : Path.cwd() / save_path,
-        "FILE_PATH_PICS" : FILE_PATH_PICS,
-        "FILE_PATH_DATA" : FILE_PATH_PICS,
-        "SUMMARY_FILE" : FILE_PATH_PICS,        #optinal
-        "LEADERBOARD_FILE" : LEADERBOARD_FILE,  #optional
-    }
+    # xai_config = {
+    #     "MODEL_SAVE_PATH" : Path.cwd() / save_path,
+    #     "FILE_PATH_PICS" : FILE_PATH_PICS,
+    #     "FILE_PATH_DATA" : FILE_PATH_PICS,
+    #     "SUMMARY_FILE" : FILE_PATH_PICS,        #optinal
+    #     "LEADERBOARD_FILE" : LEADERBOARD_FILE,  #optional
+    # }
 
-    xai_autogluon(automl,
-                  Path.cwd() / save_path,   # optional if model is given
-                  X_train=train_data, 
-                  X_test=test_data,
-                  model_path=FILE_PATH_DATA, 
-                  config=xai_config)
+    # xai_autogluon(automl,
+    #               Path.cwd() / save_path,   # optional if model is given
+    #               X_train=train_data, 
+    #               X_test=test_data,
+    #               model_path=FILE_PATH_DATA, 
+    #               config=xai_config)
 
 
 def save_model(model: TabularPredictor, 
