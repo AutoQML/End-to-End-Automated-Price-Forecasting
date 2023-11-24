@@ -1,5 +1,6 @@
 from time import time
 from pathlib import Path
+from typing import Union
 
 import pandas as pd
 import numpy as np
@@ -189,3 +190,103 @@ def evaluate_autogluon(X_train: pd.DataFrame,
 
     # close the summary file
     f.close()
+
+    xai_config = {
+        "MODEL_SAVE_PATH" : Path.cwd() / save_path,
+        "FILE_PATH_PICS" : FILE_PATH_PICS,
+        "FILE_PATH_DATA" : FILE_PATH_PICS,
+        "SUMMARY_FILE" : FILE_PATH_PICS,        #optinal
+        "LEADERBOARD_FILE" : LEADERBOARD_FILE,  #optional
+    }
+
+    xai_autogluon(automl,
+                  Path.cwd() / save_path,   # optional if model is given
+                  X_train=train_data, 
+                  X_test=test_data,
+                  model_path=FILE_PATH_DATA, 
+                  config=xai_config)
+
+
+def save_model(model: TabularPredictor, 
+               model_path: Union[None, str, Path] = None):
+    """
+    Save the model to the given path.
+    """
+    if model_path is None:
+        model_path = Path.cwd()
+    elif isinstance(model_path, str):
+        model_path = Path(model_path)
+    model.save(str(model_path))
+    return model_path
+
+
+class AutogluonWrapper:
+    """
+    AGL Wrapper to use SHAP explanations
+    """
+    def __init__(self, predictor, feature_names, target_class=None):
+        self.ag_model = predictor
+        self.feature_names = feature_names
+        self.target_class = target_class
+        if target_class is None and predictor.problem_type != 'regression':
+            print("Since target_class not specified, SHAP will explain predictions for each class")
+    
+    def predict_proba(self, X):
+        if isinstance(X, pd.Series):
+            X = X.values.reshape(1,-1)
+        if not isinstance(X, pd.DataFrame):
+            X = pd.DataFrame(X, columns=self.feature_names)
+        preds = self.ag_model.predict_proba(X)
+        if self.ag_model.problem_type == "regression" or self.target_class is None:
+            return preds
+        else:
+            return preds[self.target_class]
+        
+    def predict(self, X):
+        if isinstance(X, pd.Series):
+            X = X.values.reshape(1,-1)
+        if not isinstance(X, pd.DataFrame):
+            X = pd.DataFrame(X, columns=self.feature_names)
+        return self.ag_model.predict(X)
+
+
+def xai_autogluon(model: Union[None, TabularPredictor] = None, 
+                  model_path: Union[None, str, Path] = None,
+                  *
+                  X_train: pd.DataFrame,
+                  X_test: pd.DataFrame,
+                  config: dict):
+    """
+    Explain the model using FI and SHAP values.
+
+    Parameters
+    ----------
+    model : Union[None, TabularPredictor], optional
+        The model to explain, by default None
+        Note that either the model or the model_path must be given.
+    model_path : Union[None, str, Path], optional
+        The path to the model, by default None
+    X_train : pd.DataFrame, optional
+        The training data, by default None
+    X_test : pd.DataFrame, optional
+        The test data, by default None
+    config : dict
+        The configuration dictionary.
+    """
+    import math, warnings
+    import shap
+    from sklearn.inspection import permutation_importance, PartialDependenceDisplay
+    
+    # check if we can get the AG model
+    if model is None and model_path is None:
+        raise ValueError("Either model or model_path must be given.")
+    elif model is None:
+        model = TabularPredictor.load(model_path)
+
+    assert isinstance(model, TabularPredictor), "model is not a AutoGluon TabularPredictor!"
+
+    # determine numerical and categorical features
+    #note: here we can get problems with one-hot encoded data
+    numerical_features = X_train.select_dtypes(include='number').columns.tolist()   #this will maybe not catch one-hot encoded data if any
+    categorical_features = X_train.select_dtypes(include='category').columns.tolist()
+
