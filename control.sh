@@ -70,48 +70,48 @@ then
 
     conda deactivate
 
-    # ### AutoGluon
-    # conda activate autogluon
-    # echo "Conda env after activate autogluon: $CONDA_DEFAULT_ENV"
+    ### AutoGluon
+    conda activate autogluon
+    echo "Conda env after activate autogluon: $CONDA_DEFAULT_ENV"
 
-    # if [ $CONDA_DEFAULT_ENV == "autogluon" ]
-    # then
-    #     python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM
-    # fi
+    if [ $CONDA_DEFAULT_ENV == "autogluon" ]
+    then
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autogluon --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM
+    fi
 
-    # conda deactivate
+    conda deactivate
 
-    # ### manual + nn 
-    # conda activate sklearn
-    # echo "Conda env after activate sklearn: $CONDA_DEFAULT_ENV"
+    ### manual + nn 
+    conda activate sklearn
+    echo "Conda env after activate sklearn: $CONDA_DEFAULT_ENV"
 
-    # if [ $CONDA_DEFAULT_ENV == "sklearn" ]
-    # then
-    #     python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM
-    # fi
+    if [ $CONDA_DEFAULT_ENV == "sklearn" ]
+    then
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms manual nn --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM
+    fi
 
-    # conda deactivate
+    conda deactivate
 
 
-    # ### FLAML 
-    # conda activate flaml
-    # echo "Conda env after activate flaml: $CONDA_DEFAULT_ENV"
+    ### FLAML 
+    conda activate flaml
+    echo "Conda env after activate flaml: $CONDA_DEFAULT_ENV"
 
-    # if [ $CONDA_DEFAULT_ENV == "flaml" ]
-    # then
-    #     python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms flaml --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task $TIME_FOR_TASK --autosk_runtime_limit $RUNTIME_LIMIT 
-    # fi
+    if [ $CONDA_DEFAULT_ENV == "flaml" ]
+    then
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms flaml --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --autosk_time_for_task $TIME_FOR_TASK --autosk_runtime_limit $RUNTIME_LIMIT 
+    fi
 
-    # conda deactivate
+    conda deactivate
 
-    ### AutoKeras
-    # conda activate autokeras-2
-    # echo "Conda env after activate autokeras-2: $CONDA_DEFAULT_ENV"
+    ## AutoKeras
+    conda activate autokeras-2
+    echo "Conda env after activate autokeras-2: $CONDA_DEFAULT_ENV"
 
-    # if [ $CONDA_DEFAULT_ENV == "autokeras-2" ]
-    # then
-    #     python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autokeras --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM --document_results True
-    # fi
+    if [ $CONDA_DEFAULT_ENV == "autokeras-2" ]
+    then
+        python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms autokeras --datasets $DATASET --measurements $MEASUREMENTS --pca $PCA_NUM
+    fi
 
-    # conda deactivate
+    conda deactivate
 fi
