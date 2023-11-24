@@ -9,15 +9,24 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+import time
+
 from ZPAI_prepare_data_for_ml import prepare_data_for_ml
 from ZPAI_common_functions import load_csv_data, create_path, read_yaml
 
 import featuretools as ft
 
+from featuretools.selection import (
+    remove_highly_correlated_features,
+    remove_highly_null_features,
+    remove_single_value_features,
+)
+import autogluon.eda.auto as auto
 import shap
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
+from xgboost.sklearn import XGBRegressor
+from sklearn.metrics import mean_absolute_percentage_error
 
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
@@ -35,17 +44,8 @@ from sklearn import tree
 
 # import xgboost as xgb
 
-import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings('ignore')
-
-from featuretools.selection import (
-    remove_highly_correlated_features,
-    remove_highly_null_features,
-    remove_single_value_features,
-)
-
-# import featuretools as ft
 
 
 def load_and_preprocess_data(datasets: list,
@@ -71,10 +71,10 @@ def load_and_preprocess_data(datasets: list,
 
 
     """
-    PROCESSING_TYPE = 0
-    # es = ft.EntitySet(id="my_entity_set")
+    path = "./shap_output/{}"
 
     REPO_PATH = config["general"]["repo_path"]
+    M_DATE = config["general"]["start_date"]
 
     dataframe_list = []
 
@@ -149,16 +149,72 @@ def load_and_preprocess_data(datasets: list,
         else:
             merged_df = pd.concat([merged_df, dataframe_list[i+1]], axis=0, ignore_index=True)
 
-    # print(merged_df)
+    print(f"Length of merged dataframe: {len(merged_df)}")
+    print(f"Number of features of merged data frame: {merged_df.shape[1]}")
 
     # Save the DataFrame as a CSV file with the NaN values
-    merged_df.to_csv("./data/merged-files/merged-files-final-2023-10-15-NaN.csv", index=False)
+    filename = "{}-{}-{}.{}".format("./data/merged-files/merged-files-final", M_DATE, 'NaN','csv')
+    merged_df.to_csv(filename, index=False)
+    # merged_df.to_csv("./data/merged-files/merged-files-final-2023-10-15-NaN.csv", index=False)
     
-    ##############################
-    # replace NaN values by 0 for all 
-    ##############################
+    # Delete unnamed / index column
+    if set(['Unnamed: 0']).issubset(merged_df.columns):
+        data = merged_df.drop('Unnamed: 0', axis=1)
+    else:
+        data = merged_df.copy()
+
+    ################################
+    # Featuretools
+    ################################
+
+    # create featuretools EntitySet
+    es = ft.EntitySet("merged_data_frame")
+
+    data = data.reset_index()
+
+    es.add_dataframe(dataframe_name="data",
+                 index="index",
+                 dataframe=data)
+
+    ####
+    # Run deep feature synthesis
+    ####
+    feature_matrix, features = ft.dfs(entityset = es,
+                               target_dataframe_name="data")
+    
+    ###
+    # Remove Highly Null Features with a threshold of 0.9
+    ###
+    new_data = ft.selection.remove_highly_null_features(feature_matrix, pct_null_threshold=0.9)
+
+    ###
+    # Remove Single Value Features
+    # This is a kind of duplicate detection for features. 
+    # Another situation we might run into is one where our calculated features don’t have any variance. 
+    # In those cases, we are likely to want to remove the uninteresting features. For that, we use remove_single_value_features.
+    ###
+
+    es = ft.EntitySet("new_data_frame")
+
+    es.add_dataframe(dataframe_name="new_data",
+                 index="index",
+                 dataframe=new_data)
+    
+    feature_matrix, features = ft.dfs(entityset = es,
+                               target_dataframe_name="new_data")
+    
+    new_fm, new_features = remove_single_value_features(feature_matrix, features=features, count_nan_as_value=True)
+
+    ###
+    # Remove Highly Correlated Features
+    ###
+    new_fm, new_features = remove_highly_correlated_features(feature_matrix, features=features, pct_corr_threshold=0.9)
+
+    ###
+    # Replace NaN values by 0
+    ###
     # Get the current column names
-    column_names = merged_df.columns.tolist()
+    column_names = new_fm.columns.tolist()
 
     # Specify the names/columns with no replacement
     names_to_delete = ['model', 'extension', 'location', 'working_hours', 'const_year', 'price']
@@ -168,473 +224,243 @@ def load_and_preprocess_data(datasets: list,
     # print(f"Column names to replace: {columns_to_replace}")
 
     # Replace NaN values with zeros
-    merged_df[columns_to_replace] = merged_df[columns_to_replace].fillna(0)
+    new_fm[columns_to_replace] = new_fm[columns_to_replace].fillna(0)
 
-    print(merged_df.info())
+    # save construction year versus price plot
+    new_fm.plot(kind='scatter', x = 'const_year', y = 'price')
+    # Set labels for x and y axes
+    plt.xlabel('Construction year')
+    plt.ylabel('Price')
+    plt.savefig(path.format('cons_year_price.png'),dpi=100,bbox_inches='tight')
 
-    # Save the DataFrame as a CSV file
-    merged_df.to_csv("./data/merged-files/merged-files-final-2023-10-14.csv", index=False)
+    # save working hours versus price plot
+    new_fm.plot(kind='scatter', x = 'working_hours', y = 'price')
+    # Set labels for x and y axes
+    plt.xlabel('Working hours')
+    plt.ylabel('Price')
+    plt.savefig(path.format('working_houers_price.png'),dpi=100,bbox_inches='tight')
 
-    # ###################################
-    # # extract the label
-    # ##################################
+    # Drop rows with NaN values
+    new_fm = new_fm.dropna()
 
-    # X_cat = merged_df.drop('price', axis=1)
-    # y = merged_df['price'].copy()
+    ##########################
+    # Use Autogluon for anomaly / outlier detection
+    ##########################
 
-    # #fit encoder
-    # enc = OneHotEncoder()
-    # enc.fit(X_cat)
+    # Split the data into training and test set
+    X_train, X_test = train_test_split(new_fm, test_size=0.2, random_state=42)
 
-    # #transform categorical features
-    # X_encoded = enc.transform(X_cat).toarray()
+    # This parameter specifies how many standard deviations above mean anomaly score are considered
+    # to be anomalies (only needed for visualization, does not affect scores calculation).
+    threshold_stds = 2
 
-    # #create feature matrix
-    # feature_names = X_cat.columns
-    # new_feature_names = enc.get_feature_names_out(feature_names)
+    target_col = 'price'
 
-    # X = pd.DataFrame(X_encoded, columns= new_feature_names)
+    state = auto.detect_anomalies(
+        train_data= X_train,
+        test_data=X_test,
+        label=target_col,
+        threshold_stds=threshold_stds,
+        bps_flag=False,
+        return_state=True,
+        show_top_n_anomalies=None,
+        explain_top_n_anomalies=None,
+        show_help_text=False,
+        fig_args=None
+    )
 
-    # # X
+    # get the train and test anomalies
+    train_anomaly = state.anomaly_detection.anomalies.train_data
+    test_anomaly = state.anomaly_detection.anomalies.test_data
 
-    # model = XGBRegressor(n_estimators=1000, max_depth=10, learning_rate=0.001)
+    #######################################
+    # drop the anomalies from the dataset
+    #######################################
+    test_indeces = test_anomaly.index.values
+    # print(test_indeces)
+    data1 = new_fm.drop(test_indeces)
+    train_indices = train_anomaly.index.values
+    # print(train_indices)
+    data = data1.drop(train_indices)
 
+    print(f"Length of preprocessed dataframe: {len(data)}")
+    print(f"Number of features of preprocessed data frame: {data.shape[1]}")
 
-    # model.fit(X, y)
+    #########################################
+    # Calculate feature importance via SHAP
+    ########################################
 
-    # #Get predictions
-    # y_pred = model.predict(X)
+    y = data['price']
+    # print(y.head())
 
-    # # print(confusion_matrix(y, y_pred))
-    # # accuracy_score(y, y_pred)
+    X_cat = data.drop('price', axis=1)
 
-    # #Get predictions
+    #fit encoder
+    enc = OneHotEncoder()
+    enc.fit(X_cat)
+
+    #transform categorical features
+    X_encoded = enc.transform(X_cat).toarray()
+
+    #create feature matrix
+    feature_names = X_cat.columns
+    new_feature_names = enc.get_feature_names_out(feature_names)
+
+    X = pd.DataFrame(X_encoded, columns= new_feature_names)
+
+    # define and train the model
+    model = XGBRegressor(n_estimators=1000, max_depth=10, learning_rate=0.001)
+    model.fit(X, y)
+
+    #Get predictions
+    y_pred = model.predict(X)
+
+    #Get predictions
     # print(mean_absolute_percentage_error(y, y_pred))
 
-
-
-
-    if PROCESSING_TYPE == 1:
-        ###################################
-        # extract the label
-        ##################################
-
-        X_train = merged_df.drop('price', axis=1)
-        y_train = merged_df['price'].copy()
-
-        ##################################
-        # get the original feature names
-        ##################################
-        X_train_feature_names = X_train.columns
-
-        #################################
-        # One-hot encode categorical features
-        #################################
-
-        # define categorical features
-        cat_features = ['model', 'extension', 'location']
-
-        # separate numerical and categorical columns
-        df_cat = X_train[cat_features].copy()
-        df_num = X_train.drop(cat_features, axis=1)
-
-        # get the column names
-        cat_feature_names = df_cat.columns
-        num_feature_names = df_num.columns
-
-        #fit encoder
-        enc = OneHotEncoder()
-        enc.fit(df_cat)
-
-        #transform categorical features
-        X_encoded = enc.transform(df_cat).toarray()
-
-        #create feature matrix with one-hot-encoded feature/column names
-        new_cat_feature_names = enc.get_feature_names_out(cat_feature_names)
-
-        df_cat_encoded = pd.DataFrame(X_encoded, columns= new_cat_feature_names)
-
-        print(f"Values for df_cat_encoded:\n {df_cat_encoded}")
-
-        #####################################
-        # Standard scale the encoded and unencoded features
-        #####################################
-
-        # Initialize the StandardScaler for df_cat_encoded
-        scaler_df_cat_encoded = StandardScaler()
-
-        # Fit and transform the data
-        scaled_data = scaler_df_cat_encoded.fit_transform(df_cat_encoded)
-
-        # Convert the scaled data back to a dataframe
-        scaled_df_cat = pd.DataFrame(scaled_data, columns=new_cat_feature_names)
-
-        print(f"Values for scaled_df_cat:\n {scaled_df_cat}")
-
-
-        # Initialize the StandardScaler for df_num
-        scaler_df_num = StandardScaler()
-
-        # Fit and transform the data
-        scaled_data = scaler_df_num.fit_transform(df_num)
-
-        # Convert the scaled data back to a dataframe
-        scaled_df_num = pd.DataFrame(scaled_data, columns=num_feature_names)
-
-        print(f"Values for scaled_df_num:\n {scaled_df_num}")
-
-        #########################################
-        # merge the encoded & unencoded data
-        #########################################
-
-        X_train_concat = pd.concat([scaled_df_cat, scaled_df_num], axis=1)
-
-        print(f"Values for X_train_concat:\n {X_train_concat}")
-
-
-        ##########################################
-        #
-        ##########################################
-
-        # Get the number of columns
-        num_columns = X_train_concat.shape[1]
-
-        print(f'The DataFrame has {num_columns} columns.')
-
-
-        model = XGBRegressor(n_estimators=1000, max_depth=10, learning_rate=0.001)
-        # Fit the Model
-        model.fit(X_train_concat, y_train)
-
-        #Get predictions
-        y_pred = model.predict(X_train_concat)
-        print(f"mean absolute percentage erro: {mean_absolute_percentage_error(y_train, y_pred)}")
-
-        ##########################################
-        # Interpret this model using SHAP values. To do this, we pass our model 
-        # into the SHAP Explainer function. This creates an explainer object. 
-        # We use this to calculate SHAP values for every observation in the feature matrix.
-        #########################################
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(X_train_concat)
-
-        # shap.plots.waterfall(shap_values[0])
-        plt.figure()
-        shap.plots._waterfall.waterfall_legacy(explainer.expected_value, shap_values[0])
-        plt.savefig('waterfall.png')
-
-        # print(f"Shap values: {shap_values}")
-
-        i = 4
-        # shap.force_plot(explainer.expected_value, shap_values[i], features=X.iloc[i], feature_names=X.columns)
-        # shap.summary_plot(explainer.expected_value, shap_values[i], features=X.iloc[i], feature_names=X.columns, show=False)
-        # shap.summary_plot(shap_values, features=X, feature_names=X.columns, show=False)
-        # plt.savefig('scratch.png')
-        plt.figure()
-        shap.summary_plot(shap_values, features=X, feature_names=X_train_concat.columns, plot_type='bar', show=False)
-        plt.savefig('barplot.png')
-
-        #get number of unique categories for each feature 
-        n_categories = []
-        for feat in X_train_feature_names[:-1]:
-            n = X_train[feat].nunique()
-            n_categories.append(n)
-            
-        print("Feature categories: ", n_categories)
-
-
-    if PROCESSING_TYPE == 2:
-        ###################################
-        # extract the label
-        ##################################
-
-        X_train = merged_df.drop('price', axis=1)
-        y_train = merged_df['price'].copy()
-
-        ##################################
-        # get the original feature names
-        ##################################
-        X_train_feature_names = X_train.columns
-
-        #################################
-        # One-hot encode categorical features
-        #################################
-
-        #fit encoder
-        enc = OneHotEncoder()
-        enc.fit(X_train)
-
-        #transform categorical features
-        X_encoded = enc.transform(X_train).toarray()
-
-        #create feature matrix with one-hot-encoded feature/column names
-        new_cat_feature_names = enc.get_feature_names_out(X_train_feature_names)
-
-        X_train_encoded = pd.DataFrame(X_encoded, columns= new_cat_feature_names)
-
-        print(f"Values for X_train_encoded:\n {X_train_encoded}")
-
-        #####################################
-        # Standard scale the encoded and unencoded features
-        #####################################
-
-        # Initialize the StandardScaler for X_train_encoded
-        scaler = StandardScaler()
-
-        # Fit and transform the data
-        scaled_data = scaler.fit_transform(X_train_encoded)
-
-        # Convert the scaled data back to a dataframe
-        X_train_scaled = pd.DataFrame(scaled_data, columns=new_cat_feature_names)
-
-        print(f"Values for X_train_scaled:\n {X_train_scaled}")
-
-        ##########################################
-        #
-        ##########################################
-
-        # Get the number of columns
-        num_columns = X_train_scaled.shape[1]
-        print(f'The DataFrame has {num_columns} columns.')
-
-
-        model = XGBRegressor(n_estimators=1000, max_depth=10, learning_rate=0.001)
-        # Fit the Model
-        model.fit(X_train_scaled, y_train)
-
-        #Get predictions
-        y_pred = model.predict(X_train_scaled)
-        print(f"mean absolute percentage erro: {mean_absolute_percentage_error(y_train, y_pred)}")
-
-        ##########################################
-        # Interpret this model using SHAP values. To do this, we pass our model 
-        # into the SHAP Explainer function. This creates an explainer object. 
-        # We use this to calculate SHAP values for every observation in the feature matrix.
-        # #########################################
-        # explainer = shap.TreeExplainer(model)
-        # shap_values = explainer.shap_values(X_train_scaled)
-
-        explainer = shap.Explainer(model)
-        shap_values = explainer(X_train_scaled)
-
-        print(f"explainer.expected_value: {explainer.expected_value}")
-        print(f"shap_values: {shap_values}")
-
-        # shap.plots.waterfall(shap_values[0])
-        plt.figure()
-        shap.plots._waterfall.waterfall_legacy(explainer.expected_value, shap_values.values[1])
-        # shap.plots._waterfall.waterfall_legacy(explainer.expected_value, shap_values[1])
-        # shap.plots._waterfall.waterfall_legacy(shap_values[1], show=False)
-        plt.savefig('waterfall.png')
-
-        #get number of unique categories for each feature 
-        n_categories = []
-        for feat in X_train_feature_names[:-1]:
-            n = X_train[feat].nunique()
-            n_categories.append(n)
-            
-        print("Feature categories: ", n_categories)
-
-
-
-        new_shap_values = []
-        for values in shap_values.values:
-        # for values in shap_values.values:
-            
-            #split shap values into a list for each feature
-            values_split = np.split(values , np.cumsum(n_categories))
-            
-            #sum values within each list
-            values_sum = [sum(l) for l in values_split]
-            
-            new_shap_values.append(values_sum)
-
-
-        print(len(new_shap_values),sum(new_shap_values[1]),sum(shap_values.values[1]))
-        # print(len(new_shap_values),sum(new_shap_values[1]),sum(shap_values[1]))
-        print(new_shap_values[1])
-
-
-        #replace shap values
-        shap_values = np.array(new_shap_values)
-
-        #replace data with categorical feature values 
-        new_data = np.array(X_train_scaled)
-        shap_values.data = np.array(new_data)
-
-        #update feature names
-        # shap_values.X_train_feature_names = list(X_train_scaled.columns)
-
-
-        # waterfall plot
-        plt.figure()
-        # shap.plots._waterfall.waterfall_legacy(shap_values[1], show=False)
-        shap.plots._waterfall.waterfall_legacy(explainer.expected_value, shap_values.values[1])
-        plt.savefig('waterfall_2.png')
-
-        # # waterfall plot
-        # shap.plots.waterfall(shap_values[1], show=False)
-
-        # plt.savefig(path.format('category_shap.png'),dpi=100,bbox_inches='tight')
+    ######################
+    # Standard SHAP values
+    ######################
+    # get shap values
+    explainer = shap.Explainer(model)
+    shap_values = explainer(X)
+
+    # waterfall plot
+    plt.figure()
+    shap.plots.waterfall(shap_values[1], show=False)
+    plt.savefig(path.format('standard_shap_py.png'),dpi=100,bbox_inches='tight')
+
+    ######################
+    # SHAP for catgeorical features 
+    ######################
+    #get number of unique categories for each feature 
+    n_categories = []
+    for feat in feature_names[:-1]:
+        n = X_cat[feat].nunique()
+        n_categories.append(n)
+
+    new_shap_values = []
+    for values in shap_values.values:
         
-
-
-
-        # i = 4
-        # # shap.force_plot(explainer.expected_value, shap_values[i], features=X.iloc[i], feature_names=X.columns)
-        # # shap.summary_plot(explainer.expected_value, shap_values[i], features=X.iloc[i], feature_names=X.columns, show=False)
-        # # shap.summary_plot(shap_values, features=X, feature_names=X.columns, show=False)
-        # # plt.savefig('scratch.png')
-        # plt.figure()
-        # shap.summary_plot(shap_values, features=X, feature_names=X_train_concat.columns, plot_type='bar', show=False)
-        # plt.savefig('barplot.png')
-
+        #split shap values into a list for each feature
+        values_split = np.split(values , np.cumsum(n_categories))
         
+        #sum values within each list
+        values_sum = [sum(l) for l in values_split]
+        
+        new_shap_values.append(values_sum)
+
+    #replace shap values
+    shap_values.values = np.array(new_shap_values)
+
+    #replace data with categorical feature values 
+    new_data = np.array(X_cat)
+    shap_values.data = np.array(new_data)
+    # print(shap_values)
+
+    #update feature names
+    shap_values.feature_names = list(X_cat.columns)
+
+    # get the SHAP values
+    vals = np.abs(shap_values.values).mean(0)
+
+    # calculate the percentage values
+    perc_vals = vals / sum(vals)
+
+    feature_importance = pd.DataFrame(list(zip(feature_names, vals, perc_vals)), columns=['feature_name','feature_importance_vals','feature_importance_percentage'])
+    feature_importance.sort_values(by=['feature_importance_vals'], ascending=False, inplace=True)
+    filename = "{}{}{}{}.{}".format('./measurements/summary/', M_DATE, '/', 'feature-importance', 'csv')
+    feature_importance.to_csv(filename, index=False)
+
+    # Sort the DataFrame by the 'Values' column in descending order for correct plot
+    feature_importance.sort_values('feature_importance_percentage', inplace=True, ascending=True)
+
+    # Plotting
+    plt.figure()
+    plt.barh(feature_importance['feature_name'], feature_importance['feature_importance_percentage'],  color='r')
+    # feature_importance.plot(kind='barh',y='faeture_name', x='feature_importance_percentage', color='r')
+
+    # Adding labels and title
+    plt.xlabel('Feature importance in %')
+    plt.ylabel('Features')
+    plt.title('Feature importance')
+
+    plt.savefig(path.format('feature_importance_py.png'),dpi=100,bbox_inches='tight')
+
+    # waterfall plot
+    plt.figure()
+    shap.plots.waterfall(shap_values[1], show=False)
+
+    plt.savefig(path.format('category_shap_py.png'),dpi=100,bbox_inches='tight')
+
+    #Mean SHAP
+    plt.figure()
+    shap.plots.bar(shap_values,show=False)
+
+    plt.savefig(path.format('mean_shap_py.png'),dpi=100,bbox_inches='tight')
+
+    # Beeswarm
+    plt.figure()
+    shap.plots.beeswarm(shap_values ,show=False)
+
+    plt.savefig(path.format('beeswarm_py.png'),dpi=100,bbox_inches='tight')
+
+    #get shaply values and data
+    model_values = shap_values[:,"model"].values
+    model_data = shap_values[:,"model"].data
 
 
+    #split odor shap values based on odor category
+    model_categories = list(set(model_data))
 
+    model_groups = []
+    for o in model_categories:
+        relevant_values = model_values[model_data == o]
+        model_groups.append(relevant_values)
+        
+    #replace categories with labels
+    model_labels = {'1':'308',
+                '2':'320', 
+                '3':'323', 
+                '4':'329', 
+                '5':'330', 
+                '6':'336', 
+                '7':'950', 
+                '8':'966',
+                '9':'D6', 
+                '10':'M318'}
 
+    labels = [model_labels[u] for u in model_labels]
 
+    #plot boxplot
+    plt.figure(figsize=(8, 5))
 
+    plt.boxplot(model_groups,labels=labels)
 
-    if PROCESSING_TYPE == 3:
+    plt.ylabel('Shap values',size=15)
+    plt.xlabel('Odor',size=15)
 
-        #################################################
-        # convert int64 to float
-        #################################################
-        # List the columns you want to keep as int64
-        columns_to_keep_as_objets = ['extension', 'model', 'location']
+    plt.savefig(path.format('boxplot_py.png'),dpi=100,bbox_inches='tight')
 
-        # Iterate through the columns and convert to float if not in the keep list
-        for col in merged_df.columns:
-            if col not in columns_to_keep_as_objets:
-                merged_df[col] = merged_df[col].astype(float)
+    # Save the DataFrame as a CSV file
+    filename = "{}-{}.{}".format("./data/merged-files/merged-files-final", M_DATE,'csv')
+    data.to_csv(filename, index=False)
 
-        # Check the data types after conversion
-        print(merged_df.dtypes)
+    ########################
+    # build final dataset
+    ########################
+    # extract/keep features with more than 1%
+    selected_values = feature_importance.loc[feature_importance['feature_importance_percentage'] > 0.01, 'feature_name']
 
-        # merged_df = merged_df.astype({'working_hours': float, 'const_year': float})
+    selected_values = selected_values.append(pd.Series(['price']))
 
-        # split data into X_train and y_train
-        X_train = merged_df.drop('price', axis=1)
-        y_train = merged_df['price'].copy()
+    # create final dataframe with the selected features
+    selectetd_data = data[selected_values].copy()
 
-        num_feateres = X_train.drop(columns_to_keep_as_objets, axis=1)
-        print(f"Columns with numerical features: {num_feateres}")
+    time.sleep(5)
 
+    # Save the DataFrame as a CSV file
+    filename = "{}-{}.{}".format("./data/merged-files/merged-files-final-selected-features", M_DATE,'csv')
+    selectetd_data.to_csv(filename, index=True)
 
-
-        num_attribs = list(num_feateres)
-        cat_attribs = ['extension', 'model', 'location']
-
-        num_pipeline = Pipeline([
-            # ('imputer', SimpleImputer(strategy='median')),  # check and handle missing values
-            # ('attribs_addr', CombinedAttributesAdder(add_bedrooms_per_room=True)), # add attributes
-            #('attribs_adder', FunctionTransformer(add_extra_features, validate=False)), # add attributes
-            ('std_scaler', StandardScaler()), # scale the data
-        ])
-
-        full_pipeline = ColumnTransformer([
-                ("num", num_pipeline, num_attribs),
-                ("cat", OneHotEncoder(), cat_attribs), # encode the categorical data
-            ])
-
-        X_train_prepared = full_pipeline.fit_transform(X_train)
-
-        print(f"One-Hot-Encoded dataframe: {X_train_prepared}")
-
-        X_train_prep = pd.DataFrame(X_train_prepared)
-
-        print(f"X_train_prep:\n {X_train_prep}")
-
-        ###############################################
-        # SHAP part
-        # prepare the date and train it on XGBRegressor 
-        ###############################################
-
-        #get features
-        y = merged_df['price']
-        y = y.astype('category').cat.codes
-        X_cat = merged_df.drop('price', axis=1)
-
-        #fit encoder
-        enc = OneHotEncoder(dtype=float)
-        enc.fit(X_cat)
-
-        #transform categorical features
-        X_encoded = enc.transform(X_cat).toarray()
-
-        #create feature matrix
-        feature_names = X_cat.columns
-        new_feature_names = enc.get_feature_names_out(feature_names)
-
-        X = pd.DataFrame(X_encoded, columns= new_feature_names)
-
-        print(f"Values for X:\n {X}")
-
-        # Get the number of columns
-        num_columns = X.shape[1]
-
-        print(f'The DataFrame has {num_columns} columns.')
-
-
-        model = XGBRegressor(n_estimators=1000, max_depth=10, learning_rate=0.001)
-        # Fit the Model
-        model.fit(X, y)
-
-        #Get predictions
-        y_pred = model.predict(X)
-
-        # print(f"Confusion matrix: {confusion_matrix(y, y_pred)}")
-        # print(f"Accuracy score: {accuracy_score(y, y_pred)}")
-
-        print(f"mean absolute percentage erro: {mean_absolute_percentage_error(y, y_pred)}")
-
-
-        #get number of unique categories for each feature 
-        n_categories = []
-        for feat in feature_names[:-1]:
-            n = X_cat[feat].nunique()
-            n_categories.append(n)
-            
-        print("Feature categories: ", n_categories)
-
-
-
-        # # Prepare X and Y 
-        # X = pd.get_dummies(merged_df)
-        # X.drop(['price'], inplace=True, axis=1)
-        # y = merged_df['price']
-
-        # model = XGBRegressor(n_estimators=1000, max_depth=10, learning_rate=0.001)
-        # # Fit the Model
-        # model.fit(X, y)
-
-        # load JS visualization code to notebook
-        # shap.initjs()
-        ##########################################
-        # Interpret this model using SHAP values. To do this, we pass our model 
-        # into the SHAP Explainer function. This creates an explainer object. 
-        # We use this to calculate SHAP values for every observation in the feature matrix.
-        #########################################
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(X)
-
-        # shap.plots.waterfall(shap_values[0])
-        plt.figure()
-        shap.plots._waterfall.waterfall_legacy(explainer.expected_value, shap_values[0])
-        plt.savefig('waterfall.png')
-
-        # print(f"Shap values: {shap_values}")
-
-        i = 4
-        # shap.force_plot(explainer.expected_value, shap_values[i], features=X.iloc[i], feature_names=X.columns)
-        # shap.summary_plot(explainer.expected_value, shap_values[i], features=X.iloc[i], feature_names=X.columns, show=False)
-        # shap.summary_plot(shap_values, features=X, feature_names=X.columns, show=False)
-        # plt.savefig('scratch.png')
-        plt.figure()
-        shap.summary_plot(shap_values, features=X, feature_names=X.columns, plot_type='bar', show=False)
-        plt.savefig('barplot.png')
-
-
-    return(merged_df)
+    return(selectetd_data)

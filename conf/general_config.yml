@@ -10,7 +10,7 @@ datasets: ['Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar
 
 algorithms: ["manual", "nn", "autosklearn", "autogluon", "flaml", "autokeras"]
 
-documentation: True # set the documentation (True or False)
+documentation: False # set the documentation (True or False)
 
 measurement_num: 5 # number of repetitive measurements
 
@@ -19,6 +19,9 @@ automl_preprocessing: False
 
 # evaluate data set variance
 evaluate_dataset_variance: True
+
+# Control data preprocessing
+data_preprocessing: False
 
 # set method evaluation value weights
 mev_weights:

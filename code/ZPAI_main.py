@@ -8,7 +8,7 @@ import pandas as pd
 from ZPAI_common_functions import get_current_date, create_path, read_yaml
 from ZPAI_evaluate_dataset import evaluate_data
 from ZPAI_document_results_docx import document_results_docx
-from ZPAI_load_and_preprocess_data import load_and_preprocess_data
+# from ZPAI_load_and_preprocess_data import load_and_preprocess_data
 
 def create_parser():
     parser = argparse.ArgumentParser(description="Process inputs")
@@ -24,6 +24,7 @@ def create_parser():
     parser.add_argument("--automl_preprocessing", choices = ["True", "False"], help = "Set autoML preprocessing")
     parser.add_argument("--evaluate_dataset_variance", choices = ["True", "False"], help = "Set evaluation of data set variance")
     parser.add_argument("--random_state", type = int, help = "Random state")
+    parser.add_argument("--data_preprocessing", choices = ["True", "False"], help = "Control data preprocessing")
 
     return parser
 
@@ -89,6 +90,13 @@ def get_config_from_parser(parser, config):
     if args.random_state:
         config["general"]["random_state"] = args.random_state
 
+    # Data preprocessing
+    if args.data_preprocessing:
+        if args.data_preprocessing == "True":
+            config["general"]["data_preprocessing"] = True
+        else:
+            config["general"]["data_preprocessing"] = False
+
     return config
 
 
@@ -129,6 +137,7 @@ def main():
     DOCUMENTATION = CFG["general"]["documentation"]
     ALGORITHMS = CFG["general"]["algorithms"]
     NUM_OF_MEASUREMENTS = CFG["general"]["measurement_num"]
+    DATA_PREPROCESSING = CFG["general"]["data_preprocessing"]
 
     ######################################
     # INITIALIZE COMMON SUMMARY
@@ -189,16 +198,35 @@ def main():
 
     merged_df = pd.DataFrame()
 
-    if "load_preprocess" in ALGORITHMS:
-        ################################################
-        # load and preprocess input files
-        ################################################
-        temp_df = load_and_preprocess_data(datasets = DATASETS,
-                                config = CFG)
-        
-        merged_df = temp_df.copy()
+    if DATA_PREPROCESSING == True:
+        if "load_preprocess" in ALGORITHMS:
+            from ZPAI_load_and_preprocess_data import load_and_preprocess_data
+            ################################################
+            # load and preprocess input files
+            ################################################
+            temp_df = load_and_preprocess_data(datasets = DATASETS,
+                                    config = CFG)
+            
+            merged_df = temp_df.copy()
 
-        # print(merged_df)
+        else:
+            ######################################
+            # RUN PIPELINE AND ALGORITHMS FOR PREPROCESSED DATAFILE
+            ######################################
+            # outmost loop -> configure number of repetitive runs
+            for measurement in range(NUM_OF_MEASUREMENTS):
+
+                # print number of measurements
+                print('\n Measurement {} of {} with random state {} for preprocessed data file.'.format(measurement+1, NUM_OF_MEASUREMENTS, measurement+1))
+
+                dataset = 'merged-files'
+
+                evaluate_data(dataset = dataset,
+                                        measurement = measurement + 1,
+                                        GLOBAL_TXT_SUMMARY_FILE = GLOBAL_TXT_SUMMARY_FILE,
+                                        GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE,
+                                        config = CFG)
+        
     else:
         ######################################
         # RUN PIPELINE AND ALGORITHMS FOR ALL SELECTED MODELS
