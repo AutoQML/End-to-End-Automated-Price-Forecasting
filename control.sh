@@ -37,11 +37,11 @@ TIME_FOR_TASK=60
 RUNTIME_LIMIT=6
 
 RUN_AUTOSKLEARN='True'
-RUN_AUTOGLUON='True'
+RUN_AUTOGLUON='False'
 RUN_FLAML='True'
-RUN_AUTOKERAS='True'
-RUN_MANUAL='True'
-RUN_NN='True'
+RUN_AUTOKERAS='False'
+RUN_MANUAL='False'
+RUN_NN='False'
 
 echo "Num of measurements: $MEASUREMENTS"
 echo "Dataset: $DATASET"
