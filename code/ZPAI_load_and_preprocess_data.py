@@ -256,12 +256,23 @@ def load_and_preprocess_data(datasets: list,
 
     target_col = 'price'
 
+    #####
+    # ATTENTION: theres a bug in the detect_anomalies function -> it can be fixed as described here : https://github.com/autogluon/autogluon/issues/3401
+    # iloc needs to be changed to loc in the following two files:
+    # eda.auto.simple.py line:1667
+    # _state.anomaly_detection.anomalies[ds] = df.iloc[anomaly_idx].join(anomaly_scores)
+    # _state.anomaly_detection.anomalies[ds] = df.loc[anomaly_idx].join(anomaly_scores)
+    # eda.analysis.anomaly.py line:346
+    # rows=args[dataset].iloc[dataset_row_ids],
+    # rows=args[dataset].loc[dataset_row_ids],
+    #####
+
     state = auto.detect_anomalies(
         train_data= X_train,
         test_data=X_test,
         label=target_col,
         threshold_stds=threshold_stds,
-        bps_flag=False,
+        bps_flag=False, # Don't use bps_flag=True - it's using pre-trained models which aren't loading in newer versions of sklearn -> https://github.com/autogluon/autogluon/pull/3406
         return_state=True,
         show_top_n_anomalies=None,
         explain_top_n_anomalies=None,
