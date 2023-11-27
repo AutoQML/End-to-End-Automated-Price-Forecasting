@@ -1,0 +1,92 @@
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set for Auto-sklearn: 	basic-subset
+Mean Absolute Error: 	17488.44
+Mean Absolute Percentage Error: 	0.1823
+Root Mean Squared Error: 	35005.29
+N-RMSE: 	0.0636
+IQR-RMSE: 	0.5579
+CV-RMSE: 	0.3571
+R2 test score: 	0.604
+
+
+
+Feature set for Auto-sklearn: 	location
+Mean Absolute Error: 	16205.81
+Mean Absolute Percentage Error: 	0.1671
+Root Mean Squared Error: 	34250.56
+N-RMSE: 	0.0622
+IQR-RMSE: 	0.5458
+CV-RMSE: 	0.3494
+R2 test score: 	0.621
+
+
+
+Feature set for Auto-sklearn: 	extension
+Mean Absolute Error: 	16113.99
+Mean Absolute Percentage Error: 	0.1701
+Root Mean Squared Error: 	33364.52
+N-RMSE: 	0.0606
+IQR-RMSE: 	0.5317
+CV-RMSE: 	0.3404
+R2 test score: 	0.641
+
+
+
+Feature set for Auto-sklearn: 	location-extension
+Mean Absolute Error: 	15942.54
+Mean Absolute Percentage Error: 	0.1707
+Root Mean Squared Error: 	33605.29
+N-RMSE: 	0.061
+IQR-RMSE: 	0.5355
+CV-RMSE: 	0.3429
+R2 test score: 	0.635
+
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set for Flaml: 	basic-subset
+Mean Absolute Error: 	23022.13
+Mean Absolute Percentage Error: 	0.2387
+Root Mean Squared Error: 	44522.82
+N-RMSE: 	0.0809
+IQR-RMSE: 	0.7095
+CV-RMSE: 	0.4542
+R2 test score: 	0.36
+
+
+
+Feature set for Flaml: 	location
+Mean Absolute Error: 	22333.09
+Mean Absolute Percentage Error: 	0.2379
+Root Mean Squared Error: 	39623.71
+N-RMSE: 	0.072
+IQR-RMSE: 	0.6315
+CV-RMSE: 	0.4043
+R2 test score: 	0.493
+
+
+
+Feature set for Flaml: 	extension
+Mean Absolute Error: 	23485.8
+Mean Absolute Percentage Error: 	0.2306
+Root Mean Squared Error: 	42352.11
+N-RMSE: 	0.0769
+IQR-RMSE: 	0.6749
+CV-RMSE: 	0.4321
+R2 test score: 	0.421
+
+
+
+Feature set for Flaml: 	location-extension
+Mean Absolute Error: 	20048.14
+Mean Absolute Percentage Error: 	0.2264
+Root Mean Squared Error: 	37768.09
+N-RMSE: 	0.0686
+IQR-RMSE: 	0.6019
+CV-RMSE: 	0.3853
+R2 test score: 	0.539
+
