@@ -29,19 +29,19 @@ conda deactivate
 echo "Conda env after deactivate: $CONDA_DEFAULT_ENV"
 
 # set variables
-MEASUREMENTS=1
+MEASUREMENTS=5
 DATASET='merged-files'
 PCA_NUM=0
 DATA_PREPROCESSING='False'
-TIME_FOR_TASK=60
-RUNTIME_LIMIT=6
+TIME_FOR_TASK=1800
+RUNTIME_LIMIT=180
 
 RUN_AUTOSKLEARN='True'
-RUN_AUTOGLUON='False'
+RUN_AUTOGLUON='True'
 RUN_FLAML='True'
-RUN_AUTOKERAS='False'
-RUN_MANUAL='False'
-RUN_NN='False'
+RUN_AUTOKERAS='True'
+RUN_MANUAL='True'
+RUN_NN='True'
 
 echo "Num of measurements: $MEASUREMENTS"
 echo "Dataset: $DATASET"
