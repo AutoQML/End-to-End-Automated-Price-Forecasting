@@ -10,7 +10,7 @@ from ZPAI_document_results_docx import document_results_docx
 # datasets = ['Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar-329', 'Caterpillar-330', 'Caterpillar-336', 'Caterpillar-950', 'Caterpillar-966', 'Caterpillar-D6', 'Caterpillar-M318']
 # datasets = ['merged-files']
 # datasets = ['Caterpillar-950', 'Caterpillar-966']
-datasets = ['Caterpillar-320']
+# datasets = ['Caterpillar-320']
 
 # define methods to be droped from the scatter plots
 # drop_methods = []
@@ -20,12 +20,14 @@ datasets = ['Caterpillar-320']
 ##############################
 # Define data set version
 ##############################
-# final | no-cr-full-set | 
-# dataset_version = 'no-cr-full-set'
-
-
+# Set dataset(s)
+datasets = ['merged-files']
 # Set date
-m_date = '2023-08-20'
+m_date = '2023-11-27'
+# Set number of measuremts
+NUM_OF_MEASUREMENTS = 5
+# Set file description
+file_description = 'final-selected-features'
 
 # create summary yaml file
 # File path within the summary directory for each measurement
@@ -53,11 +55,10 @@ CFG["autosklearn"] = autosklearn_conf
 # CFG["general"]["start_date"] = get_current_date()
 CFG["general"]["start_date"] = m_date
 
-NUM_OF_MEASUREMENTS = 5
-
 # document_results_docx(datasets,m_date, GLOBAL_YAML_SUMMARY_FILE, EXPLICIT_SUMMARY_FILE_PATH)
 document_results_docx(datasets,
-                              NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
-                              GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE, 
-                              EXPLICIT_SUMMARY_FILE_PATH = EXPLICIT_SUMMARY_FILE_PATH, 
-                              config = CFG)
+                        file_description,
+                        NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
+                        GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE, 
+                        EXPLICIT_SUMMARY_FILE_PATH = EXPLICIT_SUMMARY_FILE_PATH, 
+                        config = CFG)

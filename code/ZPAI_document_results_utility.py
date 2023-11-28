@@ -93,7 +93,7 @@ def add_results_heading(document, heading, heading_level):
     heading_2 = heading
     document.add_heading(heading_2, level=heading_level)
 
-def get_results_values(score, manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results):
+def get_results_values(score, manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results):
     score_result_df = pd.DataFrame()
     
     # Extract value for neural nets.
@@ -127,6 +127,12 @@ def get_results_values(score, manual_results, nn_results, autosklearn_results, a
         flaml_score_results = flaml_results.loc[ f'Test-{score}' , : ]
         score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([flaml_score_results])])
         score_result_df = score_result_df.rename(index={0: 'flaml'})
+
+    # Extract value for autokeras method.
+    if not autokeras_results.empty:
+        autokeras_score_results = autokeras_results.loc[ f'Test-{score}' , : ]
+        score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([autokeras_score_results])])
+        score_result_df = score_result_df.rename(index={0: 'autokeras'})
 
     score_result_df = score_result_df.astype(float)
 
@@ -195,10 +201,10 @@ def add_score_table(document, score_result_df, score, table_font_size):
                     font = run.font
                     font.size= Pt(table_font_size)
 
-def add_bar_plot(document, score_result_df, score, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size):
+def add_bar_plot(document, score_result_df, score, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size, file_description):
     # add R2 chart
-    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model,'final',input_file_creation_date)
-    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model,'final',input_file_creation_date,f'{score}-score', 'png')
+    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date)
+    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date,f'{score}-score', 'png')
     CHART_PATH = Path(repo_path, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
 
     x, y, score_max_value = get_max_values(score_result_df)
@@ -254,10 +260,10 @@ def add_bar_plot(document, score_result_df, score, measurement_date, input_file_
 
     plt.close()
 
-def add_line_plot(document, score_result_df, score, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size):
+def add_line_plot(document, score_result_df, score, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size, file_description):
     # add R2 chart
-    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model,'final',input_file_creation_date)
-    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model,'final',input_file_creation_date,f'{score}-line-score', 'png')
+    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date)
+    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date,f'{score}-line-score', 'png')
     CHART_PATH = Path(repo_path, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
 
     # get the max value for a dynamic adaptation of the y-axes
@@ -317,10 +323,10 @@ def add_line_plot(document, score_result_df, score, measurement_date, input_file
 
     plt.close()
 
-def add_duration_line_plot(document, score_result_df, name, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size):
+def add_duration_line_plot(document, score_result_df, name, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size, file_description):
     # add R2 chart
-    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model,'final',input_file_creation_date)
-    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model,'final',input_file_creation_date,f'{name}', 'png')
+    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date)
+    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date,f'{name}', 'png')
     CHART_PATH = Path(repo_path, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
 
     plt.rcParams["figure.figsize"] = (15,10)
@@ -503,7 +509,7 @@ def add_summary_table(document, best_result_df, summary_result_values, table_fon
                         font = run.font
                         font.size= Pt(table_font_size)
 
-def get_duration_results_values(score, manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results):
+def get_duration_results_values(score, manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results):
     score_result_df = pd.DataFrame()
     
     # Extract value for neural nets.
@@ -538,6 +544,12 @@ def get_duration_results_values(score, manual_results, nn_results, autosklearn_r
         score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([flaml_score_results])])
         score_result_df = score_result_df.rename(index={0: 'flaml'})
 
+    # Extract value for autokeras method.
+    if not autokeras_results.empty:
+        autokeras_score_results = autokeras_results.loc[ f'{score}' , : ]
+        score_result_df = pd.concat([score_result_df, pd.DataFrame.from_records([autokeras_score_results])])
+        score_result_df = score_result_df.rename(index={0: 'autokeras'})
+
     score_result_df = score_result_df.astype(float)
 
     if score=="Duration":
@@ -546,10 +558,10 @@ def get_duration_results_values(score, manual_results, nn_results, autosklearn_r
     return score_result_df
 
 
-def add_box_plot(document, score_result_df, score, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size):
+def add_box_plot(document, score_result_df, score, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size, file_description):
 
-    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model,'final',input_file_creation_date)
-    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model,'final',input_file_creation_date,f'{score}-boxplot', 'png')
+    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date)
+    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date,f'{score}-boxplot', 'png')
     CHART_PATH = Path(repo_path, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
 
     # get the max value for a dynamic adaptation of the y-axes
@@ -611,10 +623,10 @@ def add_box_plot(document, score_result_df, score, measurement_date, input_file_
 
     plt.close()
 
-def add_box_plot2(document, score_result_df, column_name, score, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size):
+def add_box_plot2(document, score_result_df, column_name, score, measurement_date, input_file_creation_date, const_machine_model, repo_path, picture_size, file_description):
     # add R2 chart
-    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model,'final',input_file_creation_date)
-    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model,'final',input_file_creation_date,f'{score}-boxplot', 'png')
+    sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date)
+    filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date,f'{score}-boxplot', 'png')
     CHART_PATH = Path(repo_path, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
 
     # x, y, score_max_value = get_max_values(score_result_df)
@@ -733,7 +745,7 @@ def calculate_mev_values(mape_result_df,training_duration_df, testing_duration_d
     for i,  val in enumerate(algorithm_names):
         if val == 'manual' or val == 'nn':
             k_levels.append(K_LEVEL_MANUEL)
-        elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml':
+        elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml' or val == 'autokeras':
             k_levels.append(K_LEVEL_AUTOML)
 
     for i, val in enumerate(feature_name_list):

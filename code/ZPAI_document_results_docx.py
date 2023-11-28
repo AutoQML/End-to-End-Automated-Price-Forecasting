@@ -29,6 +29,7 @@ from ZPAI_common_functions import read_yaml
 
 
 def document_results_docx(datasets: list,
+                          file_description: str,
                           NUM_OF_MEASUREMENTS: int,
                           GLOBAL_YAML_SUMMARY_FILE: str, 
                           EXPLICIT_SUMMARY_FILE_PATH: str,
@@ -74,14 +75,15 @@ def document_results_docx(datasets: list,
         FILE_PATH_PICS = Path('./measurements', dataset, 'pictures')
 
         # create measurement date directory
-        SUB_DIR_DATA = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
+        SUB_DIR_DATA = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE)
 
         # construct the file names of the results
-        nn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'nn-results','csv')
-        manual_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'manual-results','csv')
-        autosklearn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autosklearn-results', 'csv')
-        autogluon_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autogluon-results', 'csv')
-        flaml_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'flaml-results', 'csv')
+        nn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'nn-results','csv')
+        manual_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'manual-results','csv')
+        autosklearn_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'autosklearn-results', 'csv')
+        autogluon_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'autogluon-results', 'csv')
+        flaml_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'flaml-results', 'csv')
+        autokeras_result_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'autokeras-results', 'csv')
 
         # init data frames
         nn_results = pd.DataFrame()
@@ -89,6 +91,8 @@ def document_results_docx(datasets: list,
         autosklearn_results = pd.DataFrame()
         autogluon_results = pd.DataFrame()
         flaml_results = pd.DataFrame()
+        autokeras_results = pd.DataFrame()
+
 
         # create result data frame
         r2_result_df = pd.DataFrame()
@@ -142,16 +146,23 @@ def document_results_docx(datasets: list,
             if FLAML_FILE_PATH.is_file():
                 flaml_results = load_csv_data(FLAML_FILE_PATH)
 
+            # get autokeras results
+            AUTOKERAS_FILE_PATH = Path(REPO_PATH, 'measurements', dataset, 'data', SUB_DIR_DATA, str(measurement + 1), autokeras_result_filename)
+            if AUTOKERAS_FILE_PATH.is_file():
+                autokeras_results = load_csv_data(AUTOKERAS_FILE_PATH)
+
+            
+
             # get the result values
-            temp_r2_result_df = get_results_values("R2", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_mae_result_df = get_results_values("MAE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_mape_result_df = get_results_values("MAPE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_rmse_result_df = get_results_values("RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_nrmse_result_df = get_results_values("N-RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_iqrrmse_result_df = get_results_values("IQR-RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_cvrmse_result_df = get_results_values("CV-RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_training_duration_result_df = get_duration_results_values("Training-Duration", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
-            temp_testing_duration_result_df = get_duration_results_values("Test-Duration", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
+            temp_r2_result_df = get_results_values("R2", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results)
+            temp_mae_result_df = get_results_values("MAE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results)
+            temp_mape_result_df = get_results_values("MAPE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results)
+            temp_rmse_result_df = get_results_values("RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results)
+            temp_nrmse_result_df = get_results_values("N-RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results)
+            temp_iqrrmse_result_df = get_results_values("IQR-RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results)
+            temp_cvrmse_result_df = get_results_values("CV-RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results)
+            temp_training_duration_result_df = get_duration_results_values("Training-Duration", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results)
+            temp_testing_duration_result_df = get_duration_results_values("Test-Duration", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results, autokeras_results)
 
 
             # init the dataframe for the first time
@@ -225,7 +236,7 @@ def document_results_docx(datasets: list,
         add_results_heading(document, f"R2 results for {dataset}", HEADING_2_LEVELS)
         # r2_result_df = get_results_values("R2", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, r2_result_df, "R2", TABLE_FONT_SIZE)
-        add_bar_plot(document, r2_result_df, "R2", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
+        add_bar_plot(document, r2_result_df, "R2", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE, file_description)
         # add_line_plot(document, r2_result_df, "R2", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
         document.add_page_break()
 
@@ -236,7 +247,7 @@ def document_results_docx(datasets: list,
         add_results_heading(document, f"MAE results for {dataset}", HEADING_2_LEVELS)
         # mae_result_df = get_results_values("MAE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, mae_result_df, "MAE", TABLE_FONT_SIZE)
-        add_bar_plot(document, mae_result_df, "MAE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
+        add_bar_plot(document, mae_result_df, "MAE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE, file_description)
         # add_line_plot(document, mae_result_df, "MAE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
         document.add_page_break()
 
@@ -246,16 +257,16 @@ def document_results_docx(datasets: list,
         add_results_heading(document, f"MAPE results for {dataset}", HEADING_2_LEVELS)
         # mape_result_df = get_results_values("MAPE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, mape_result_df, "MAPE", TABLE_FONT_SIZE)
-        add_bar_plot(document, mape_result_df, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
+        add_bar_plot(document, mape_result_df, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE, file_description)
         # add_line_plot(document, mape_result_df, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
 
         #######################
         # Display scatter plot for MAPE results
         #######################
         # construct file / path to save the scatter plot
-        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
-        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'MAPE-scatter-plot', 'png')
-        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'MAPE-scatter-plot', 'pdf')
+        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE)
+        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,f'MAPE-scatter-plot', 'png')
+        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,f'MAPE-scatter-plot', 'pdf')
         CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
         CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
@@ -279,7 +290,7 @@ def document_results_docx(datasets: list,
         add_results_heading(document, f"RMSE results for {dataset}", HEADING_2_LEVELS)
         # rmse_result_df = get_results_values("RMSE", manual_results, nn_results, autosklearn_results, autogluon_results, flaml_results)
         add_score_table(document, rmse_result_df, "RMSE", TABLE_FONT_SIZE)
-        add_bar_plot(document, rmse_result_df, "RMSE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
+        add_bar_plot(document, rmse_result_df, "RMSE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE, file_description)
         # add_line_plot(document, rmse_result_df, "RMSE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
 
         document.add_page_break()
@@ -330,9 +341,9 @@ def document_results_docx(datasets: list,
         # Display scatter plot for training duration
         #######################
         # construct file / path to save the scatter plot
-        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
-        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'Training-duration-scatter-plot', 'png')
-        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'Training-duration-scatter-plot', 'pdf')
+        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE)
+        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,f'Training-duration-scatter-plot', 'png')
+        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,f'Training-duration-scatter-plot', 'pdf')
         CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
         CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
@@ -395,9 +406,9 @@ def document_results_docx(datasets: list,
         # Display scatter plot for testing duration
         #######################
         # construct file / path to save the scatter plot
-        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
-        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'Prediction-duration-scatter-plot', 'png')
-        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'Prediction-duration-scatter-plot', 'pdf')
+        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset, file_description, INPUT_FILE_CREATION_DATE)
+        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description, INPUT_FILE_CREATION_DATE,f'Prediction-duration-scatter-plot', 'png')
+        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description, INPUT_FILE_CREATION_DATE,f'Prediction-duration-scatter-plot', 'pdf')
         CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
         CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
@@ -423,9 +434,9 @@ def document_results_docx(datasets: list,
         mev_df = calculate_mev_values(mape_result_df,training_duration_df, testing_duration_df, config)
 
          # construct file / path to save the scatter plot
-        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
-        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'MEV-scatter-plot', 'png')
-        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,f'MEV-scatter-plot', 'pdf')
+        sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE)
+        filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,f'MEV-scatter-plot', 'png')
+        pdf_filename = "{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,f'MEV-scatter-plot', 'pdf')
         CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
         CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
@@ -467,7 +478,7 @@ def document_results_docx(datasets: list,
         # Display MAPE box plot for best feature-set combination
         #####################
         add_results_heading(document, f"Boxplot for MAPE results for {best_mev_feature_set} feature set.", HEADING_2_LEVELS)
-        add_box_plot2(document, best_res_mape, best_mev_feature_set, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE)
+        add_box_plot2(document, best_res_mape, best_mev_feature_set, "MAPE", MEASUREMENT_DATE, INPUT_FILE_CREATION_DATE, dataset, REPO_PATH, PICTURE_SIZE, file_description)
 
         #######################
         # Calculate standart deviation for the training runtime measurements 
@@ -607,8 +618,8 @@ def document_results_docx(datasets: list,
         rmse_col_name_min, rmse_row_name_min, min_value =  get_min_values(rmse_result_df)
 
         # File path for stored leaderboards
-        leaderboards_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
-        best_leaderboard_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autosklearn-leaderboard',rmse_col_name_min, 'csv')
+        leaderboards_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE)
+        best_leaderboard_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'autosklearn-leaderboard',rmse_col_name_min, 'csv')
         FILE_PATH_LEADERBOARD = Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file)
         FILE_PATH_LEADERBOARD_STR = str(Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file))
 
@@ -664,8 +675,8 @@ def document_results_docx(datasets: list,
         #################################
 
         # File path for stored leaderboards
-        leaderboards_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
-        best_leaderboard_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autogluon-leaderboard',rmse_col_name_min, 'csv')
+        leaderboards_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE)
+        best_leaderboard_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'autogluon-leaderboard',rmse_col_name_min, 'csv')
         FILE_PATH_LEADERBOARD = Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file)
         FILE_PATH_LEADERBOARD_STR = str(Path(REPO_PATH, 'measurements', dataset, 'data', leaderboards_dir, best_leaderboard_file))
 
@@ -726,18 +737,18 @@ def document_results_docx(datasets: list,
         # rmse_location, rmse_method, rmse_min_value
 
         # # File path for storing pictures
-        # best_result_picture_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE)
+        # best_result_picture_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE)
         # FILE_PATH_PICS = Path(REPO_PATH, 'measurements', dataset, 'pictures', best_result_picture_dir)
         # if rmse_method == 'autosklearn':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autosklearn-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'autosklearn-test-result',rmse_location, 'png')
         # elif rmse_method == 'autogluon':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'autogluon-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'autogluon-test-result',rmse_location, 'png')
         # elif rmse_method == 'nn':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'nn-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'nn-test-result',rmse_location, 'png')
         # elif rmse_method == 'manual':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'manual-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'manual-test-result',rmse_location, 'png')
         # elif rmse_method == 'flaml':
-        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset,'final',INPUT_FILE_CREATION_DATE,'flaml-test-result',rmse_location, 'png')
+        #     best_result_picture_file = "{}-{}-{}-{}-{}-{}.{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE,'flaml-test-result',rmse_location, 'png')
         # else:
         #     print('Failure in displaying the best result')
 
