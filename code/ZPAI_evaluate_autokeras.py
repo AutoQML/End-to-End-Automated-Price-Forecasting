@@ -109,23 +109,23 @@ def evaluate_autokeras(X_train: pd.DataFrame,
     num_elements = X_test.shape[0]
     test_time_per_sample = ((test_stop_time - test_start_time) / num_elements)
 
-    # df_temp = pd.DataFrame({'Actual': y_test, 'Predicted': final_predictions})
-    # df_temp.Predicted = df_temp.Predicted.astype(int)
+    df_temp = pd.DataFrame({'Actual': y_test, 'Predicted': final_predictions})
+    df_temp.Predicted = df_temp.Predicted.astype(int)
 
-    # # Display the results within a barchart diagram
-    # df_temp = df_temp.head(30)
-    # df_temp.plot(kind='bar',figsize=(10,6))
-    # plt.grid(which='major', linestyle='-', linewidth='0.5', color='grey')
-    # plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-    # #plt.savefig(FILE_PATH_PICS+'/'+'Test5.png')
-    # # filename = "{}-{}-{}-{}.{}".format(d,input_filename,feature_set,'autosklearn-test-result','png')
-    # filename = "{}-{}-{}-{}.{}".format(M_DATE,input_filename,'flaml-test-result',feature_set,'png')
-    # title = str("Autokeras results for {} on feat. set {}".format(input_filename, feature_set))
-    # plt.title(title)
-    # plt.savefig(FILE_PATH_PICS+'/'+filename)
+    # Display the results within a barchart diagram
+    df_temp = df_temp.head(30)
+    df_temp.plot(kind='bar',figsize=(10,6))
+    plt.grid(which='major', linestyle='-', linewidth='0.5', color='grey')
+    plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+    #plt.savefig(FILE_PATH_PICS+'/'+'Test5.png')
+    # filename = "{}-{}-{}-{}.{}".format(d,input_filename,feature_set,'autosklearn-test-result','png')
+    filename = "{}-{}-{}-{}.{}".format(M_DATE,input_filename,'autokeras-test-result',feature_set,'png')
+    title = str("Autokeras results for {} on feat. set {}".format(input_filename, feature_set))
+    plt.title(title)
+    plt.savefig(FILE_PATH_PICS+'/'+filename)
 
-    # # close open windows 
-    # plt.close()
+    # close open windows 
+    plt.close()
 
     ###################
     # Model evaluation
