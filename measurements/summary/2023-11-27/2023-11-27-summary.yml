@@ -1,0 +1,18 @@
+autosklearn_limit: 180
+autosklearn_runtime: 1800
+bin_outlier_detect: true
+measurement_date: '2023-11-27'
+number_of_measurements: 5
+pca_numbers: 0
+random_seed: 1
+merged-files:
+  input_file_25: 59500
+  input_file_50: 80000
+  input_file_75: 115000
+  input_file_creation_date: 2023-11-23
+  input_file_max: 998000
+  input_file_mean: 94089
+  input_file_min: 1
+  input_file_name: merged-files-final-selected-features-2023-11-23.csv
+  input_file_size: 2916
+  input_file_std: 58342
