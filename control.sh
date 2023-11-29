@@ -65,6 +65,21 @@ fi
 if [[ $OSTYPE == 'linux'* ]] 
 then
     echo 'linux'
+
+    if [ $DATA_PREPROCESSING == 'True' ]
+    then
+        # activate load_prep_tf_gluon_data conda env
+        conda activate load_prep_tf_gluon_data
+
+        if [ $CONDA_DEFAULT_ENV == "load_prep_tf_gluon_data" ]
+        then
+                    python $script_directory/code/ZPAI_main.py --start_date $START_DATE --algorithms load_preprocess --document_results False --data_preprocessing $DATA_PREPROCESSING
+        fi
+
+        conda deactivate
+        echo "Conda env after deactivate: $CONDA_DEFAULT_ENV"
+
+    fi
     
     ### Auto-Sklearn
     if [ $RUN_AUTOSKLEARN == 'True' ]
