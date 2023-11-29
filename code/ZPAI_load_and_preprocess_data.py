@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import time
 
 from ZPAI_prepare_data_for_ml import prepare_data_for_ml
-from ZPAI_common_functions import load_csv_data, create_path, read_yaml
+from ZPAI_common_functions import load_csv_data, create_path, read_yaml, perform_outlier_detection
 
 import featuretools as ft
 
@@ -83,6 +83,9 @@ def load_and_preprocess_data(datasets: list,
     ################################
     for dataset in datasets:
 
+        # assign dataset
+        DATASET = dataset
+
         ########################
         # extract model name
         ########################
@@ -128,6 +131,21 @@ def load_and_preprocess_data(datasets: list,
         # load the data
         dataset_df = load_csv_data(working_file)
 
+        # extract filename
+        FILE_PATH_IN = str(FILE_PATH_IN)
+        DELETE_FILE_PATH = FILE_PATH_IN+"/"
+        working_file = str(working_file)
+        input_filename_with_type = working_file.replace(DELETE_FILE_PATH, "")
+        input_filename_without_type = Path(input_filename_with_type).stem
+        date_input_filename = "{}-{}".format(M_DATE, input_filename_without_type)
+        # print('Input filename: {}'.format(date_input_filename))
+
+        # File path for storing pictures
+        FILE_PATH_PICS = Path(REPO_PATH, 'measurements', DATASET, 'pictures', date_input_filename)
+        create_path(path = FILE_PATH_PICS, verbose = False)
+
+        FILE_PATH_PICS = str(FILE_PATH_PICS)
+
             
         # Delete unnamed / index column
         if set(['Unnamed: 0']).issubset(dataset_df.columns):
@@ -135,6 +153,12 @@ def load_and_preprocess_data(datasets: list,
 
         # add model column
         dataset_df['model'] = model_name
+
+        # add OD for each dataframe
+        dataset_df = perform_outlier_detection(dataset_df, 
+                                               model_name, 
+                                               FILE_PATH_PICS,
+                                               config)
 
         # assing new dataframe to appropriate / last dataset name in the list
         dataframe_list[-1] = dataset_df

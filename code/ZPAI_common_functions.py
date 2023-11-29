@@ -5,6 +5,10 @@ import yaml
 import numpy as np
 from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, r2_score
 
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
 # load CSV data file
 def load_csv_data(csv_path):
     return pd.read_csv(csv_path, delimiter=',')
@@ -58,3 +62,51 @@ def calculate_scores(y_test, y_predict):
     root_mean_squared_error = np.sqrt(mean_squared_error(y_test, y_predict))
 
     return(mean_abs_error, mean_abs_percentage_error, r2_score_value, root_mean_squared_error)
+
+
+###########################
+# Perform outlier detection
+###########################
+def perform_outlier_detection(dataset_df: pd.DataFrame,
+                              model_name: str,
+                              file_path_pics: str,
+                              config: dict):
+    
+    M_DATE = config["general"]["start_date"]
+    FILE_PATH_PICS = file_path_pics
+
+    # boxplot for price, construction year and working hours
+    plt.figure()
+    filename = "{}-{}-{}.{}".format(M_DATE, model_name,'boxplot', 'pdf')
+    dataset_df.plot(kind="box",subplots=True,layout=(7,2),figsize=(15,20))
+    plt.savefig(FILE_PATH_PICS+'/'+filename)
+
+    # calculate IQR for price feature
+    q1 = pd.DataFrame(dataset_df['price']).quantile(0.25)[0]
+    q3 = pd.DataFrame(dataset_df['price']).quantile(0.75)[0]
+    iqr_price = q3 - q1 #Interquartile range
+    fence_low_price = q1 - (1.5*iqr_price)
+    fence_high_price = q3 + (1.5*iqr_price)
+    print(q1, q3, iqr_price, fence_low_price, fence_high_price)
+
+    # calculate IQR for working hours feature
+    q1 = pd.DataFrame(dataset_df['working_hours']).quantile(0.25)[0]
+    q3 = pd.DataFrame(dataset_df['working_hours']).quantile(0.75)[0]
+    iqr_wh = q3 - q1 #Interquartile range
+    fence_low_wh = q1 - (1.5*iqr_wh)
+    fence_high_wh = q3 + (1.5*iqr_wh)
+    print(q1, q3, iqr_wh, fence_low_wh, fence_high_wh)
+
+    # Delete outliers
+    # Define the conditions for price deletion
+    condition = (dataset_df['price'] > fence_high_price)
+    # Delete rows based on the combined condition
+    dataset_df = dataset_df[~condition]
+
+    # Define the conditions for working hours deletion
+    condition = (dataset_df['working_hours'] > fence_high_wh)
+    # Delete rows based on the combined condition
+    dataset_df = dataset_df[~condition]
+
+
+    return dataset_df
