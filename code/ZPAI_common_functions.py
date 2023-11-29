@@ -9,6 +9,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+import seaborn as sns
+
 # load CSV data file
 def load_csv_data(csv_path):
     return pd.read_csv(csv_path, delimiter=',')
@@ -75,10 +77,31 @@ def perform_outlier_detection(dataset_df: pd.DataFrame,
     M_DATE = config["general"]["start_date"]
     FILE_PATH_PICS = file_path_pics
 
-    # boxplot for price, construction year and working hours
-    plt.figure()
-    filename = "{}-{}-{}.{}".format(M_DATE, model_name,'boxplot', 'pdf')
-    dataset_df.plot(kind="box",subplots=True,layout=(7,2),figsize=(15,20))
+    # boxplot construction year
+    plt.figure(figsize=(15, 20))  # Optional: set the size of the figure
+    filename = "{}-{}-{}.{}".format(M_DATE, model_name,'construction-year-boxplot-sns', 'pdf')
+    sns.boxplot(y='const_year', data=dataset_df)
+    title = "{}-{} {}".format('Caterpillar', model_name, 'construction year boxplot')
+    plt.ylabel('Construction year')
+    plt.title(title)
+    plt.savefig(FILE_PATH_PICS+'/'+filename)
+
+    # boxplot price
+    plt.figure(figsize=(15, 20))  # Optional: set the size of the figure
+    filename = "{}-{}-{}.{}".format(M_DATE, model_name,'price-boxplot-sns', 'pdf')
+    sns.boxplot(y='price', data=dataset_df)
+    title = "{}-{} {}".format('Caterpillar', model_name, 'price boxplot')
+    plt.ylabel('Price')
+    plt.title(title)
+    plt.savefig(FILE_PATH_PICS+'/'+filename)
+
+    # boxplot working hours
+    plt.figure(figsize=(15, 20))  # Optional: set the size of the figure
+    filename = "{}-{}-{}.{}".format(M_DATE, model_name,'working-hours-boxplot-sns', 'pdf')
+    sns.boxplot(y='working_hours', data=dataset_df)
+    title = "{}-{} {}".format('Caterpillar', model_name, 'working hours boxplot')
+    plt.ylabel('Working hours')
+    plt.title(title)
     plt.savefig(FILE_PATH_PICS+'/'+filename)
 
     # calculate IQR for price feature
