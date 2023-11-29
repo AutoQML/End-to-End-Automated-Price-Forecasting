@@ -140,6 +140,14 @@ def load_and_preprocess_data(datasets: list,
         date_input_filename = "{}-{}".format(M_DATE, input_filename_without_type)
         # print('Input filename: {}'.format(date_input_filename))
 
+        # File path for storing pictures and data
+        FILE_PATH_OUT = Path(REPO_PATH, 'measurements', DATASET)
+        create_path(path = FILE_PATH_OUT, verbose = False)
+
+        # File path for storing pictures
+        FILE_PATH_PICS = Path(REPO_PATH, 'measurements', DATASET, 'pictures')
+        create_path(path = FILE_PATH_PICS, verbose = False)
+
         # File path for storing pictures
         FILE_PATH_PICS = Path(REPO_PATH, 'measurements', DATASET, 'pictures', date_input_filename)
         create_path(path = FILE_PATH_PICS, verbose = False)
