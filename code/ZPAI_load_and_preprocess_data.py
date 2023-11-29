@@ -261,20 +261,6 @@ def load_and_preprocess_data(datasets: list,
     # Replace NaN values with zeros
     new_fm[columns_to_replace] = new_fm[columns_to_replace].fillna(0)
 
-    # save construction year versus price plot
-    new_fm.plot(kind='scatter', x = 'const_year', y = 'price')
-    # Set labels for x and y axes
-    plt.xlabel('Construction year')
-    plt.ylabel('Price')
-    plt.savefig(path.format('cons_year_price.png'),dpi=100,bbox_inches='tight')
-
-    # save working hours versus price plot
-    new_fm.plot(kind='scatter', x = 'working_hours', y = 'price')
-    # Set labels for x and y axes
-    plt.xlabel('Working hours')
-    plt.ylabel('Price')
-    plt.savefig(path.format('working_houers_price.png'),dpi=100,bbox_inches='tight')
-
     ##########################################
     # Drop rows with remaining NaN values
     # TODO: use imputation techniques for 
@@ -340,6 +326,25 @@ def load_and_preprocess_data(datasets: list,
 
     else:
         data = new_fm.copy()
+
+    ##############################
+    # Save distribution plots after preprocessing
+    ##############################
+    # save construction year versus price plot
+    data.plot(kind='scatter', x = 'const_year', y = 'price')
+    # Set labels for x and y axes
+    plt.xlabel('Construction year')
+    plt.ylabel('Price')
+    plt.title('Price versus construction year')
+    plt.savefig(path.format('cons_year_price.pdf'),dpi=100,bbox_inches='tight')
+
+    # save working hours versus price plot
+    data.plot(kind='scatter', x = 'working_hours', y = 'price')
+    # Set labels for x and y axes
+    plt.xlabel('Working hours')
+    plt.ylabel('Price')
+    plt.title('Price versus working hours')
+    plt.savefig(path.format('working_houers_price.pdf'),dpi=100,bbox_inches='tight')
 
     #########################################
     # Calculate feature importance via SHAP
