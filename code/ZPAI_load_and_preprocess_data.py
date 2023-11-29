@@ -76,7 +76,7 @@ def load_and_preprocess_data(datasets: list,
     REPO_PATH = config["general"]["repo_path"]
     M_DATE = config["general"]["start_date"]
 
-    AUTOGLUON_OD = False
+    AUTOGLUON_OD = True
 
     dataframe_list = []
 
@@ -501,6 +501,10 @@ def load_and_preprocess_data(datasets: list,
     plt.xlabel('Odor',size=15)
 
     plt.savefig(path.format('boxplot_py.png'),dpi=100,bbox_inches='tight')
+
+    # Reset the index
+    data = data.reset_index()
+
 
     # Save the DataFrame as a CSV file
     filename = "{}-{}.{}".format("./data/merged-files/merged-files-final", M_DATE,'csv')
