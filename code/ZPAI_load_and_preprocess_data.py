@@ -76,6 +76,8 @@ def load_and_preprocess_data(datasets: list,
     REPO_PATH = config["general"]["repo_path"]
     M_DATE = config["general"]["start_date"]
 
+    AUTOGLUON_OD = False
+
     dataframe_list = []
 
     #################################
@@ -237,14 +239,15 @@ def load_and_preprocess_data(datasets: list,
     
     new_fm, new_features = remove_single_value_features(feature_matrix, features=features, count_nan_as_value=True)
 
-    ###
+    ###################################
     # Remove Highly Correlated Features
-    ###
+    ###################################
     new_fm, new_features = remove_highly_correlated_features(feature_matrix, features=features, pct_corr_threshold=0.9)
 
-    ###
+    ############################
     # Replace NaN values by 0
-    ###
+    ############################
+
     # Get the current column names
     column_names = new_fm.columns.tolist()
 
@@ -272,62 +275,71 @@ def load_and_preprocess_data(datasets: list,
     plt.ylabel('Price')
     plt.savefig(path.format('working_houers_price.png'),dpi=100,bbox_inches='tight')
 
-    # Drop rows with NaN values
+    ##########################################
+    # Drop rows with remaining NaN values
+    # TODO: use imputation techniques for 
+    # missing values if possible
+    ##########################################
     new_fm = new_fm.dropna()
 
-    ##########################
+    ################################################
     # Use Autogluon for anomaly / outlier detection
-    ##########################
+    ################################################
 
-    # Split the data into training and test set
-    X_train, X_test = train_test_split(new_fm, test_size=0.2, random_state=42)
+    if AUTOGLUON_OD == True:
 
-    # This parameter specifies how many standard deviations above mean anomaly score are considered
-    # to be anomalies (only needed for visualization, does not affect scores calculation).
-    threshold_stds = 2
+        # Split the data into training and test set
+        X_train, X_test = train_test_split(new_fm, test_size=0.2, random_state=42)
 
-    target_col = 'price'
+        # This parameter specifies how many standard deviations above mean anomaly score are considered
+        # to be anomalies (only needed for visualization, does not affect scores calculation).
+        threshold_stds = 2
 
-    #####
-    # ATTENTION: theres a bug in the detect_anomalies function -> it can be fixed as described here : https://github.com/autogluon/autogluon/issues/3401
-    # iloc needs to be changed to loc in the following two files:
-    # eda.auto.simple.py line:1667
-    # _state.anomaly_detection.anomalies[ds] = df.iloc[anomaly_idx].join(anomaly_scores)
-    # _state.anomaly_detection.anomalies[ds] = df.loc[anomaly_idx].join(anomaly_scores)
-    # eda.analysis.anomaly.py line:346
-    # rows=args[dataset].iloc[dataset_row_ids],
-    # rows=args[dataset].loc[dataset_row_ids],
-    #####
+        target_col = 'price'
 
-    state = auto.detect_anomalies(
-        train_data= X_train,
-        test_data=X_test,
-        label=target_col,
-        threshold_stds=threshold_stds,
-        bps_flag=False, # Don't use bps_flag=True - it's using pre-trained models which aren't loading in newer versions of sklearn -> https://github.com/autogluon/autogluon/pull/3406
-        return_state=True,
-        show_top_n_anomalies=None,
-        explain_top_n_anomalies=None,
-        show_help_text=False,
-        fig_args=None
-    )
+        #####
+        # ATTENTION: theres a bug in the detect_anomalies function -> it can be fixed as described here : https://github.com/autogluon/autogluon/issues/3401
+        # iloc needs to be changed to loc in the following two files:
+        # eda.auto.simple.py line:1667
+        # _state.anomaly_detection.anomalies[ds] = df.iloc[anomaly_idx].join(anomaly_scores)
+        # _state.anomaly_detection.anomalies[ds] = df.loc[anomaly_idx].join(anomaly_scores)
+        # eda.analysis.anomaly.py line:346
+        # rows=args[dataset].iloc[dataset_row_ids],
+        # rows=args[dataset].loc[dataset_row_ids],
+        #####
 
-    # get the train and test anomalies
-    train_anomaly = state.anomaly_detection.anomalies.train_data
-    test_anomaly = state.anomaly_detection.anomalies.test_data
+        state = auto.detect_anomalies(
+            train_data= X_train,
+            test_data=X_test,
+            label=target_col,
+            threshold_stds=threshold_stds,
+            bps_flag=False, # Don't use bps_flag=True - it's using pre-trained models which aren't loading in newer versions of sklearn -> https://github.com/autogluon/autogluon/pull/3406
+            return_state=True,
+            show_top_n_anomalies=None,
+            explain_top_n_anomalies=None,
+            show_help_text=False,
+            fig_args=None
+        )
 
-    #######################################
-    # drop the anomalies from the dataset
-    #######################################
-    test_indeces = test_anomaly.index.values
-    # print(test_indeces)
-    data1 = new_fm.drop(test_indeces)
-    train_indices = train_anomaly.index.values
-    # print(train_indices)
-    data = data1.drop(train_indices)
+        # get the train and test anomalies
+        train_anomaly = state.anomaly_detection.anomalies.train_data
+        test_anomaly = state.anomaly_detection.anomalies.test_data
 
-    print(f"Length of preprocessed dataframe: {len(data)}")
-    print(f"Number of features of preprocessed data frame: {data.shape[1]}")
+        #######################################
+        # drop the anomalies from the dataset
+        #######################################
+        test_indeces = test_anomaly.index.values
+        # print(test_indeces)
+        data1 = new_fm.drop(test_indeces)
+        train_indices = train_anomaly.index.values
+        # print(train_indices)
+        data = data1.drop(train_indices)
+
+        print(f"Length of preprocessed dataframe: {len(data)}")
+        print(f"Number of features of preprocessed data frame: {data.shape[1]}")
+
+    else:
+        data = new_fm.copy()
 
     #########################################
     # Calculate feature importance via SHAP
