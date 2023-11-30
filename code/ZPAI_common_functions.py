@@ -106,9 +106,11 @@ def perform_outlier_detection(dataset_df: pd.DataFrame,
 
     # calculate IQR for price feature
     q1 = pd.DataFrame(dataset_df['price']).quantile(0.25)[0]
+    q2 = pd.DataFrame(dataset_df['price']).quantile(0.50)[0]
     q3 = pd.DataFrame(dataset_df['price']).quantile(0.75)[0]
     iqr_price = q3 - q1 #Interquartile range
-    fence_low_price = q1 - (1.5*iqr_price)
+    # fence_low_price = q1 - (1.5*iqr_price)
+    fence_low_price = q2 * 0.1
     fence_high_price = q3 + (1.5*iqr_price)
     # print(q1, q3, iqr_price, fence_low_price, fence_high_price)
 
@@ -122,9 +124,11 @@ def perform_outlier_detection(dataset_df: pd.DataFrame,
 
     # Delete outliers
     # Define the conditions for price deletion
-    condition = (dataset_df['price'] > fence_high_price)
+    condition1 = (dataset_df['price'] > fence_high_price)
+    condition2 = (dataset_df['price'] < fence_low_price)
     # Delete rows based on the combined condition
-    dataset_df = dataset_df[~condition]
+    conditions = condition1 | condition2
+    dataset_df = dataset_df[~conditions]
 
     # Define the conditions for working hours deletion
     condition = (dataset_df['working_hours'] > fence_high_wh)
