@@ -403,3 +403,49 @@ IQR-RMSE: 	0.3025
 CV-RMSE: 	0.1733
 R2 test score: 	0.852
 
+Summary for: 
+merged-files-final-2022-07-06
+
+
+Feature set for AutoKeras: 	basic-subset
+Mean Absolute Error: 	15726.43
+Mean Absolute Percentage Error: 	0.1663
+Root Mean Squared Error: 	23945.96
+N-RMSE: 	0.1109
+IQR-RMSE: 	0.465
+CV-RMSE: 	0.2664
+R2 test score: 	0.65
+
+
+
+Feature set for AutoKeras: 	extension
+Mean Absolute Error: 	15431.66
+Mean Absolute Percentage Error: 	0.1729
+Root Mean Squared Error: 	22750.96
+N-RMSE: 	0.1053
+IQR-RMSE: 	0.4418
+CV-RMSE: 	0.2531
+R2 test score: 	0.684
+
+
+
+Feature set for AutoKeras: 	location
+Mean Absolute Error: 	16255.04
+Mean Absolute Percentage Error: 	0.1925
+Root Mean Squared Error: 	24128.47
+N-RMSE: 	0.1117
+IQR-RMSE: 	0.4685
+CV-RMSE: 	0.2684
+R2 test score: 	0.645
+
+
+
+Feature set for AutoKeras: 	extension-location
+Mean Absolute Error: 	16580.27
+Mean Absolute Percentage Error: 	0.188
+Root Mean Squared Error: 	24281.5
+N-RMSE: 	0.1124
+IQR-RMSE: 	0.4715
+CV-RMSE: 	0.2701
+R2 test score: 	0.641
+

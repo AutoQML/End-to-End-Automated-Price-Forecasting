@@ -408,3 +408,49 @@ merged-files-final-2022-07-06
 
 
 Feature set for AutoKeras: 	basic-subset
+Summary for: 
+merged-files-final-2022-07-06
+
+
+Feature set for AutoKeras: 	basic-subset
+Mean Absolute Error: 	17379.34
+Mean Absolute Percentage Error: 	0.1964
+Root Mean Squared Error: 	26280.73
+N-RMSE: 	0.0991
+IQR-RMSE: 	0.4259
+CV-RMSE: 	0.2885
+R2 test score: 	0.661
+
+
+
+Feature set for AutoKeras: 	extension
+Mean Absolute Error: 	16055.4
+Mean Absolute Percentage Error: 	0.1962
+Root Mean Squared Error: 	23608.75
+N-RMSE: 	0.0891
+IQR-RMSE: 	0.3826
+CV-RMSE: 	0.2592
+R2 test score: 	0.726
+
+
+
+Feature set for AutoKeras: 	location
+Mean Absolute Error: 	17518.9
+Mean Absolute Percentage Error: 	0.2223
+Root Mean Squared Error: 	26954.99
+N-RMSE: 	0.1017
+IQR-RMSE: 	0.4369
+CV-RMSE: 	0.2959
+R2 test score: 	0.643
+
+
+
+Feature set for AutoKeras: 	extension-location
+Mean Absolute Error: 	15880.92
+Mean Absolute Percentage Error: 	0.2037
+Root Mean Squared Error: 	24364.68
+N-RMSE: 	0.0919
+IQR-RMSE: 	0.3949
+CV-RMSE: 	0.2675
+R2 test score: 	0.709
+
