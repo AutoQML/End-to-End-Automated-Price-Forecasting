@@ -21,7 +21,7 @@ from featuretools.selection import (
     remove_highly_null_features,
     remove_single_value_features,
 )
-import autogluon.eda.auto as auto
+# import autogluon.eda.auto as auto
 import shap
 
 from sklearn.model_selection import train_test_split
@@ -76,7 +76,7 @@ def load_and_preprocess_data(datasets: list,
     REPO_PATH = config["general"]["repo_path"]
     M_DATE = config["general"]["start_date"]
 
-    AUTOGLUON_OD = True
+    AUTOGLUON_OD = False
 
     dataframe_list = []
 
@@ -261,6 +261,9 @@ def load_and_preprocess_data(datasets: list,
     # Replace NaN values with zeros
     new_fm[columns_to_replace] = new_fm[columns_to_replace].fillna(0)
 
+    # Convert Int64 to int64
+    new_fm[columns_to_replace] = new_fm[columns_to_replace].astype(np.int64)
+
     ##########################################
     # Drop rows with remaining NaN values
     # TODO: use imputation techniques for 
@@ -270,61 +273,61 @@ def load_and_preprocess_data(datasets: list,
 
     ################################################
     # Use Autogluon for anomaly / outlier detection
+    # NOT ACTIVATED IN THIS STUDY
     ################################################
 
-    if AUTOGLUON_OD == True:
+    # # Split the data into training and test set
+    # X_train, X_test = train_test_split(new_fm, test_size=0.2, random_state=42)
 
-        # Split the data into training and test set
-        X_train, X_test = train_test_split(new_fm, test_size=0.2, random_state=42)
+    # # This parameter specifies how many standard deviations above mean anomaly score are considered
+    # # to be anomalies (only needed for visualization, does not affect scores calculation).
+    # threshold_stds = 2
 
-        # This parameter specifies how many standard deviations above mean anomaly score are considered
-        # to be anomalies (only needed for visualization, does not affect scores calculation).
-        threshold_stds = 2
+    # target_col = 'price'
 
-        target_col = 'price'
+    #####
+    # ATTENTION: theres a bug in the detect_anomalies function -> it can be fixed as described here : https://github.com/autogluon/autogluon/issues/3401
+    # iloc needs to be changed to loc in the following two files:
+    # eda.auto.simple.py line:1667
+    # _state.anomaly_detection.anomalies[ds] = df.iloc[anomaly_idx].join(anomaly_scores)
+    # _state.anomaly_detection.anomalies[ds] = df.loc[anomaly_idx].join(anomaly_scores)
+    # eda.analysis.anomaly.py line:346
+    # rows=args[dataset].iloc[dataset_row_ids],
+    # rows=args[dataset].loc[dataset_row_ids],
+    #####
 
-        #####
-        # ATTENTION: theres a bug in the detect_anomalies function -> it can be fixed as described here : https://github.com/autogluon/autogluon/issues/3401
-        # iloc needs to be changed to loc in the following two files:
-        # eda.auto.simple.py line:1667
-        # _state.anomaly_detection.anomalies[ds] = df.iloc[anomaly_idx].join(anomaly_scores)
-        # _state.anomaly_detection.anomalies[ds] = df.loc[anomaly_idx].join(anomaly_scores)
-        # eda.analysis.anomaly.py line:346
-        # rows=args[dataset].iloc[dataset_row_ids],
-        # rows=args[dataset].loc[dataset_row_ids],
-        #####
+    # state = auto.detect_anomalies(
+    #     train_data= X_train,
+    #     test_data=X_test,
+    #     label=target_col,
+    #     threshold_stds=threshold_stds,
+    #     bps_flag=False, # Don't use bps_flag=True - it's using pre-trained models which aren't loading in newer versions of sklearn -> https://github.com/autogluon/autogluon/pull/3406
+    #     return_state=True,
+    #     show_top_n_anomalies=None,
+    #     explain_top_n_anomalies=None,
+    #     show_help_text=False,
+    #     fig_args=None
+    # )
 
-        state = auto.detect_anomalies(
-            train_data= X_train,
-            test_data=X_test,
-            label=target_col,
-            threshold_stds=threshold_stds,
-            bps_flag=False, # Don't use bps_flag=True - it's using pre-trained models which aren't loading in newer versions of sklearn -> https://github.com/autogluon/autogluon/pull/3406
-            return_state=True,
-            show_top_n_anomalies=None,
-            explain_top_n_anomalies=None,
-            show_help_text=False,
-            fig_args=None
-        )
+    # # get the train and test anomalies
+    # train_anomaly = state.anomaly_detection.anomalies.train_data
+    # test_anomaly = state.anomaly_detection.anomalies.test_data
 
-        # get the train and test anomalies
-        train_anomaly = state.anomaly_detection.anomalies.train_data
-        test_anomaly = state.anomaly_detection.anomalies.test_data
+    # #######################################
+    # # drop the anomalies from the dataset
+    # #######################################
+    # test_indeces = test_anomaly.index.values
+    # # print(test_indeces)
+    # data1 = new_fm.drop(test_indeces)
+    # train_indices = train_anomaly.index.values
+    # # print(train_indices)
+    # data = data1.drop(train_indices)
 
-        #######################################
-        # drop the anomalies from the dataset
-        #######################################
-        test_indeces = test_anomaly.index.values
-        # print(test_indeces)
-        data1 = new_fm.drop(test_indeces)
-        train_indices = train_anomaly.index.values
-        # print(train_indices)
-        data = data1.drop(train_indices)
+    # print(f"Length of preprocessed dataframe: {len(data)}")
+    # print(f"Number of features of preprocessed data frame: {data.shape[1]}")
 
-        print(f"Length of preprocessed dataframe: {len(data)}")
-        print(f"Number of features of preprocessed data frame: {data.shape[1]}")
-
-    else:
+    # Circumvent AutoGluon OD
+    if AUTOGLUON_OD == False:
         data = new_fm.copy()
 
     ##############################
@@ -516,7 +519,7 @@ def load_and_preprocess_data(datasets: list,
     # extract/keep features with more than 1%
     selected_values = feature_importance.loc[feature_importance['feature_importance_percentage'] > 0.01, 'feature_name']
 
-    selected_values = selected_values.append(pd.Series(['price']))
+    selected_values = selected_values._append(pd.Series(['price']))
 
     # create final dataframe with the selected features
     selectetd_data = data[selected_values].copy()
