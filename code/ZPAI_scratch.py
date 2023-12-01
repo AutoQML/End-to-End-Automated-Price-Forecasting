@@ -113,7 +113,7 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
-    plt.xlabel("Mean absolute percentage error", fontsize=16)
+    plt.xlabel("Mean absolute percentage error [MAPE]", fontsize=16)
     plt.ylabel("Feature combination", fontsize=16)
     # save grafics
     plt.savefig(CHART_PATH)
@@ -481,7 +481,7 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
-    plt.xlabel("Method evaluation score", fontsize=16)
+    plt.xlabel("Method evaluation score [MES]", fontsize=16)
     plt.ylabel("Feature combination", fontsize=16)
     # save grafics
     plt.savefig(CHART_PATH)
