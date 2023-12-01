@@ -1,0 +1,15 @@
+measurement_date: '2023-12-01'
+Caterpillar-966:
+  input_file_25: 76500
+  input_file_50: 94000
+  input_file_75: 135000
+  input_file_creation_date: 2022-06-01
+  input_file_fh: 222750
+  input_file_fl: 0
+  input_file_iqr: 58500
+  input_file_max: 230000
+  input_file_mean: 107013
+  input_file_min: 13522
+  input_file_name: Caterpillar-966-final-2022-06-01.csv
+  input_file_size: 294
+  input_file_std: 41485

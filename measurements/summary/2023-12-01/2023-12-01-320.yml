@@ -1,0 +1,15 @@
+measurement_date: '2023-12-01'
+Caterpillar-320:
+  input_file_25: 59000
+  input_file_50: 78954
+  input_file_75: 99800
+  input_file_creation_date: 2022-06-15
+  input_file_fh: 161000
+  input_file_fl: 0
+  input_file_iqr: 40800
+  input_file_max: 165000
+  input_file_mean: 82047
+  input_file_min: 10000
+  input_file_name: Caterpillar-320-final-2022-06-15.csv
+  input_file_size: 509
+  input_file_std: 30222
