@@ -97,9 +97,14 @@ def evaluate_autogluon(X_train: pd.DataFrame,
     num_elements = X_test.shape[0] # compute numbe of test items
     average_test_time = ((test_stop_time - test_start_time) / num_elements)
 
-    # print("Predictions:  \n", y_pred)
+    print("Predictions:  \n", y_pred)
     perf = automl.evaluate_predictions(y_true=y_test, y_pred=y_pred, auxiliary_metrics=True)
-    print(perf)
+    # print(f"AutoGluon performance: {perf}")
+
+    # build a dataframe with the predicted values
+    test_predictions = test_data_nolab.copy()
+    test_predictions['Predictions'] = y_pred
+    print(test_predictions)
 
     # print(automl.leaderboard())
     test_data = X_test
