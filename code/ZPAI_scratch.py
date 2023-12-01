@@ -35,6 +35,8 @@ def modify_legend(ax):
     labels_txt = [label.replace('Autosklearn', 'auto-sklearn') for label in labels_txt]
     # replace 'Flaml' string by 'FLAML' string
     labels_txt = [label.replace('Flaml', 'FLAML') for label in labels_txt]
+    # replace 'Autokeras' string by 'AutoKeras' string
+    labels_txt = [label.replace('Autokeras', 'AutoKeras') for label in labels_txt]
 
     return handles, labels_txt
 
@@ -62,7 +64,7 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # ax.set_xticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     # set dynamic xticks steps
     xticks_step_size_range = (MAX_VAL - MIN_VAL)
-    xticks_step_size = 0.1 if xticks_step_size_range > 0.2 else 0.01
+    xticks_step_size = 0.05 if xticks_step_size_range > 0.2 else 0.01
     ax.set_xticks(np.arange(0.0, 1.1, xticks_step_size))
 
     ax.tick_params(axis=u'both', which=u'both', length=0)
@@ -106,8 +108,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     handles, labels_txt = modify_legend(ax)
 
     fig.subplots_adjust(bottom=0.8 / rows)
-    fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
-    # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
+    fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
+    # fig.legend(handles, labels_txt, ncol=6, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
@@ -232,7 +234,7 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     handles, labels_txt = modify_legend(ax)
 
     fig.subplots_adjust(bottom=0.8 / rows)
-    fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
+    fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
@@ -353,7 +355,7 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     handles, labels_txt = modify_legend(ax)
 
     fig.subplots_adjust(bottom=0.8 / rows)
-    fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
+    fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
@@ -474,7 +476,7 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     handles, labels_txt = modify_legend(ax)
 
     fig.subplots_adjust(bottom=0.8 / rows)
-    fig.legend(handles, labels_txt, ncol=len(labels), loc='lower center', borderaxespad=1.5, fontsize=13)
+    fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
