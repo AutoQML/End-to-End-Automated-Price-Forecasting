@@ -449,9 +449,10 @@ def document_results_docx(datasets: list,
         add_score_table(document, mev_df, 'MEV', TABLE_FONT_SIZE)
         best_mev_feature_set, best_mev_method, best_mev_value = get_min_values(mev_df)
 
-        # print(mev_df)
-        mev_df = mev_df.reindex(['autogluon', 'autosklearn', 'manual', 'flaml', 'nn'])
-        # print(mev_df)
+        # print(f"MEV-DF: {mev_df}")
+        # reindex for changing the colours within the plot -> make it identikal to the other plots
+        mev_df = mev_df.reindex(['autogluon', 'autokeras', 'autosklearn', 'flaml', 'manual', 'nn'])
+        # print(f"MEV-DF: {mev_df}")
 
         plot_mev(mev_df, CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, PICTURE_SIZE)
 
