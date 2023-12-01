@@ -13,6 +13,7 @@ import time
 
 from ZPAI_prepare_data_for_ml import prepare_data_for_ml
 from ZPAI_common_functions import load_csv_data, create_path, read_yaml, perform_outlier_detection
+from ZPAI_evaluate_dataset import calculate_stats
 
 import featuretools as ft
 
@@ -49,6 +50,7 @@ warnings.filterwarnings('ignore')
 
 
 def load_and_preprocess_data(datasets: list,
+                            yaml_file_path: str,
                             config: dict) -> None:
     """
     Summary.
@@ -75,6 +77,7 @@ def load_and_preprocess_data(datasets: list,
 
     REPO_PATH = config["general"]["repo_path"]
     M_DATE = config["general"]["start_date"]
+    YAML_FILE_PATH = yaml_file_path
 
     AUTOGLUON_OD = False
 
@@ -156,6 +159,16 @@ def load_and_preprocess_data(datasets: list,
 
         FILE_PATH_PICS = str(FILE_PATH_PICS)
 
+        # create yaml file
+        filename = "{}-{}.{}".format(M_DATE, model_name,'yml')
+        YAML_FILE = Path(YAML_FILE_PATH, filename)
+
+        # create first entry once at the creation of the file
+        dict_file = {'measurement_date': M_DATE}
+        if not Path.exists(YAML_FILE):
+            with open(YAML_FILE, 'w') as file:
+                documents = yaml.dump(dict_file, file)
+
             
         # Delete unnamed / index column
         if set(['Unnamed: 0']).issubset(dataset_df.columns):
@@ -169,6 +182,16 @@ def load_and_preprocess_data(datasets: list,
                                                model_name, 
                                                FILE_PATH_PICS,
                                                config)
+        
+        ###################################
+        # CALCULATE AND SAVE STATS OF INPUT FILE
+        ###################################
+
+        calculate_stats(df = dataset_df, 
+                        dataset = DATASET,
+                        filename = input_filename_with_type,  
+                        creation_date = file_creation_date,
+                        yaml_file = YAML_FILE)
 
         # assing new dataframe to appropriate / last dataset name in the list
         dataframe_list[-1] = dataset_df

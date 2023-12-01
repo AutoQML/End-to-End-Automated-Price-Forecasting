@@ -205,7 +205,8 @@ def main():
             # load and preprocess input files
             ################################################
             temp_df = load_and_preprocess_data(datasets = DATASETS,
-                                    config = CFG)
+                                                yaml_file_path = EXPLICIT_SUMMARY_FILE_PATH,
+                                                config = CFG)
             
             merged_df = temp_df.copy()
 

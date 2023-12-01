@@ -58,6 +58,12 @@ def calculate_stats(df: pd.DataFrame,
         file_25 = int(df['price'].describe()['25%'])
         file_50 = int(df['price'].describe()['50%'])
         file_75 = int(df['price'].describe()['75%'])
+        iqr = int(file_75 - file_25) #Interquartile range
+        if((file_25 - (1.5*iqr)) < 0):
+            fence_low = 0
+        else:
+            fence_low = int(file_25 - (1.5*iqr))
+        fence_high = int(file_75 + (1.5*iqr))
 
         dict_file_stats = {dataset :{'input_file_name': filename, 
                                     'input_file_size': len(df), 
@@ -68,7 +74,10 @@ def calculate_stats(df: pd.DataFrame,
                                     'input_file_max': file_max, 
                                     'input_file_25' : file_25, 
                                     'input_file_50': file_50, 
-                                    'input_file_75' : file_75}}
+                                    'input_file_75' : file_75,
+                                    'input_file_iqr' : iqr,
+                                    'input_file_fl' : fence_low,
+                                    'input_file_fh' : fence_high}}
 
         with open(yaml_file, 'a') as file: # open the file in append mode
             yaml.dump(dict_file_stats, file, default_flow_style=False)
