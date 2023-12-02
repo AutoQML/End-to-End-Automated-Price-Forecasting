@@ -156,6 +156,7 @@ def evaluate_data(dataset: str,
 
     # get most actual input data file (csv file)
     working_file = latest_file
+    print(f"Selected file: {working_file}")
 
     # load the data
     dataset_df = load_csv_data(working_file)
