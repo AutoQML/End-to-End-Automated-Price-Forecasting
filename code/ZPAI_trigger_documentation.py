@@ -23,12 +23,12 @@ from ZPAI_document_results_docx import document_results_docx
 # Set dataset(s)
 datasets = ['merged-files']
 # Set date
-m_date = '2023-11-28'
+m_date = '2023-12-02'
 # Set number of measuremts
 NUM_OF_MEASUREMENTS = 5
 # Set file description
-# file_description = 'final-selected-features'
-file_description = 'final'
+file_description = 'final-selected-features'
+# file_description = 'final'
 
 # create summary yaml file
 # File path within the summary directory for each measurement

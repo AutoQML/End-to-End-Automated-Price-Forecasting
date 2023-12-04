@@ -1,0 +1,4 @@
+,R2-Score,MAPE,MAE,RMSE,N-RMSE,IQR-RMSE,CV-RMSE
+Feature-Set,location-extension,location-extension,location-extension,location-extension,location-extension,location-extension,location-extension
+Method,autosklearn,autogluon,autogluon,autosklearn,autosklearn,autosklearn,autosklearn
+Value,0.822,0.1432,11403.6,16909.2,0.0743,0.3179,0.1887
