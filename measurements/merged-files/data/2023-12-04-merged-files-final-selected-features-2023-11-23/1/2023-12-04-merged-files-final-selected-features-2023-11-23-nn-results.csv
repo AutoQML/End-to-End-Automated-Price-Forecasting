@@ -1,0 +1,14 @@
+,basic-subset,location,extension,location-extension
+Test-MAE,97973.28,24816.78,23640.61,97983.95
+Test-MAPE,0.9996,0.2775,0.2714,0.9997
+Test-RMSE,112669.73,41503.64,40006.54,112682.33
+Test-N-RMSE,0.2047,0.0754,0.0727,0.2047
+Test-IQR-RMSE,1.7955,0.6614,0.6376,1.7957
+Test-CV-RMSE,1.1495,0.4234,0.4082,1.1497
+Test-R2,-3.0987,0.4438,0.4832,-3.0997
+Training-Duration,1867.193,1045.286,1486.425,1031.79
+Test-Duration,4.442e-07,4.956e-07,5.054e-07,5.577e-07
+Activation,relu,relu,relu,relu
+Hidden-layer-size,"(10,)","(10,)","(10,)","(10,)"
+Learning rate,1e-05,0.0001,0.0001,1e-05
+Solver,adam,adam,adam,adam

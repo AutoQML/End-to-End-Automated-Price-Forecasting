@@ -1,0 +1,446 @@
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set for Auto-sklearn: 	basic-subset
+Mean Absolute Error: 	14491.92
+Mean Absolute Percentage Error: 	295.8188
+Root Mean Squared Error: 	26030.08
+N-RMSE: 	0.0734
+IQR-RMSE: 	0.5574
+CV-RMSE: 	0.2901
+R2 test score: 	0.685
+
+
+
+Feature set for Auto-sklearn: 	location
+Mean Absolute Error: 	13943.15
+Mean Absolute Percentage Error: 	314.5982
+Root Mean Squared Error: 	23889.71
+N-RMSE: 	0.0674
+IQR-RMSE: 	0.5115
+CV-RMSE: 	0.2663
+R2 test score: 	0.735
+
+
+
+Feature set for Auto-sklearn: 	extension
+Mean Absolute Error: 	14414.74
+Mean Absolute Percentage Error: 	316.1942
+Root Mean Squared Error: 	25490.16
+N-RMSE: 	0.0719
+IQR-RMSE: 	0.5458
+CV-RMSE: 	0.2841
+R2 test score: 	0.698
+
+
+
+Feature set for Auto-sklearn: 	location-extension
+Mean Absolute Error: 	13848.72
+Mean Absolute Percentage Error: 	338.0178
+Root Mean Squared Error: 	24554.49
+N-RMSE: 	0.0693
+IQR-RMSE: 	0.5258
+CV-RMSE: 	0.2737
+R2 test score: 	0.72
+
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set for AutoGluon: 	basic-subset
+Mean Absolute Error: 	80992.43
+Mean Absolute Percentage Error: 	29.1156
+Root Mean Squared Error: 	92008.73
+N-RMSE: 	0.2595
+IQR-RMSE: 	1.9701
+CV-RMSE: 	1.0255
+R2 test score: 	-2.937
+
+
+
+Feature set for AutoGluon: 	location
+Mean Absolute Error: 	81032.2
+Mean Absolute Percentage Error: 	29.116
+Root Mean Squared Error: 	92057.21
+N-RMSE: 	0.2597
+IQR-RMSE: 	1.9711
+CV-RMSE: 	1.026
+R2 test score: 	-2.941
+
+
+
+Feature set for AutoGluon: 	extension
+Mean Absolute Error: 	81024.66
+Mean Absolute Percentage Error: 	29.1164
+Root Mean Squared Error: 	92025.0
+N-RMSE: 	0.2596
+IQR-RMSE: 	1.9704
+CV-RMSE: 	1.0256
+R2 test score: 	-2.939
+
+
+
+Feature set for AutoGluon: 	location-extension
+Mean Absolute Error: 	81045.68
+Mean Absolute Percentage Error: 	29.1167
+Root Mean Squared Error: 	92050.85
+N-RMSE: 	0.2597
+IQR-RMSE: 	1.971
+CV-RMSE: 	1.0259
+R2 test score: 	-2.941
+
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set: 	basic-subset
+
+
+Select and train different models and calculate the MAE, RMSE and R2-Score for each model:
+
+***Linear regression model***
+CV - Mean MAE: 	20104
+CV - Mean RMSE: 	40948
+CV - Mean R2 score: 	0.5204
+***Decision Tree model***
+CV - Mean MAE: 	25119
+CV - Mean RMSE: 	58972
+Cv - Mean R2 score: 	-0.1444
+***Random Forest model***
+CV - Mean MAE: 	20194
+CV - Mean RMSE: 	43517
+CV - Mean R2 score: 	0.4492
+***Support Vector Regressor model***
+CV - Mean MAE: 	27332
+CV - Mean RMSE: 	49910
+CV - Mean R2 score: 	0.2798
+***kNN Regressor model***
+CV - Mean MAE: 	21497
+CV - Mean RMSE: 	46930
+CV - Mean R2 score: 	0.3448
+***AdaBoost Regressor model***
+CV - Mean MAE: 	32213
+CV - Mean RMSE: 	51772
+CV - Mean R2 score: 	0.1838
+-----------------------
+Analyze  the best model
+------------------------
+
+Final model: Pipeline(steps=[('model',
+                 DecisionTreeRegressor(criterion='absolute_error', max_depth=10,
+                                       min_samples_split=4))])
+
+-----------------------------------
+Evaluate the system on the test set
+-----------------------------------
+
+Mean Absolute Error: 	17259.19
+Mean Absolute Percentage Error: 	308.4242
+Root Mean Squared Error: 	31826.59
+N-RMSE: 	0.0898
+IQR-RMSE: 	0.6815
+CV-RMSE: 	0.3547
+R2 test score: 	0.529
+
+
+
+Feature set: 	location
+
+
+Select and train different models and calculate the MAE, RMSE and R2-Score for each model:
+
+***Linear regression model***
+CV - Mean MAE: 	22421
+CV - Mean RMSE: 	42681
+CV - Mean R2 score: 	0.4796
+***Decision Tree model***
+CV - Mean MAE: 	21070
+CV - Mean RMSE: 	46541
+Cv - Mean R2 score: 	0.3452
+***Random Forest model***
+CV - Mean MAE: 	18915
+CV - Mean RMSE: 	43083
+CV - Mean R2 score: 	0.4523
+***Support Vector Regressor model***
+CV - Mean MAE: 	28034
+CV - Mean RMSE: 	50965
+CV - Mean R2 score: 	0.2542
+***kNN Regressor model***
+CV - Mean MAE: 	19807
+CV - Mean RMSE: 	43061
+CV - Mean R2 score: 	0.4688
+***AdaBoost Regressor model***
+CV - Mean MAE: 	35020
+CV - Mean RMSE: 	54998
+CV - Mean R2 score: 	0.0754
+-----------------------
+Analyze  the best model
+------------------------
+
+Final model: Pipeline(steps=[('model',
+                 DecisionTreeRegressor(criterion='poisson', max_depth=5))])
+
+-----------------------------------
+Evaluate the system on the test set
+-----------------------------------
+
+Mean Absolute Error: 	19542.34
+Mean Absolute Percentage Error: 	304.8901
+Root Mean Squared Error: 	31413.76
+N-RMSE: 	0.0886
+IQR-RMSE: 	0.6726
+CV-RMSE: 	0.3501
+R2 test score: 	0.541
+
+
+
+Feature set: 	extension
+
+
+Select and train different models and calculate the MAE, RMSE and R2-Score for each model:
+
+***Linear regression model***
+CV - Mean MAE: 	20858
+CV - Mean RMSE: 	41522
+CV - Mean R2 score: 	0.5082
+***Decision Tree model***
+CV - Mean MAE: 	22254
+CV - Mean RMSE: 	52815
+Cv - Mean R2 score: 	0.1474
+***Random Forest model***
+CV - Mean MAE: 	18810
+CV - Mean RMSE: 	42571
+CV - Mean R2 score: 	0.4771
+***Support Vector Regressor model***
+CV - Mean MAE: 	24625
+CV - Mean RMSE: 	47477
+CV - Mean R2 score: 	0.3502
+***kNN Regressor model***
+CV - Mean MAE: 	19726
+CV - Mean RMSE: 	44862
+CV - Mean R2 score: 	0.4148
+***AdaBoost Regressor model***
+CV - Mean MAE: 	31831
+CV - Mean RMSE: 	52819
+CV - Mean R2 score: 	0.1643
+-----------------------
+Analyze  the best model
+------------------------
+
+Final model: Pipeline(steps=[('model',
+                 RandomForestRegressor(criterion='absolute_error', max_depth=20,
+                                       max_features=13, min_samples_split=6,
+                                       n_estimators=81))])
+
+-----------------------------------
+Evaluate the system on the test set
+-----------------------------------
+
+Mean Absolute Error: 	14801.89
+Mean Absolute Percentage Error: 	336.3697
+Root Mean Squared Error: 	26250.11
+N-RMSE: 	0.074
+IQR-RMSE: 	0.5621
+CV-RMSE: 	0.2926
+R2 test score: 	0.68
+
+
+
+Feature set: 	location-extension
+
+
+Select and train different models and calculate the MAE, RMSE and R2-Score for each model:
+
+***Linear regression model***
+CV - Mean MAE: 	14454636449317
+CV - Mean RMSE: 	233968730301239
+CV - Mean R2 score: 	-2.3318709629588164e+20
+***Decision Tree model***
+CV - Mean MAE: 	20503
+CV - Mean RMSE: 	46453
+Cv - Mean R2 score: 	0.3547
+***Random Forest model***
+CV - Mean MAE: 	18315
+CV - Mean RMSE: 	40462
+CV - Mean R2 score: 	0.5288
+***Support Vector Regressor model***
+CV - Mean MAE: 	25146
+CV - Mean RMSE: 	48064
+CV - Mean R2 score: 	0.3373
+***kNN Regressor model***
+CV - Mean MAE: 	19506
+CV - Mean RMSE: 	44644
+CV - Mean R2 score: 	0.428
+***AdaBoost Regressor model***
+CV - Mean MAE: 	32535
+CV - Mean RMSE: 	51936
+CV - Mean R2 score: 	0.2096
+-----------------------
+Analyze  the best model
+------------------------
+
+Final model: Pipeline(steps=[('model', KNeighborsRegressor(n_neighbors=10, p=3))])
+
+-----------------------------------
+Evaluate the system on the test set
+-----------------------------------
+
+Mean Absolute Error: 	16002.03
+Mean Absolute Percentage Error: 	289.9763
+Root Mean Squared Error: 	27148.64
+N-RMSE: 	0.0766
+IQR-RMSE: 	0.5813
+CV-RMSE: 	0.3026
+R2 test score: 	0.657
+
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set for NN: 	basic-subset
+
+
+Train a NN:
+Mean Absolute Error: 	89692.16
+Mean Absolute Percentage Error: 	1.1044
+Root Mean Squared Error: 	100965.79
+N_RMS: 	0.2848
+IQR_RMSE: 	2.1619
+CV_RMS: 	1.1253
+R2 test score: 	-3.741
+
+
+
+Feature set for NN: 	location
+
+
+Train a NN:
+Mean Absolute Error: 	23547.33
+Mean Absolute Percentage Error: 	294.7125
+Root Mean Squared Error: 	34749.39
+N_RMS: 	0.098
+IQR_RMSE: 	0.7441
+CV_RMS: 	0.3873
+R2 test score: 	0.4384
+
+
+
+Feature set for NN: 	extension
+
+
+Train a NN:
+Mean Absolute Error: 	89666.13
+Mean Absolute Percentage Error: 	1.1934
+Root Mean Squared Error: 	100940.23
+N_RMS: 	0.2847
+IQR_RMSE: 	2.1613
+CV_RMS: 	1.125
+R2 test score: 	-3.7386
+
+
+
+Feature set for NN: 	location-extension
+
+
+Train a NN:
+Mean Absolute Error: 	89672.06
+Mean Absolute Percentage Error: 	1.1566
+Root Mean Squared Error: 	100946.22
+N_RMS: 	0.2848
+IQR_RMSE: 	2.1615
+CV_RMS: 	1.1251
+R2 test score: 	-3.7391
+
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set for Flaml: 	basic-subset
+Mean Absolute Error: 	24141.52
+Mean Absolute Percentage Error: 	490.5564
+Root Mean Squared Error: 	38306.82
+N-RMSE: 	0.1081
+IQR-RMSE: 	0.8202
+CV-RMSE: 	0.4269
+R2 test score: 	0.318
+
+
+
+Feature set for Flaml: 	location
+Mean Absolute Error: 	21937.47
+Mean Absolute Percentage Error: 	464.8246
+Root Mean Squared Error: 	34240.49
+N-RMSE: 	0.0966
+IQR-RMSE: 	0.7332
+CV-RMSE: 	0.3816
+R2 test score: 	0.455
+
+
+
+Feature set for Flaml: 	extension
+Mean Absolute Error: 	71151.92
+Mean Absolute Percentage Error: 	349.533
+Root Mean Squared Error: 	108237.61
+N-RMSE: 	0.3053
+IQR-RMSE: 	2.3176
+CV-RMSE: 	1.2063
+R2 test score: 	-4.448
+
+
+
+Feature set for Flaml: 	location-extension
+Mean Absolute Error: 	24552.75
+Mean Absolute Percentage Error: 	411.4166
+Root Mean Squared Error: 	35285.14
+N-RMSE: 	0.0995
+IQR-RMSE: 	0.7555
+CV-RMSE: 	0.3933
+R2 test score: 	0.421
+
+Summary for: 
+merged-files-final-selected-features-2023-11-23
+
+
+Feature set for AutoKeras: 	basic-subset
+Mean Absolute Error: 	18407.33
+Mean Absolute Percentage Error: 	290.53
+Root Mean Squared Error: 	31878.53
+N-RMSE: 	0.0899
+IQR-RMSE: 	0.6826
+CV-RMSE: 	0.3553
+R2 test score: 	0.527
+
+
+
+Feature set for AutoKeras: 	location
+Mean Absolute Error: 	19312.91
+Mean Absolute Percentage Error: 	287.7551
+Root Mean Squared Error: 	31464.66
+N-RMSE: 	0.0888
+IQR-RMSE: 	0.6737
+CV-RMSE: 	0.3507
+R2 test score: 	0.54
+
+
+
+Feature set for AutoKeras: 	extension
+Mean Absolute Error: 	18500.77
+Mean Absolute Percentage Error: 	276.2869
+Root Mean Squared Error: 	32656.35
+N-RMSE: 	0.0921
+IQR-RMSE: 	0.6992
+CV-RMSE: 	0.364
+R2 test score: 	0.504
+
+
+
+Feature set for AutoKeras: 	location-extension
+Mean Absolute Error: 	17976.58
+Mean Absolute Percentage Error: 	277.8229
+Root Mean Squared Error: 	31813.78
+N-RMSE: 	0.0897
+IQR-RMSE: 	0.6812
+CV-RMSE: 	0.3546
+R2 test score: 	0.529
+
