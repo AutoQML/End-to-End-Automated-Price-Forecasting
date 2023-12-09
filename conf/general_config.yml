@@ -18,7 +18,7 @@ measurement_num: 5 # number of repetitive measurements
 automl_preprocessing: False
 
 # evaluate data set variance
-evaluate_dataset_variance: True
+evaluate_dataset_variance: False
 
 # Control data preprocessing
 data_preprocessing: False
