@@ -14,7 +14,7 @@ from ZPAI_document_results_docx import document_results_docx
 
 # define methods to be droped from the scatter plots
 # drop_methods = []
-# drop_methods = ['rf', 'svr-single', 'svr-integrated']
+drop_methods = ['manual', 'nn']
 
 
 ##############################
@@ -23,12 +23,12 @@ from ZPAI_document_results_docx import document_results_docx
 # Set dataset(s)
 datasets = ['merged-files']
 # Set date
-m_date = '2023-12-02'
+m_date = '2023-12-07'
 # Set number of measuremts
 NUM_OF_MEASUREMENTS = 5
 # Set file description
-file_description = 'final-selected-features'
-# file_description = 'final'
+# file_description = 'final-selected-features'
+file_description = 'final'
 
 # create summary yaml file
 # File path within the summary directory for each measurement
@@ -59,6 +59,7 @@ CFG["general"]["start_date"] = m_date
 # document_results_docx(datasets,m_date, GLOBAL_YAML_SUMMARY_FILE, EXPLICIT_SUMMARY_FILE_PATH)
 document_results_docx(datasets,
                         file_description,
+                        drop_methods,
                         NUM_OF_MEASUREMENTS = NUM_OF_MEASUREMENTS,
                         GLOBAL_YAML_SUMMARY_FILE = GLOBAL_YAML_SUMMARY_FILE, 
                         EXPLICIT_SUMMARY_FILE_PATH = EXPLICIT_SUMMARY_FILE_PATH, 

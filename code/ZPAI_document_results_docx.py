@@ -30,6 +30,7 @@ from ZPAI_common_functions import read_yaml
 
 def document_results_docx(datasets: list,
                           file_description: str,
+                          drop_methods: list,
                           NUM_OF_MEASUREMENTS: int,
                           GLOBAL_YAML_SUMMARY_FILE: str, 
                           EXPLICIT_SUMMARY_FILE_PATH: str,
@@ -270,6 +271,13 @@ def document_results_docx(datasets: list,
         CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
         CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
+        # Drop methods / measurements from depiction in the scatter plot
+        for method in drop_methods:
+            scatter_r2_mape_result_df = scatter_r2_mape_result_df.drop(index=method)
+
+        # scatter_r2_mape_result_df = scatter_r2_mape_result_df.drop(index='nn') # svr measurement on unencoded data
+        # scatter_r2_mape_result_df = scatter_r2_mape_result_df.drop(index='manual') # rf measurement on encoded data
+
         # calculate min and max values for scaling the plot
         score_col_name_max, score_row_name_max, max_value =  get_max_values(scatter_r2_mape_result_df) # get max value for scaling the plot
         score_col_name_min, score_row_name_min, min_value =  get_min_values(scatter_r2_mape_result_df) # get min value for scaling the plot
@@ -347,6 +355,10 @@ def document_results_docx(datasets: list,
         CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
         CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
+        # Drop methods / measurements from depiction in the scatter plot
+        for method in drop_methods:
+            scatter_training_duration_result_df = scatter_training_duration_result_df.drop(index=method)
+
         # calculate min and max values for scaling the plot
         score_col_name_max, score_row_name_max, max_value =  get_max_values(scatter_training_duration_result_df) # get max value for scaling the plot
         score_col_name_min, score_row_name_min, min_value =  get_min_values(scatter_training_duration_result_df) # get min value for scaling the plot
@@ -412,6 +424,10 @@ def document_results_docx(datasets: list,
         CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
         CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
+        # Drop methods / measurements from depiction in the scatter plot
+        for method in drop_methods:
+            scatter_testing_duration_result_df = scatter_testing_duration_result_df.drop(index=method)
+
 
         # calculate min and max values for scaling the plot
         score_col_name_max, score_row_name_max, max_value =  get_max_values(scatter_testing_duration_result_df) # get max value for scaling the plot
@@ -440,6 +456,10 @@ def document_results_docx(datasets: list,
         CHART_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, filename)
         CHART_PDF_PATH = Path(REPO_PATH, 'measurements', dataset, 'pictures',sub_dir, pdf_filename)
 
+        # Drop methods / measurements from depiction in the scatter plot
+        for method in drop_methods:
+            mev_df = mev_df.drop(index=method)
+
 
         # calculate min and max values for scaling the plot
         score_col_name_max, score_row_name_max, max_value =  get_max_values(mev_df) # get max value for scaling the plot
@@ -450,8 +470,21 @@ def document_results_docx(datasets: list,
         best_mev_feature_set, best_mev_method, best_mev_value = get_min_values(mev_df)
 
         # print(f"MEV-DF: {mev_df}")
+
         # reindex for changing the colours within the plot -> make it identikal to the other plots
-        mev_df = mev_df.reindex(['autogluon', 'autokeras', 'autosklearn', 'flaml', 'manual', 'nn'])
+        reindext_list = ['autogluon', 'autokeras', 'autosklearn', 'flaml', 'manual', 'nn']
+
+        # check for methods to be dropped
+        for method in drop_methods:
+            if method in reindext_list:
+                reindext_list.remove(method)
+                print(f"{method} removed from the list.")
+            else:
+                print(f"{method} is not in the list.")
+
+        mev_df = mev_df.reindex(reindext_list)
+        # mev_df = mev_df.reindex(['autogluon', 'autokeras', 'autosklearn', 'flaml', 'manual', 'nn'])
+
         # print(f"MEV-DF: {mev_df}")
 
         plot_mev(mev_df, CHART_PATH, CHART_PDF_PATH, max_value, min_value, dataset, document, PICTURE_SIZE)
