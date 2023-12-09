@@ -1,0 +1,36 @@
+Measuremt date: 2023-12-07
+Random seed: 1
+PCA number: 0
+Datasets: ['merged-files']
+Auto-sklearn runtime 1800
+Auto-sklearn limit : 180
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
+Input file for merged-files: merged-files-final-2022-07-06.csv with size: 2910 created: 2022-07-06
