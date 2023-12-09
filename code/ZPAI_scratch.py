@@ -65,6 +65,7 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # set dynamic xticks steps
     xticks_step_size_range = (MAX_VAL - MIN_VAL)
     xticks_step_size = 0.05 if xticks_step_size_range > 0.2 else 0.01
+    # xticks_step_size = 0.02 if xticks_step_size_range > 0.2 else 0.01  # for smaller grids 
     ax.set_xticks(np.arange(0.0, 1.1, xticks_step_size))
 
     ax.tick_params(axis=u'both', which=u'both', length=0)
@@ -72,6 +73,7 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # ax.set_xlim([-0.05, 1.05])
     # ax.set_xlim([ 0.145, 0.255])
     ax.set_xlim([MIN_VAL - xticks_step_size, MAX_VAL + xticks_step_size])
+    # ax.set_xlim([0.121, 0.33]) # used for adaptation of the 2910 dataset
     ax.tick_params(axis='both', which='major', labelsize=14)
 
     y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
