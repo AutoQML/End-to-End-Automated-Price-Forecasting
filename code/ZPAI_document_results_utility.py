@@ -627,6 +627,7 @@ def add_box_plot2(document, score_result_df, column_name, score, measurement_dat
     # add R2 chart
     sub_dir = "{}-{}-{}-{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date)
     filename = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date,f'{score}-boxplot', 'png')
+    filename_pdf = "{}-{}-{}-{}-{}.{}".format(measurement_date, const_machine_model, file_description,input_file_creation_date,f'{score}-boxplot', 'pdf')
     CHART_PATH = Path(repo_path, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
 
     # x, y, score_max_value = get_max_values(score_result_df)
@@ -638,7 +639,7 @@ def add_box_plot2(document, score_result_df, column_name, score, measurement_dat
     graphics_title = f"{score}-score for {const_machine_model}"
     # plt.title(graphics_title, fontsize=22) # uncomment for publication
     plt.xlabel("Methods", fontsize=20)
-    plt.ylabel("Mean absolute percentage error", fontsize=20)
+    plt.ylabel("Mean absolute percentage error [MAPE]", fontsize=20)
 
     ################
     # modify x axis labels
@@ -649,16 +650,25 @@ def add_box_plot2(document, score_result_df, column_name, score, measurement_dat
     # Capitalize the first letters of the label names
     labels = [label.capitalize() for label in labels]
     # Replace 'manual' string by the actual algorithm 'Rand. Forest'
+    # labels = [label.replace('0', 'Autogluon') for label in labels]
+    # labels = [label.replace('1', 'auto-sklearn') for label in labels]
+    # labels = [label.replace('2', 'Rand. Forest') for label in labels]
+    # labels = [label.replace('3', 'FLAML') for label in labels]
+    # labels = [label.replace('5', 'AutoKeras') for label in labels]
+
     labels = [label.replace('0', 'Autogluon') for label in labels]
-    labels = [label.replace('1', 'auto-sklearn') for label in labels]
-    labels = [label.replace('2', 'Rand. Forest') for label in labels]
+    labels = [label.replace('1', 'AutoKeras') for label in labels]
+    labels = [label.replace('2', 'auto-sklearn') for label in labels]
     labels = [label.replace('3', 'FLAML') for label in labels]
-    labels = [label.replace('4', 'Neural Net') for label in labels]
+    labels = [label.replace('4', 'Rand. Forest') for label in labels]
+    labels = [label.replace('5', 'MLP') for label in labels]
+    
 
     ax.set_xticklabels(labels)
 
 
     plt.savefig(Path(repo_path, 'measurements', const_machine_model, 'pictures',sub_dir, filename))
+    plt.savefig(Path(repo_path, 'measurements', const_machine_model, 'pictures',sub_dir, filename_pdf))
 
     CHART_PATH = Path(repo_path, 'measurements', const_machine_model, 'pictures',sub_dir, filename)
     document.add_picture(str(CHART_PATH), width=Inches(picture_size))
