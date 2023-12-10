@@ -730,6 +730,7 @@ def calculate_mev_values(mape_result_df,training_duration_df, testing_duration_d
     RESPONSIVENESS_FACTOR = config["general"]["mev_weights"]["responsiveness"]
     K_LEVEL_MANUEL = config["general"]["knowledge_levels"]["manual_methods"]
     K_LEVEL_AUTOML = config["general"]["knowledge_levels"]["automl_methods"]
+    K_LEVEL_AUTOPREPRO = config["general"]["knowledge_levels"]["autoprepro_methods"]
 
     SUM_WEIGHTING_VALUES = CORRECTNESS_FACTOR + COMPLEXITY_FACTOR + EXPERTISE_FACTOR + RESPONSIVENESS_FACTOR
 
@@ -757,6 +758,8 @@ def calculate_mev_values(mape_result_df,training_duration_df, testing_duration_d
             k_levels.append(K_LEVEL_MANUEL)
         elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml' or val == 'autokeras':
             k_levels.append(K_LEVEL_AUTOML)
+        elif val == 'autogluon-prepro':
+            k_levels.append(K_LEVEL_AUTOPREPRO)
 
     for i, val in enumerate(feature_name_list):
         feature_name_list[i]['K-level'] = k_levels

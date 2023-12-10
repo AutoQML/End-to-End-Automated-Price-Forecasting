@@ -14,7 +14,9 @@ from ZPAI_document_results_docx import document_results_docx
 
 # define methods to be droped from the scatter plots
 # drop_methods = []
-drop_methods = ['manual', 'nn']
+drop_methods = ['autogluon-prepro']
+# drop_methods = ['manual', 'nn']
+# drop_methods = ['manual', 'nn', 'autogluon-prepro']
 
 
 ##############################

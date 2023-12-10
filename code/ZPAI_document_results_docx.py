@@ -273,7 +273,8 @@ def document_results_docx(datasets: list,
 
         # Drop methods / measurements from depiction in the scatter plot
         for method in drop_methods:
-            scatter_r2_mape_result_df = scatter_r2_mape_result_df.drop(index=method)
+            if method in scatter_r2_mape_result_df.index:
+                scatter_r2_mape_result_df = scatter_r2_mape_result_df.drop(index=method)
 
         # scatter_r2_mape_result_df = scatter_r2_mape_result_df.drop(index='nn') # svr measurement on unencoded data
         # scatter_r2_mape_result_df = scatter_r2_mape_result_df.drop(index='manual') # rf measurement on encoded data
@@ -357,7 +358,8 @@ def document_results_docx(datasets: list,
 
         # Drop methods / measurements from depiction in the scatter plot
         for method in drop_methods:
-            scatter_training_duration_result_df = scatter_training_duration_result_df.drop(index=method)
+            if method in scatter_training_duration_result_df.index:
+                scatter_training_duration_result_df = scatter_training_duration_result_df.drop(index=method)
 
         # calculate min and max values for scaling the plot
         score_col_name_max, score_row_name_max, max_value =  get_max_values(scatter_training_duration_result_df) # get max value for scaling the plot
@@ -426,7 +428,8 @@ def document_results_docx(datasets: list,
 
         # Drop methods / measurements from depiction in the scatter plot
         for method in drop_methods:
-            scatter_testing_duration_result_df = scatter_testing_duration_result_df.drop(index=method)
+            if method in scatter_testing_duration_result_df.index:
+                scatter_testing_duration_result_df = scatter_testing_duration_result_df.drop(index=method)
 
 
         # calculate min and max values for scaling the plot
@@ -446,8 +449,29 @@ def document_results_docx(datasets: list,
         # ############################
         # # Calculate the MEV
         # ############################
+        # print(f"MAPE result DF: {mape_result_df}")
+
+        ############
+        # Add result values for AutoGluon on automatic preprocessed data
+        ############
+        # New row data
+        new_mape_data = {'basic-subset': 0.15, 'extension': 0.14, 'location': 0.13, 'extension-location': 0.12}
+        new_train_data = {'basic-subset': 12, 'extension': 13, 'location': 14, 'extension-location': 0.15}
+        new_test_data = {'basic-subset': 0.00025, 'extension': 0.00024, 'location': 0.00023, 'extension-location': 0.00022}
+
+        # Index name for the new row
+        index_name = 'autogluon-prepro'
+
+        # Adding a new row with the specified index name
+        mape_result_df.loc[index_name] = new_mape_data
+        training_duration_df.loc[index_name] = new_train_data
+        testing_duration_df.loc[index_name] = new_test_data
+
+        # print(f"DF2: {mape_result_df}")
 
         mev_df = calculate_mev_values(mape_result_df,training_duration_df, testing_duration_df, config)
+
+        # print(f"MES-DF:{mev_df}")
 
          # construct file / path to save the scatter plot
         sub_dir = "{}-{}-{}-{}".format(MEASUREMENT_DATE, dataset, file_description,INPUT_FILE_CREATION_DATE)
@@ -458,7 +482,8 @@ def document_results_docx(datasets: list,
 
         # Drop methods / measurements from depiction in the scatter plot
         for method in drop_methods:
-            mev_df = mev_df.drop(index=method)
+            if method in mev_df.index:
+                mev_df = mev_df.drop(index=method)
 
 
         # calculate min and max values for scaling the plot
@@ -472,7 +497,8 @@ def document_results_docx(datasets: list,
         # print(f"MEV-DF: {mev_df}")
 
         # reindex for changing the colours within the plot -> make it identikal to the other plots
-        reindext_list = ['autogluon', 'autokeras', 'autosklearn', 'flaml', 'manual', 'nn']
+        # reindext_list = ['autogluon', 'autokeras', 'autosklearn', 'flaml', 'manual', 'nn']
+        reindext_list = ['autogluon', 'autokeras', 'autosklearn', 'flaml', 'manual', 'nn', 'autogluon-prepro']
 
         # check for methods to be dropped
         for method in drop_methods:

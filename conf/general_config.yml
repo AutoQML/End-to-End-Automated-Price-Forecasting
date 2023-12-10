@@ -35,3 +35,4 @@ mev_weights:
 knowledge_levels:
     manual_methods: 5
     automl_methods: 2
+    autoprepro_methods: 1
