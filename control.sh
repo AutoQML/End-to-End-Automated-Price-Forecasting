@@ -41,7 +41,7 @@ RUN_AUTOGLUON='True'
 RUN_FLAML='True'
 RUN_AUTOKERAS='True'
 RUN_MANUAL='True'
-RUN_NN='True'
+RUN_NN='False'
 
 echo "Num of measurements: $MEASUREMENTS"
 echo "Dataset: $DATASET"
