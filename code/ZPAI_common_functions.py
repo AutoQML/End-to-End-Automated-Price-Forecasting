@@ -109,13 +109,14 @@ def perform_outlier_detection(dataset_df: pd.DataFrame,
     q2 = pd.DataFrame(dataset_df['price']).quantile(0.50)[0]
     q3 = pd.DataFrame(dataset_df['price']).quantile(0.75)[0]
     iqr_price = q3 - q1 #Interquartile range
-    fence_low_price_iqr = q1 - (1.5*iqr_price)
-    fence_low_price_q2 = q2 * 0.1
-    if(fence_low_price_iqr > fence_low_price_q2):
-        fence_low_price = fence_low_price_iqr
-    else:
-        fence_low_price = fence_low_price_q2
+    # fence_low_price_iqr = q1 - (1.5*iqr_price)
+    # fence_low_price_q2 = q2 * 0.1
+    # if(fence_low_price_iqr > fence_low_price_q2):
+    #     fence_low_price = fence_low_price_iqr
+    # else:
+    #     fence_low_price = fence_low_price_q2
     # fence_low_price = q2 * 0.1
+    fence_low_price = q1 - (1.5*iqr_price)
     fence_high_price = q3 + (1.5*iqr_price)
     # print(q1, q3, iqr_price, fence_low_price, fence_high_price)
 
