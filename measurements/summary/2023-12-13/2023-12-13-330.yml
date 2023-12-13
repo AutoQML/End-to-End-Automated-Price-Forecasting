@@ -1,0 +1,15 @@
+measurement_date: '2023-12-13'
+Caterpillar-330:
+  input_file_25: 59500
+  input_file_50: 89800
+  input_file_75: 142750
+  input_file_creation_date: 2022-06-17
+  input_file_fh: 267625
+  input_file_fl: 0
+  input_file_iqr: 83250
+  input_file_max: 261545
+  input_file_mean: 105858
+  input_file_min: 15900
+  input_file_name: Caterpillar-330-final-2022-06-17.csv
+  input_file_size: 198
+  input_file_std: 57570

@@ -1,0 +1,15 @@
+measurement_date: '2023-12-13'
+Caterpillar-329:
+  input_file_25: 71800
+  input_file_50: 80250
+  input_file_75: 95000
+  input_file_creation_date: 2022-06-17
+  input_file_fh: 129800
+  input_file_fl: 37000
+  input_file_iqr: 23200
+  input_file_max: 137000
+  input_file_mean: 84943
+  input_file_min: 53234
+  input_file_name: Caterpillar-329-final-2022-06-17.csv
+  input_file_size: 146
+  input_file_std: 17563

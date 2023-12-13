@@ -1,0 +1,15 @@
+measurement_date: '2023-12-13'
+Caterpillar-336:
+  input_file_25: 84050
+  input_file_50: 105000
+  input_file_75: 136350
+  input_file_creation_date: 2022-06-17
+  input_file_fh: 214800
+  input_file_fl: 5600
+  input_file_iqr: 52300
+  input_file_max: 234000
+  input_file_mean: 113857
+  input_file_min: 25000
+  input_file_name: Caterpillar-336-final-2022-06-17.csv
+  input_file_size: 226
+  input_file_std: 41083
