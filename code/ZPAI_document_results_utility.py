@@ -741,7 +741,7 @@ def calculate_mev_values(mape_result_df,training_duration_df, testing_duration_d
     for feature_set_name in feature_set_names:
         feature_name_list.append(feature_set_name + '_df')
 
-    # 1. merge the average MAPE, training runtime & preiction time results int different subset dataframes
+    # 1. merge the average MAPE, training runtime & prediction time results in different subset dataframes
     for i, val in enumerate(feature_name_list):
         feature_name_list[i] = pd.concat([mape_result_df[feature_set_names[i]], training_duration_df[feature_set_names[i]], testing_duration_df[feature_set_names[i]]], axis=1)
         # print(feature_name_list[i])

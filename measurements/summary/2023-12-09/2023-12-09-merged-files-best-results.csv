@@ -1,0 +1,4 @@
+,R2-Score,MAPE,MAE,RMSE,N-RMSE,IQR-RMSE,CV-RMSE
+Feature-Set,extension-location,extension-location,extension-location,extension-location,extension-location,extension-location,extension-location
+Method,autogluon,autogluon,autogluon,autogluon,autogluon,autogluon,autogluon
+Value,0.8564,0.1426,11654.0,17098.0,0.0645,0.2771,0.1877
