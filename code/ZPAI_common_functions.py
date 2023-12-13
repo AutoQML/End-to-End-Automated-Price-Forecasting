@@ -127,6 +127,14 @@ def perform_outlier_detection(dataset_df: pd.DataFrame,
     fence_high_wh = q3 + (1.5*iqr_wh)
     # print(q1, q3, iqr_wh, fence_low_wh, fence_high_wh)
 
+    # calculate IQR for working hours feature
+    q1 = pd.DataFrame(dataset_df['const_year']).quantile(0.25)[0]
+    q3 = pd.DataFrame(dataset_df['const_year']).quantile(0.75)[0]
+    iqr_cy = q3 - q1 #Interquartile range
+    fence_low_cy = q1 - (1.5*iqr_cy)
+    fence_high_cy = q3 + (1.5*iqr_cy)
+    # print(q1, q3, iqr_cy, fence_low_cy, fence_high_cy)
+
     # Delete outliers
     # Define the conditions for price deletion
     condition1 = (dataset_df['price'] > fence_high_price)
@@ -135,9 +143,23 @@ def perform_outlier_detection(dataset_df: pd.DataFrame,
     conditions = condition1 | condition2
     dataset_df = dataset_df[~conditions]
 
+    # # Define the conditions for working hours deletion
+    # condition = (dataset_df['working_hours'] > fence_high_wh)
+    # # Delete rows based on the combined condition
+    # dataset_df = dataset_df[~condition]
+
     # Define the conditions for working hours deletion
-    condition = (dataset_df['working_hours'] > fence_high_wh)
+    condition1 = (dataset_df['working_hours'] > fence_high_wh)
+    condition2 = (dataset_df['working_hours'] < fence_low_wh)
     # Delete rows based on the combined condition
-    dataset_df = dataset_df[~condition]
+    conditions = condition1 | condition2
+    dataset_df = dataset_df[~conditions]
+
+    # Define the conditions for construction year deletion
+    condition1 = (dataset_df['const_year'] > fence_high_cy)
+    condition2 = (dataset_df['const_year'] < fence_low_cy)
+    # Delete rows based on the combined condition
+    conditions = condition1 | condition2
+    dataset_df = dataset_df[~conditions]
 
     return dataset_df
