@@ -292,7 +292,7 @@ def load_and_preprocess_data(datasets: list,
     # TODO: use imputation techniques for 
     # missing values if possible
     ##########################################
-    new_fm = new_fm.dropna()
+    # new_fm = new_fm.dropna()
 
     ################################################
     # Use Autogluon for anomaly / outlier detection
@@ -463,7 +463,7 @@ def load_and_preprocess_data(datasets: list,
 
     # Plotting
     plt.figure()
-    plt.barh(feature_importance['feature_name'], feature_importance['feature_importance_percentage'],  color='r')
+    plt.barh(feature_importance['feature_name'], feature_importance['feature_importance_percentage'],  color='b')
     # feature_importance.plot(kind='barh',y='faeture_name', x='feature_importance_percentage', color='r')
 
     # Adding labels and title
@@ -471,7 +471,7 @@ def load_and_preprocess_data(datasets: list,
     plt.ylabel('Features')
     plt.title('Feature importance')
 
-    plt.savefig(path.format('feature_importance_py.png'),dpi=100,bbox_inches='tight')
+    plt.savefig(path.format('feature_importance_py.pdf'),dpi=100,bbox_inches='tight')
 
     # waterfall plot
     plt.figure()
