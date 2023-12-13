@@ -1,0 +1,15 @@
+measurement_date: '2023-12-12'
+Caterpillar-308:
+  input_file_25: 43000
+  input_file_50: 52511
+  input_file_75: 63089
+  input_file_creation_date: 2022-06-17
+  input_file_fh: 93222
+  input_file_fl: 12866
+  input_file_iqr: 20089
+  input_file_max: 91000
+  input_file_mean: 53797
+  input_file_min: 24950
+  input_file_name: Caterpillar-308-final-2022-06-17.csv
+  input_file_size: 214
+  input_file_std: 14388
