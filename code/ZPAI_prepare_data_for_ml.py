@@ -261,7 +261,8 @@ def prepare_data_for_ml(df_dataset: pd.DataFrame,
                                 config = config)
 
     # combinatorial walk through all possible combinations of the features / feature columns
-    for L in range(0, len(column_names)+1):
+    # for L in range(0, len(column_names)+1):
+    for L in range(len(column_names), len(column_names)+1): # only calculate the full feature set. 
         # combinatorial walk through all possible combinations of the features / feature columns
         # L = 0 just use the set features const_year & working_hours
         # L = 1 use one additional feature (each of them in combination with const_year & working_hours)
