@@ -76,8 +76,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # ax.set_xlim([0.121, 0.33]) # used for adaptation of the 2910 dataset
     ax.tick_params(axis='both', which='major', labelsize=14)
 
-    y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
-    # y_offsets = np.linspace(-0.30, 0.30, values.shape[0])
+    # y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+    y_offsets = np.linspace(-0.00, 0.00, values.shape[0])
     for idx in range(values.shape[0]):
         mean = values[idx].mean(axis=1)
         mean_y = np.arange(rows) + y_offsets[idx]
@@ -102,6 +102,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # Add 'basic-subset' to all labels except tha basic-subset label
     labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
+    labels = ['']
+
     ax.set_yticklabels(labels)
 
     ################
@@ -109,14 +111,15 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     #################
     handles, labels_txt = modify_legend(ax)
 
-    fig.subplots_adjust(bottom=0.8 / rows)
+    fig.subplots_adjust(bottom=0.3 / rows)
+    fig.set_figheight(4)
     fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=6, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Mean absolute percentage error [MAPE]", fontsize=16)
-    plt.ylabel("Feature combination", fontsize=16)
+    plt.ylabel(" ", fontsize=16)
     # save grafics
     plt.savefig(CHART_PATH)
     plt.savefig(CHART_PDF_PATH)
