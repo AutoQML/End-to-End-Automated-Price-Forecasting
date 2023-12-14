@@ -752,17 +752,38 @@ def calculate_mev_values(mape_result_df,training_duration_df, testing_duration_d
         # print(feature_name_list[i])
 
     # 3. add knowledge levels
-    k_levels = []
-    for i,  val in enumerate(algorithm_names):
-        if val == 'manual' or val == 'nn':
-            k_levels.append(K_LEVEL_MANUEL)
-        elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml' or val == 'autokeras':
-            k_levels.append(K_LEVEL_AUTOML)
-        elif val == 'autogluon-prepro':
-            k_levels.append(K_LEVEL_AUTOPREPRO)
+    # k_levels = []
+    # for i,  val in enumerate(algorithm_names):
+    #     if val == 'manual' or val == 'nn':
+    #         k_levels.append(K_LEVEL_MANUEL)
+    #     elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml' or val == 'autokeras':
+    #         k_levels.append(K_LEVEL_AUTOML)
+    #     elif val == 'autogluon-prepro':
+    #         k_levels.append(K_LEVEL_AUTOPREPRO)
+        
+    # for i, val in enumerate(feature_name_list):
+    #     feature_name_list[i]['K-level'] = k_levels
+    #     # print(feature_name_list[i])
 
+    # 3. add knowledge levels
+    # assign different knowledge levels for second dataset for AutoML methods
     for i, val in enumerate(feature_name_list):
-        feature_name_list[i]['K-level'] = k_levels
+        if i == 0:
+            k_levels = []
+            for j,  val in enumerate(algorithm_names):
+                if val == 'manual' or val == 'nn':
+                    k_levels.append(K_LEVEL_MANUEL)
+                elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml' or val == 'autokeras':
+                    k_levels.append(K_LEVEL_AUTOML)
+            feature_name_list[i]['K-level'] = k_levels
+        elif i == 1:
+            k_levels = []
+            for j,  val in enumerate(algorithm_names):
+                if val == 'manual' or val == 'nn':
+                    k_levels.append(K_LEVEL_MANUEL)
+                elif val == 'autosklearn' or val == 'autogluon' or val == 'flaml' or val == 'autokeras':
+                    k_levels.append(K_LEVEL_AUTOPREPRO)
+            feature_name_list[i]['K-level'] = k_levels
         # print(feature_name_list[i])
 
     # 4. normalize the MAPE values
