@@ -14,7 +14,8 @@ from ZPAI_document_results_docx import document_results_docx
 
 # define methods to be droped from the scatter plots
 # drop_methods = []
-drop_methods = ['autogluon-prepro']
+# drop_methods = ['autogluon-prepro']
+drop_methods = ['autogluon-prepro', 'nn']
 # drop_methods = ['manual', 'nn']
 # drop_methods = ['manual', 'nn', 'autogluon-prepro']
 
@@ -25,12 +26,12 @@ drop_methods = ['autogluon-prepro']
 # Set dataset(s)
 datasets = ['merged-files']
 # Set date
-m_date = '2023-12-07'
+m_date = '2024-12-12'
 # Set number of measuremts
 NUM_OF_MEASUREMENTS = 5
 # Set file description
-# file_description = 'final-selected-features'
-file_description = 'final'
+file_description = 'final-selected-features'
+# file_description = 'final'
 
 # create summary yaml file
 # File path within the summary directory for each measurement
