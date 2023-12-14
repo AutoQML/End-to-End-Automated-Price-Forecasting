@@ -1,0 +1,105 @@
+Summary for: 
+merged-files-final-2022-07-06
+
+
+Feature set for Auto-sklearn: 	extension-location
+Mean Absolute Error: 	11767.96
+Mean Absolute Percentage Error: 	0.145
+Root Mean Squared Error: 	17395.78
+N-RMSE: 	0.0656
+IQR-RMSE: 	0.2819
+CV-RMSE: 	0.191
+R2 test score: 	0.851
+
+Summary for: 
+merged-files-final-2022-07-06
+
+
+Feature set for AutoGluon: 	extension-location
+Mean Absolute Error: 	11599.49
+Mean Absolute Percentage Error: 	0.1411
+Root Mean Squared Error: 	17128.93
+N-RMSE: 	0.0646
+IQR-RMSE: 	0.2776
+CV-RMSE: 	0.188
+R2 test score: 	0.856
+
+Summary for: 
+merged-files-final-2022-07-06
+
+
+Feature set: 	extension-location
+
+
+Select and train different models and calculate the MAE, RMSE and R2-Score for each model:
+
+***Linear regression model***
+CV - Mean MAE: 	17285
+CV - Mean RMSE: 	25154
+CV - Mean R2 score: 	0.7122
+***Decision Tree model***
+CV - Mean MAE: 	16743
+CV - Mean RMSE: 	26049
+Cv - Mean R2 score: 	0.6871
+***Random Forest model***
+CV - Mean MAE: 	13171
+CV - Mean RMSE: 	20537
+CV - Mean R2 score: 	0.8078
+***Support Vector Regressor model***
+CV - Mean MAE: 	17118
+CV - Mean RMSE: 	27406
+CV - Mean R2 score: 	0.659
+***kNN Regressor model***
+CV - Mean MAE: 	14265
+CV - Mean RMSE: 	21991
+CV - Mean R2 score: 	0.7784
+***AdaBoost Regressor model***
+CV - Mean MAE: 	24049
+CV - Mean RMSE: 	32900
+CV - Mean R2 score: 	0.506
+-----------------------
+Analyze  the best model
+------------------------
+
+Final model: Pipeline(steps=[('model',
+                 RandomForestRegressor(criterion='poisson', max_features=21,
+                                       n_estimators=141))])
+
+-----------------------------------
+Evaluate the system on the test set
+-----------------------------------
+
+Mean Absolute Error: 	11658.21
+Mean Absolute Percentage Error: 	0.1463
+Root Mean Squared Error: 	17466.74
+N-RMSE: 	0.0659
+IQR-RMSE: 	0.2831
+CV-RMSE: 	0.1917
+R2 test score: 	0.85
+
+Summary for: 
+merged-files-final-2022-07-06
+
+
+Feature set for Flaml: 	extension-location
+Mean Absolute Error: 	14097.06
+Mean Absolute Percentage Error: 	0.1703
+Root Mean Squared Error: 	20379.74
+N-RMSE: 	0.0769
+IQR-RMSE: 	0.3303
+CV-RMSE: 	0.2237
+R2 test score: 	0.796
+
+Summary for: 
+merged-files-final-2022-07-06
+
+
+Feature set for AutoKeras: 	extension-location
+Mean Absolute Error: 	15727.96
+Mean Absolute Percentage Error: 	0.204
+Root Mean Squared Error: 	23964.96
+N-RMSE: 	0.0904
+IQR-RMSE: 	0.3884
+CV-RMSE: 	0.2631
+R2 test score: 	0.718
+

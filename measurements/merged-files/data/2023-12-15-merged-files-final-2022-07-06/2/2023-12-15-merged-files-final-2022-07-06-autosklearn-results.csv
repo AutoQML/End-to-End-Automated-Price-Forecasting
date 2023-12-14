@@ -1,0 +1,10 @@
+,extension-location
+Test-MAE,11767.96
+Test-MAPE,0.145
+Test-RMSE,17395.78
+Test-N-RMSE,0.0656
+Test-IQR-RMSE,0.2819
+Test-CV-RMSE,0.191
+Test-R2,0.8514
+Training-Duration,1800.973
+Test-Duration,0.0017556071

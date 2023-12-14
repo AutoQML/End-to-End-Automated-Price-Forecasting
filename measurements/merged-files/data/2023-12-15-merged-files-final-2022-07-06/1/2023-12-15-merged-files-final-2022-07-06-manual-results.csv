@@ -1,0 +1,36 @@
+,extension-location
+CV - LinReg - Mean MAE,17285
+CV - LinReg - Mean MAPE,0.25472158452136556
+CV - LinReg - Mean RMSE,25154
+CV - LinReg - Mean R2Score,0.7122
+CV - Tree - Mean MAE,16628
+CV - Tree - Mean MAPE,0.2368252120256172
+CV - Tree - Mean RMSE,25586
+CV - Tree - Mean R2Score,0.7015
+CV - RandForest - Mean MAE,13216
+CV - RandForest - Mean MAPE,0.20301450683722494
+CV - RandForest - Mean RMSE,20443
+CV - RandForest - Mean R2Score,0.8093
+CV - SVR - Mean MAE,17515
+CV - SVR - Mean MAPE,0.24442383973685375
+CV - SVR - Mean RMSE,27951
+CV - SVR - Mean R2Score,0.6436
+CV - KNN - Mean MAE,14213
+CV - KNN - Mean MAPE,0.21613883387757477
+CV - KNN - Mean RMSE,21998
+CV - KNN - Mean R2Score,0.7782
+CV - AdaBoost - Mean MAE,23740
+CV - AdaBoost - Mean MAPE,0.3550202485661293
+CV - AdaBoost - Mean RMSE,31734
+CV - AdaBoost - Mean R2Score,0.5405
+final-model,"RandomForestRegressor(bootstrap=False, criterion='poisson', max_depth=20,
+                      max_features=23, min_samples_split=9, n_estimators=54)"
+Test-MAE,12010.15
+Test-MAPE,0.1481
+Test-RMSE,17998.67
+Test-N-RMSE,0.0679
+Test-IQR-RMSE,0.2917
+Test-CV-RMSE,0.1976
+Test-R2,0.8409
+Training-Duration,1189.22
+Test-Duration,1.64435e-05
