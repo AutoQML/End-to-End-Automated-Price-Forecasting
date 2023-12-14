@@ -2,3 +2,28 @@ Measuremt date: 2023-12-13
 Random seed: 1
 PCA number: 0
 Datasets: ['Caterpillar-308', 'Caterpillar-320', 'Caterpillar-323', 'Caterpillar-329', 'Caterpillar-330', 'Caterpillar-336', 'Caterpillar-950', 'Caterpillar-966', 'Caterpillar-D6', 'Caterpillar-M318']
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
+Input file for merged-files: merged-files-final-selected-features-2023-12-12.csv with size: 2804 created: 2023-12-12
