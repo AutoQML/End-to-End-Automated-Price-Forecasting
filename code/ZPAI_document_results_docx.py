@@ -459,17 +459,17 @@ def document_results_docx(datasets: list,
         # new_train_data = {'basic-subset': 12, 'extension': 13, 'location': 14, 'extension-location': 0.15}
         # new_test_data = {'basic-subset': 0.00025, 'extension': 0.00024, 'location': 0.00023, 'extension-location': 0.00022}
 
-        new_mape_data = {'extension-location': 0.1547}
-        new_train_data = {'extension-location': 13.4}
-        new_test_data = {'extension-location': 0.00022}
+        # new_mape_data = {'extension-location': 0.1547}
+        # new_train_data = {'extension-location': 13.4}
+        # new_test_data = {'extension-location': 0.00022}
 
-        # Index name for the new row
-        index_name = 'autogluon-prepro'
+        # # Index name for the new row
+        # index_name = 'autogluon-prepro'
 
-        # Adding a new row with the specified index name
-        mape_result_df.loc[index_name] = new_mape_data
-        training_duration_df.loc[index_name] = new_train_data
-        testing_duration_df.loc[index_name] = new_test_data
+        # # Adding a new row with the specified index name
+        # mape_result_df.loc[index_name] = new_mape_data
+        # training_duration_df.loc[index_name] = new_train_data
+        # testing_duration_df.loc[index_name] = new_test_data
 
         # print(f"DF2: {mape_result_df}")
 
