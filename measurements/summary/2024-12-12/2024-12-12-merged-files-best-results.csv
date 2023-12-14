@@ -1,0 +1,4 @@
+,R2-Score,MAPE,MAE,RMSE,N-RMSE,IQR-RMSE,CV-RMSE
+Feature-Set,3,3,3,3,3,3,3
+Method,autogluon,autogluon,autogluon,autogluon,autogluon,autogluon,autogluon
+Value,0.8123,0.1438,12082.0,16846.0,0.0791,0.3343,0.186

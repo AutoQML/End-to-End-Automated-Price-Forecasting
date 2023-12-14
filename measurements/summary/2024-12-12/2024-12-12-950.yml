@@ -1,0 +1,15 @@
+measurement_date: '2023-12-12'
+Caterpillar-950:
+  input_file_25: 54900
+  input_file_50: 77900
+  input_file_75: 113000
+  input_file_creation_date: 2022-06-01
+  input_file_fh: 200150
+  input_file_fl: 0
+  input_file_iqr: 58100
+  input_file_max: 200000
+  input_file_mean: 84768
+  input_file_min: 3719
+  input_file_name: Caterpillar-950-final-2022-06-01.csv
+  input_file_size: 285
+  input_file_std: 38195

@@ -1,0 +1,15 @@
+measurement_date: '2023-12-12'
+Caterpillar-M318:
+  input_file_25: 52442
+  input_file_50: 66592
+  input_file_75: 99000
+  input_file_creation_date: 2022-06-15
+  input_file_fh: 168837
+  input_file_fl: 0
+  input_file_iqr: 46558
+  input_file_max: 168107
+  input_file_mean: 75903
+  input_file_min: 1
+  input_file_name: Caterpillar-M318-final-2022-06-15.csv
+  input_file_size: 152
+  input_file_std: 33382

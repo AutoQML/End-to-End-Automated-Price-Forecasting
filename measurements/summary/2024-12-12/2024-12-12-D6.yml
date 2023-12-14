@@ -1,0 +1,15 @@
+measurement_date: '2023-12-12'
+Caterpillar-D6:
+  input_file_25: 64134
+  input_file_50: 87875
+  input_file_75: 125452
+  input_file_creation_date: 2022-06-14
+  input_file_fh: 217429
+  input_file_fl: 0
+  input_file_iqr: 61318
+  input_file_max: 230000
+  input_file_mean: 98098
+  input_file_min: 70
+  input_file_name: Caterpillar-D6-final-2022-06-14.csv
+  input_file_size: 498
+  input_file_std: 46059
