@@ -46,6 +46,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     MAX_VAL = max_value
     dataset = dataset
 
+    num_featuresets = len(datasets)
+
     # values: frameworks x dataset x repetitions
     rows = values.shape[1]
     # a4_size = (8.27, 1.0 * rows)
@@ -55,7 +57,10 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     fig, ax = plt.subplots(1, 1, gridspec_kw={'wspace': 0.01, 'hspace': 0})
     fig.set_size_inches(a4_size)
 
-    plt.subplots_adjust(left=0.20)
+    if num_featuresets == 1:
+        plt.subplots_adjust(left=0.10)
+    else: 
+        plt.subplots_adjust(left=0.20)
 
     ax.set_frame_on(False)
     ax.grid(True, linewidth=0.5, alpha=0.25, color='black')
@@ -76,8 +81,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # ax.set_xlim([0.121, 0.33]) # used for adaptation of the 2910 dataset
     ax.tick_params(axis='both', which='major', labelsize=14)
 
-    # y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
-    y_offsets = np.linspace(-0.00, 0.00, values.shape[0])
+    y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+    # y_offsets = np.linspace(-0.00, 0.00, values.shape[0])
     for idx in range(values.shape[0]):
         mean = values[idx].mean(axis=1)
         mean_y = np.arange(rows) + y_offsets[idx]
@@ -100,9 +105,11 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # Capitalize the first letters of the label names
     # labels = [label.capitalize() for label in labels]
     # Add 'basic-subset' to all labels except tha basic-subset label
-    labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
-    labels = ['']
+    if num_featuresets == 1:
+        labels = ['automatic\ndataset']
+    else:
+        labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
     ax.set_yticklabels(labels)
 
@@ -111,15 +118,23 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     #################
     handles, labels_txt = modify_legend(ax)
 
-    fig.subplots_adjust(bottom=0.3 / rows)
-    fig.set_figheight(4)
+    if num_featuresets == 1:
+        fig.subplots_adjust(bottom=0.3 / rows)
+        fig.set_figheight(4)    # set hight of figure manualy
+    else:
+        fig.subplots_adjust(bottom=0.8 / rows)
+
     fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=6, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Mean absolute percentage error [MAPE]", fontsize=16)
-    plt.ylabel(" ", fontsize=16)
+
+    if num_featuresets == 1:
+        plt.ylabel(" ", fontsize=16) # delete y-label
+    else:
+        plt.ylabel("Feature combination", fontsize=16)
     # save grafics
     plt.savefig(CHART_PATH)
     plt.savefig(CHART_PDF_PATH)
@@ -178,6 +193,8 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     MAX_VAL = max_value
     dataset = dataset
 
+    num_featuresets = len(datasets)
+
     rounded_max_val = math.ceil(MAX_VAL / 1000) * 1000
     rounded_min_val = math.floor(MIN_VAL / 1000) * 1000
 
@@ -190,7 +207,10 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     fig, ax = plt.subplots(1, 1, gridspec_kw={'wspace': 0.01, 'hspace': 0})
     fig.set_size_inches(a4_size)
 
-    plt.subplots_adjust(left=0.20)
+    if num_featuresets == 1:
+        plt.subplots_adjust(left=0.10)
+    else:
+        plt.subplots_adjust(left=0.20)
 
     ax.set_frame_on(False)
     ax.grid(True, linewidth=0.5, alpha=0.25, color='black')
@@ -229,7 +249,10 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     # Capitalize the first letters of the label names
     # labels = [label.capitalize() for label in labels]
     # Add 'basic-subset' to all labels except tha basic-subset label
-    labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
+    if num_featuresets == 1:
+        labels = ['automatic\ndataset']
+    else:
+        labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
     ax.set_yticklabels(labels)
 
@@ -238,14 +261,21 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     #################
     handles, labels_txt = modify_legend(ax)
 
-    fig.subplots_adjust(bottom=0.8 / rows)
+    if num_featuresets == 1:
+        fig.subplots_adjust(bottom=0.3 / rows)
+        fig.set_figheight(4)    # set hight of figure manualy
+    else:
+        fig.subplots_adjust(bottom=0.8 / rows)
     fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Training time (sec)", fontsize=16)
-    plt.ylabel("Feature combination", fontsize=16)
+    if num_featuresets == 1:
+        plt.ylabel(" ", fontsize=16)
+    else:
+        plt.ylabel("Feature combination", fontsize=16)
     # save grafics
     plt.savefig(CHART_PATH)
     plt.savefig(CHART_PDF_PATH)
@@ -304,6 +334,8 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     MAX_VAL = max_value
     dataset = dataset
 
+    num_featuresets = len(datasets)
+
     # values: frameworks x dataset x repetitions
     rows = values.shape[1]
     # a4_size = (8.27, 1.0 * rows)
@@ -312,7 +344,10 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     fig, ax = plt.subplots(1, 1, gridspec_kw={'wspace': 0.01, 'hspace': 0})
     fig.set_size_inches(a4_size)
 
-    plt.subplots_adjust(left=0.20)
+    if num_featuresets == 1:
+        plt.subplots_adjust(left=0.10)
+    else:
+        plt.subplots_adjust(left=0.20)
 
     ax.set_frame_on(False)
     ax.grid(True, linewidth=0.5, alpha=0.25, color='black')
@@ -350,7 +385,10 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     # Capitalize the first letters of the label names
     # labels = [label.capitalize() for label in labels]
     # Add 'basic-subset' to all labels except tha basic-subset label
-    labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
+    if num_featuresets == 1:
+        labels = ['automatic\ndataset']
+    else:
+        labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
     ax.set_yticklabels(labels)
 
@@ -359,14 +397,22 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     #################
     handles, labels_txt = modify_legend(ax)
 
-    fig.subplots_adjust(bottom=0.8 / rows)
+    if num_featuresets == 1:
+        fig.subplots_adjust(bottom=0.3 / rows)
+        fig.set_figheight(4)    # set hight of figure manualy
+    else:
+        fig.subplots_adjust(bottom=0.8 / rows)
+
     fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Prediction time (sec)", fontsize=16)
-    plt.ylabel("Feature combination", fontsize=16)
+    if num_featuresets == 1:
+        plt.ylabel(" ", fontsize=16)
+    else:
+        plt.ylabel("Feature combination", fontsize=16)
     # save grafics
     plt.savefig(CHART_PATH)
     plt.savefig(CHART_PDF_PATH)
@@ -426,6 +472,8 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     MAX_VAL = max_value
     dataset = dataset
 
+    num_featuresets = len(datasets)
+
     # values: frameworks x dataset x repetitions
     rows = values.shape[1]
     # a4_size = (8.27, 1.0 * rows)
@@ -434,7 +482,10 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     fig, ax = plt.subplots(1, 1, gridspec_kw={'wspace': 0.01, 'hspace': 0})
     fig.set_size_inches(a4_size)
 
-    plt.subplots_adjust(left=0.20)
+    if num_featuresets == 1:
+        plt.subplots_adjust(left=0.10)
+    else:
+        plt.subplots_adjust(left=0.20)
 
     ax.set_frame_on(False)
     ax.grid(True, linewidth=0.5, alpha=0.25, color='black')
@@ -471,7 +522,10 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     # Capitalize the first letters of the label names
     # labels = [label.capitalize() for label in labels]
     # Add 'basic-subset' to all labels except tha basic-subset label
-    labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
+    if num_featuresets == 1:
+        labels = ['automatic\ndataset']
+    else:
+        labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
     ax.set_yticklabels(labels)
 
@@ -480,14 +534,22 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     #################
     handles, labels_txt = modify_legend(ax)
 
-    fig.subplots_adjust(bottom=0.8 / rows)
+    if num_featuresets == 1:
+        fig.subplots_adjust(bottom=0.3 / rows)
+        fig.set_figheight(4)    # set hight of figure manualy
+    else:
+        fig.subplots_adjust(bottom=0.8 / rows)
+
     fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Method evaluation score [MES]", fontsize=16)
-    plt.ylabel("Feature combination", fontsize=16)
+    if num_featuresets == 1:
+        plt.ylabel(" ", fontsize=16)
+    else:
+        plt.ylabel("Feature combination", fontsize=16)
     # save grafics
     plt.savefig(CHART_PATH)
     plt.savefig(CHART_PDF_PATH)
