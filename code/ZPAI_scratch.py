@@ -81,6 +81,9 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # ax.set_xlim([0.121, 0.33]) # used for adaptation of the 2910 dataset
     ax.tick_params(axis='both', which='major', labelsize=14)
 
+    if num_featuresets == 1:
+        ax.set_ylim([-0.5,0.5])
+        
     y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
     # y_offsets = np.linspace(-0.00, 0.00, values.shape[0])
     for idx in range(values.shape[0]):
