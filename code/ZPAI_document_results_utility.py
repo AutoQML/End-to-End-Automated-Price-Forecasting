@@ -139,7 +139,7 @@ def get_results_values(score, manual_results, nn_results, autosklearn_results, a
     if score=="R2" or score=="MAPE" or score=="N-RMSE" or score=="IQR-RMSE" or score=="CV-RMSE":
         score_result_df = score_result_df.round(decimals=4)
     elif score=="MAE" or score=="RMSE":
-        score_result_df = score_result_df.astype(int)
+        score_result_df = score_result_df.fillna(0).astype(int)
 
     return score_result_df
 
