@@ -225,8 +225,10 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     fig.set_size_inches(a4_size)
 
     if num_featuresets == 1:
-        plt.subplots_adjust(left=0.10)
-    else:
+        plt.subplots_adjust(left=0.15)
+    elif num_featuresets == 2:
+        plt.subplots_adjust(left=0.15)
+    else: 
         plt.subplots_adjust(left=0.20)
 
     ax.set_frame_on(False)
@@ -274,7 +276,9 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     # labels = [label.capitalize() for label in labels]
     # Add 'basic-subset' to all labels except tha basic-subset label
     if num_featuresets == 1:
-        labels = ['automatic\ndataset']
+        labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
+    elif num_featuresets == 2:
+        labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
     else:
         labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
@@ -288,16 +292,23 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     if num_featuresets == 1:
         fig.subplots_adjust(bottom=0.3 / rows)
         fig.set_figheight(4)    # set hight of figure manualy
+    elif num_featuresets == 2:
+        fig.subplots_adjust(bottom=0.6 / rows)
+        fig.set_figheight(4)    # set hight of figure manualy
     else:
         fig.subplots_adjust(bottom=0.8 / rows)
+
     fig.legend(handles, labels_txt, ncol=len(labels_txt), loc='lower center', borderaxespad=1.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=3, loc='lower center', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc='right', borderaxespad=0.5, fontsize=13)
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Training time (sec)", fontsize=16)
+
     if num_featuresets == 1:
-        plt.ylabel(" ", fontsize=16)
+        plt.ylabel(" ", fontsize=16) # delete y-label
+    elif num_featuresets == 2:
+        plt.ylabel(" ", fontsize=16) # delete y-label
     else:
         plt.ylabel("Feature combination", fontsize=16)
     # save grafics
@@ -369,8 +380,10 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     fig.set_size_inches(a4_size)
 
     if num_featuresets == 1:
-        plt.subplots_adjust(left=0.10)
-    else:
+        plt.subplots_adjust(left=0.15)
+    elif num_featuresets == 2:
+        plt.subplots_adjust(left=0.15)
+    else: 
         plt.subplots_adjust(left=0.20)
 
     ax.set_frame_on(False)
@@ -385,7 +398,14 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     ax.set_xlim([MIN_VAL - 0.00015, MAX_VAL + 0.00015])
     ax.tick_params(axis='both', which='major', labelsize=14)
 
-    y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+    if num_featuresets == 1:
+        ax.set_ylim([-0.5,0.5])
+        y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+    elif num_featuresets == 2:
+        y_offsets = np.linspace(-0.20, 0.20, values.shape[0])
+    else:
+        y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+
     for idx in range(values.shape[0]):
         mean = values[idx].mean(axis=1)
         mean_y = np.arange(rows) + y_offsets[idx]
@@ -410,7 +430,9 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     # labels = [label.capitalize() for label in labels]
     # Add 'basic-subset' to all labels except tha basic-subset label
     if num_featuresets == 1:
-        labels = ['automatic\ndataset']
+        labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
+    elif num_featuresets == 2:
+        labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
     else:
         labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
@@ -424,6 +446,9 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     if num_featuresets == 1:
         fig.subplots_adjust(bottom=0.3 / rows)
         fig.set_figheight(4)    # set hight of figure manualy
+    elif num_featuresets == 2:
+        fig.subplots_adjust(bottom=0.6 / rows)
+        fig.set_figheight(4)    # set hight of figure manualy
     else:
         fig.subplots_adjust(bottom=0.8 / rows)
 
@@ -433,10 +458,14 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Prediction time (sec)", fontsize=16)
+
     if num_featuresets == 1:
-        plt.ylabel(" ", fontsize=16)
+        plt.ylabel(" ", fontsize=16) # delete y-label
+    elif num_featuresets == 2:
+        plt.ylabel(" ", fontsize=16) # delete y-label
     else:
         plt.ylabel("Feature combination", fontsize=16)
+
     # save grafics
     plt.savefig(CHART_PATH)
     plt.savefig(CHART_PDF_PATH)
@@ -507,8 +536,10 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     fig.set_size_inches(a4_size)
 
     if num_featuresets == 1:
-        plt.subplots_adjust(left=0.10)
-    else:
+        plt.subplots_adjust(left=0.15)
+    elif num_featuresets == 2:
+        plt.subplots_adjust(left=0.15)
+    else: 
         plt.subplots_adjust(left=0.20)
 
     ax.set_frame_on(False)
@@ -522,7 +553,14 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     ax.set_xlim([MIN_VAL - 0.05, MAX_VAL + 0.05])
     ax.tick_params(axis='both', which='major', labelsize=14)
 
-    y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+    if num_featuresets == 1:
+        ax.set_ylim([-0.5,0.5])
+        y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+    elif num_featuresets == 2:
+        y_offsets = np.linspace(-0.20, 0.20, values.shape[0])
+    else:
+        y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+
     for idx in range(values.shape[0]):
         mean = values[idx].mean(axis=1)
         mean_y = np.arange(rows) + y_offsets[idx]
@@ -547,7 +585,9 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     # labels = [label.capitalize() for label in labels]
     # Add 'basic-subset' to all labels except tha basic-subset label
     if num_featuresets == 1:
-        labels = ['automatic\ndataset']
+        labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
+    elif num_featuresets == 2:
+        labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
     else:
         labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
@@ -561,6 +601,9 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     if num_featuresets == 1:
         fig.subplots_adjust(bottom=0.3 / rows)
         fig.set_figheight(4)    # set hight of figure manualy
+    elif num_featuresets == 2:
+        fig.subplots_adjust(bottom=0.6 / rows)
+        fig.set_figheight(4)    # set hight of figure manualy
     else:
         fig.subplots_adjust(bottom=0.8 / rows)
 
@@ -570,10 +613,14 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
     # fig.legend(handles, labels_txt, ncol=1, loc=(0.85, 0.67), borderaxespad=0.5, fontsize=13)
 
     plt.xlabel("Method evaluation score [MES]", fontsize=16)
+
     if num_featuresets == 1:
-        plt.ylabel(" ", fontsize=16)
+        plt.ylabel(" ", fontsize=16) # delete y-label
+    elif num_featuresets == 2:
+        plt.ylabel(" ", fontsize=16) # delete y-label
     else:
         plt.ylabel("Feature combination", fontsize=16)
+        
     # save grafics
     plt.savefig(CHART_PATH)
     plt.savefig(CHART_PDF_PATH)
