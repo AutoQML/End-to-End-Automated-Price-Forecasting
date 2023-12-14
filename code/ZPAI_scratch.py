@@ -58,7 +58,7 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     fig.set_size_inches(a4_size)
 
     if num_featuresets == 1:
-        plt.subplots_adjust(left=0.10)
+        plt.subplots_adjust(left=0.15)
     elif num_featuresets == 2:
         plt.subplots_adjust(left=0.15)
     else: 
@@ -117,7 +117,7 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     # Add 'basic-subset' to all labels except tha basic-subset label
 
     if num_featuresets == 1:
-        labels = labels
+        labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
     elif num_featuresets == 2:
         labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
     else:
@@ -242,7 +242,14 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
     ax.set_xlim([MIN_VAL - 100.0, MAX_VAL + 200.0])
     ax.tick_params(axis='both', which='major', labelsize=14)
 
-    y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+    if num_featuresets == 1:
+        ax.set_ylim([-0.5,0.5])
+        y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+    elif num_featuresets == 2:
+        y_offsets = np.linspace(-0.20, 0.20, values.shape[0])
+    else:
+        y_offsets = np.linspace(-0.15, 0.15, values.shape[0])
+
     for idx in range(values.shape[0]):
         mean = values[idx].mean(axis=1)
         mean_y = np.arange(rows) + y_offsets[idx]
