@@ -1,0 +1,12 @@
+,1+2,3
+final-model,"RandomForestRegressor(criterion='poisson', max_features=21, n_estimators=141)","RandomForestRegressor(max_depth=20, max_features=21, min_samples_split=6,
+                      n_estimators=104)"
+Test-MAE,11658.21,12412.46
+Test-MAPE,0.1463,0.1478
+Test-RMSE,17466.74,17612.33
+Test-N-RMSE,0.0659,0.0827
+Test-IQR-RMSE,0.2831,0.3495
+Test-CV-RMSE,0.1917,0.1945
+Test-R2,0.8502,0.7948
+Training-Duration,1106.535,1604.616
+Test-Duration,5.47019E-05,3.19023E-05

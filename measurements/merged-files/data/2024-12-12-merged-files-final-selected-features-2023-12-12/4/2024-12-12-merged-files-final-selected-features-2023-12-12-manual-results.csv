@@ -1,13 +1,12 @@
-,1+2,3
+,1+2
 final-model,"RandomForestRegressor(bootstrap=False, criterion='poisson', max_features=18,
-                      min_samples_split=9, n_estimators=122)","RandomForestRegressor(criterion='poisson', max_features=15, min_samples_split=7,
-                      n_estimators=187)"
-Test-MAE,11874.28,12510.32
-Test-MAPE,0.1477,0.1509
-Test-RMSE,17512.28,17640.45
-Test-N-RMSE,0.0661,0.0828
-Test-IQR-RMSE,0.2838,0.35
-Test-CV-RMSE,0.1922,0.1948
-Test-R2,0.8494,0.7942
-Training-Duration,1102.841,1509.807
-Test-Duration,3.44388E-05,5.01519E-05
+                      min_samples_split=9, n_estimators=122)"
+Test-MAE,11874.28
+Test-MAPE,0.1477
+Test-RMSE,17512.28
+Test-N-RMSE,0.0661
+Test-IQR-RMSE,0.2838
+Test-CV-RMSE,0.1922
+Test-R2,0.8494
+Training-Duration,1102.841
+Test-Duration,3.44388E-05
