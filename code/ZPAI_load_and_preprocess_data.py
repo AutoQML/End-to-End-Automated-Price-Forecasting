@@ -470,6 +470,18 @@ def load_and_preprocess_data(datasets: list,
     plt.xlabel('Feature importance in %')
     plt.ylabel('Features')
     plt.title('Feature importance')
+    # Extract the label names 
+    # Getting current labels
+    labels = [item.get_text() for item in plt.gca().get_yticklabels()]
+    # labels = [item.get_text() for item in ax.get_yticklabels()]
+    # replace 'extension' string by the actual algorithm 'series'
+    # Replace the specific label (e.g., replace '4' with 'Four')
+    for i, label in enumerate(labels):
+        if label == 'extension':
+            labels[i] = 'series'
+
+    # Setting new labels
+    plt.gca().set_yticklabels(labels)
 
     plt.savefig(path.format('feature_importance_py.pdf'),dpi=100,bbox_inches='tight')
 
