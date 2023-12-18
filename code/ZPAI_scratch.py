@@ -101,8 +101,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
 
         # display singe measurements and mean value of all measurements
         color = next(ax._get_lines.prop_cycler)
-        ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 0.33, alpha=0.45, linewidths=0, **color) # display dots for sigle measurements
-        ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx], **color) # display diamonds 
+        ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 1.25, alpha=0.45, linewidths=0, **color) # display dots for sigle measurements
+        ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * 1.9, label=labels[idx], **color) # display diamonds 
 
     graphics_title = f"MAPE-scores for {dataset}"
     # plt.title(graphics_title) # uncomment for publication
@@ -119,8 +119,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
     if num_featuresets == 1:
         labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
     elif num_featuresets == 2:
-        labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
-        # labels = [label.replace(label, 'Semi automated\npipeline') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
+        # labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
+        labels = [label.replace(label, 'Semi automated\npipeline') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
     else:
         labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
@@ -135,8 +135,8 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
         fig.subplots_adjust(bottom=0.3 / rows)
         fig.set_figheight(4)    # set hight of figure manualy
     elif num_featuresets == 2:
-        fig.subplots_adjust(bottom=0.6 / rows)
-        fig.set_figheight(4)    # set hight of figure manualy
+        fig.subplots_adjust(bottom=0.43 / rows)
+        fig.set_figheight(6)    # set hight of figure manualy
     else:
         fig.subplots_adjust(bottom=0.8 / rows)
 
@@ -261,8 +261,8 @@ def subfunc_plot_training_duration(values: np.ndarray, labels: list, datasets: l
 
         # display singe measurements and mean value of all measurements
         color = next(ax._get_lines.prop_cycler)
-        ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 0.33, alpha=0.45, linewidths=0, **color)
-        ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx],
+        ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 1.25, alpha=0.45, linewidths=0, **color)
+        ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * 1.9, label=labels[idx],
                    **color)
 
     graphics_title = f"MAPE-scores for {dataset}"
@@ -415,7 +415,7 @@ def subfunc_plot_testing_duration(values: np.ndarray, labels: list, datasets: li
 
         # display singe measurements and mean value of all measurements
         color = next(ax._get_lines.prop_cycler)
-        ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 0.33, alpha=0.45, linewidths=0, **color)
+        ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 1.25, alpha=0.45, linewidths=0, **color)
         ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx],
                    **color)
 
@@ -571,7 +571,7 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
         # display singe measurements and mean value of all measurements
         color = next(ax._get_lines.prop_cycler)
         # ax.scatter(x, y, s=(matplotlib.rcParams['lines.markersize'] ** 2) * 0.33, alpha=0.45, linewidths=0, **color)
-        ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * .9, label=labels[idx],
+        ax.scatter(mean, mean_y, marker='d', s=(matplotlib.rcParams['lines.markersize'] ** 2.7) * 1.9, label=labels[idx],
                    **color)
 
     graphics_title = f"MEV-scores for {dataset}"
@@ -603,8 +603,8 @@ def subfunc_plot_mev(values: np.ndarray, labels: list, datasets: list, CHART_PAT
         fig.subplots_adjust(bottom=0.3 / rows)
         fig.set_figheight(4)    # set hight of figure manualy
     elif num_featuresets == 2:
-        fig.subplots_adjust(bottom=0.6 / rows)
-        fig.set_figheight(4)    # set hight of figure manualy
+        fig.subplots_adjust(bottom=0.43 / rows)
+        fig.set_figheight(6)    # set hight of figure manualy
     else:
         fig.subplots_adjust(bottom=0.8 / rows)
 
