@@ -120,6 +120,7 @@ def plot_dataset_performance(values: np.ndarray, labels: list, datasets: list, C
         labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
     elif num_featuresets == 2:
         labels = [label.replace(label, 'Manual & semi-\nautomated pipelines') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
+        # labels = [label.replace(label, 'Semi automated\npipeline') if label =='1+2' else 'Fully automated\npipeline' for label in labels]
     else:
         labels = [label.replace(label, 'basic-subset +\n{}'.format(label)) if label !='basic-subset' else 'basic-subset' for label in labels]
 
