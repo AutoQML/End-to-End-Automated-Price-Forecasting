@@ -1,4 +1,0 @@
-,R2-Score,MAPE,MAE,RMSE,N-RMSE,IQR-RMSE,CV-RMSE
-Feature-Set,extension,location-extension,location-extension,extension,extension,extension,extension
-Method,autosklearn,autosklearn,autosklearn,autosklearn,autosklearn,autosklearn,autosklearn
-Value,0.6075,0.1626,15391.0,40061.25,0.0603,0.6876,0.4125

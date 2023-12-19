@@ -1,7 +1,0 @@
-model_id,rank,ensemble_weight,type,cost,duration,config_id,train_loss,seed,start_time,end_time,budget,status,data_preprocessors,feature_preprocessors,balancing_strategy,config_origin
-17,1,0.74,extra_trees,16197.717414838336,1.2671442031860352,16,15433.311111259243,0,1701017285.776852,1701017287.067479,0.0,StatusType.SUCCESS,[],['no_preprocessing'],,Initial design
-2,2,0.18,random_forest,16952.210993883516,3.2806308269500732,1,6967.053016567122,0,1701017242.8289475,1701017246.1337185,0.0,StatusType.SUCCESS,[],['no_preprocessing'],,Initial design
-15,3,0.04,gradient_boosting,19912.45169962471,4.005420923233032,14,6461.473838901628,0,1701017281.0289826,1701017285.0595894,0.0,StatusType.SUCCESS,[],['select_percentile_regression'],,Initial design
-13,4,0.0,extra_trees,24464.448357209872,5.9781494140625,12,25686.02134438993,0,1701017267.8560905,1701017273.858446,0.0,StatusType.SUCCESS,[],['extra_trees_preproc_for_regression'],,Initial design
-8,5,0.0,random_forest,28330.591226273817,2.9826464653015137,7,12279.4865536565,0,1701017255.7727575,1701017258.7812583,0.0,StatusType.SUCCESS,[],['fast_ica'],,Initial design
-20,6,0.04,k_nearest_neighbors,31088.61630791715,0.5977299213409424,19,2376.9971558589305,0,1701017288.4840355,1701017289.1022449,0.0,StatusType.SUCCESS,[],['select_rates_regression'],,Initial design

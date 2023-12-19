@@ -1,5 +1,0 @@
-bin_outlier_detect: true
-measurement_date: '2023-12-01'
-number_of_measurements: 5
-pca_numbers: 0
-random_seed: 1

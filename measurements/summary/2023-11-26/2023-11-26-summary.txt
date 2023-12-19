@@ -1,8 +1,0 @@
-Measuremt date: 2023-11-26
-Random seed: 1
-PCA number: 0
-Datasets: ['merged-files']
-Auto-sklearn runtime 60
-Auto-sklearn limit : 6
-Input file for merged-files: merged-files-final-selected-features-2023-11-23.csv with size: 2916 created: 2023-11-23
-Input file for merged-files: merged-files-final-selected-features-2023-11-23.csv with size: 2916 created: 2023-11-23
